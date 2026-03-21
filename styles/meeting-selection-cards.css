@@ -2,10 +2,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 50vh;
-  column-gap: 10vw;
+  column-gap: 5vw;
   row-gap: 5px;
   border-radius: 5px;
-  padding: 10px 8px;
+  padding: 10px 25px;
   align-items: start;
   justify-content: center;
 }
