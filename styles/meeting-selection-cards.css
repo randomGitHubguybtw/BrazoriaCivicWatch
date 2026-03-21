@@ -63,7 +63,7 @@
   transform-origin: top center;
 }
 
-.card-text {
+.meeting-card-text {
   position:absolute;
   left: 22px;
   right: 22px;
@@ -71,7 +71,7 @@
   transition: top 0.2s;
   opacity: 1;
   z-index: 2;
-  font-size: clamp(22px, 1.5vw, 100px);
+  font-size: clamp(24px, 1.5vw, 1000px);
   text-align: center;
   text-overflow: ellipsis;
   overflow: hidden;
