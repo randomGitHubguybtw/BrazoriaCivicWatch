@@ -1,0 +1,43 @@
+.voter-cards-set {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.voter-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.voter-card {
+  display: flex;
+  justify-content: center;
+  vertical-align: center;
+  margin-right: 3vw;
+  height: 30vh;
+}
+
+.voter-button {
+  height: 100%;
+  width: 110px;
+  border-radius: 10px;
+  background-color: rgb(186, 94, 62);
+  border: dashed 3px rgb(201, 155, 73);
+  transition: width 0.2s, opacity 0.15s;
+}
+
+.voter-button:hover {
+  width: 210px;
+  cursor: pointer;
+}
+
+.voter-button:active {
+  opacity: 0.8;
+}
+
+.voter-cards-title {
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: 600;
+}

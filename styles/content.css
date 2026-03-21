@@ -1,0 +1,33 @@
+.title {
+  text-align: center;
+  font-size: clamp(2px, calc(24px + 1vw), 100px);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.separator-container {
+  display: flex;
+  justify-content: center;
+  vertical-align: center;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.seperator {
+  background-color: rgb(109, 130, 99);
+  font-size: 1px;
+  height: 15px;
+  width: 75vw;
+  text-align: center;
+  border: solid 2px rgb(201, 155, 73);
+  border-radius: 10px;
+  display: block;
+}
+
+.construction-warning {
+  text-align: center;
+  margin: 50px 75px;
+  font-size: 20px;
+  font-weight: 600;
+}

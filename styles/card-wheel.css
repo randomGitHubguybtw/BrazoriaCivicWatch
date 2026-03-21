@@ -1,0 +1,72 @@
+.card-wheel {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 25vh;
+  column-gap: 10px;
+  row-gap: 5px;
+  border-radius: 5px;
+  padding: 10px 8px;
+  align-items: start;
+  justify-content: center;
+}
+
+.card-photo {
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+  user-select: none;
+}
+
+.card-container {
+  position: relative;
+  cursor: pointer;
+  height: 100%;
+  transition: transform 0.2s;
+}
+
+.card-overlay {
+  background-color: black;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 1));
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  opacity: 0.8;
+  transition: opacity 0.2s, padding 0.2s;
+}
+
+.card-overlay:hover{
+  opacity: 1;
+}
+
+.card-overlay:active {
+  opacity: 0.9;
+}
+
+.card-overlay:hover .card-text {
+  top: 40px;
+}
+
+.card-container:hover {
+  transform: scale(1.02);
+  transform-origin: top center;
+}
+
+.card-text {
+  position:absolute;
+  left: 12px;
+  right: 12px;
+  top: 15px;
+  transition: top 0.2s;
+  opacity: 1;
+  z-index: 2;
+  font-size: clamp(0px, 1.5vw, 24px);
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  user-select: none;
+}

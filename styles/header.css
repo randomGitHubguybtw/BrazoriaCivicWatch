@@ -1,0 +1,117 @@
+.header {
+  display: flex;
+  background-color: rgb(186, 94, 62);
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 10px;
+  height: 45px;
+  width: 100%;
+  padding-left: 5px;
+  border-bottom: solid 3px rgb(201, 155, 73);
+  justify-content: center;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.middle {
+  display: flex;
+  flex: 4;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.left {
+  display: flex;
+  flex: 1;
+}
+
+.right {
+  display: flex;
+  vertical-align: center;
+  flex: 1;
+  overflow: hidden;
+}
+
+.drop-down-burger {
+  display: flex;
+  align-items: center;
+}
+
+.burger {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.mission {
+  font-weight: 550;
+  font-size: 18px;
+  text-align: center;
+}
+
+.search-bar {
+  background-color: rgb(109, 130, 99);
+  color: rgb(45, 35, 28);
+  border: none;
+  height: 93.3%;
+  border: solid 2px rgb(201, 155, 73);
+  width: 100%;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+.search-icon {
+  height: 38px;
+  width: 70px;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+.search-button {
+  padding: 0;
+  background-color: rgb(109, 130, 99);
+  border: solid 2px rgb(201, 155, 73);
+  border-radius: 4px;
+  margin-right: -2px;
+  padding-top: 2px;
+  margin-bottom: -1px;
+  padding-bottom: 2px;
+  width: 80px;
+  transition: opacity 0.15s
+}
+
+.search-button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.search-button:active {
+  opacity: 0.6;
+}
+
+.search-bar::placeholder {
+  color:rgb(45, 35, 28);
+  font-size: 16px;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-top: 45px;
+}
+
+.title-graphic {
+  margin: 0;
+  height: 165px;
+  width: 700px;
+  object-position: 56% 44%;
+  object-fit: cover;
+}

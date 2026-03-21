@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+
+        <title>Brazoria Civic Watch</title>
+        <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+        <link rel="stylesheet" href="styles/card-wheel.css">
+        <link rel="stylesheet" href="styles/content.css">
+        <link rel="stylesheet" href="styles/general.css">
+        <link rel="stylesheet" href="styles/header.css">
+        <link rel="stylesheet" href="styles/voter-cards.css">
+        <link rel="stylesheet" href="styles/footer.css">
+
+    </head>
+    <body>
+
+        <div class="header">
+            <div class="left">
+              <div class="drop-down-burger">
+               <img class="burger" src="icons/hamburger-menu.svg">
+               </div>
+            </div>
+            <div class="middle">
+                <p class="mission"> Keeping Brazoria easy to access and accountable since 2026</p>
+            </div>
+            <div class="right">
+              <button class="search-button">
+                <img class="search-icon" src="icons/Brazoria Civic Watch Logo Black.png">
+              </button>
+              <input class="search-bar" type="text" placeholder="Search Any Query...">
+            </div>
+        </div>
+
+        <div class="title">
+           <img class="title-graphic" src="icons/Brazoria Civic Watch Final.png">
+        </div>
+
+        <div class="card-wheel">
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/recent-meeting.png.jpg">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Recent Meetings
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/run-for-office.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Run for Office
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/candidate-interviews.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Candidate Interviews
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/officials-info.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Current Officials
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/archive.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Archive
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/locations-info.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Meeting Information
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/gov-websites.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Government Websites
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/register-to-vote.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Register to Vote
+                    </div>
+                </div>
+            </div>
+            <div class="card-container">
+                <img class="card-photo" src="card-photos/public-place-locations.png">
+                <div class="card-overlay">
+                    <div class="card-text">
+                        Public Places
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="separator-container">
+          <div class="seperator">
+            
+          </div>
+        </div>
+
+        <div class="voter-cards-set">
+          <p class="voter-cards-title">Voter Information</p>
+          <div class="voter-buttons-container">
+            <div class="voter-card">
+              <button class="voter-button">
+                <p>Candidate Interviews</p>
+              </button>
+            </div>
+            <div class="voter-card">
+              <button class="voter-button">
+                <p>Voter Information (When and Where)</p>
+              </button>
+            </div>
+            <div class="voter-card">
+              <button class="voter-button">
+                <p>Sample Ballot</p>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+            <div class="horizontal-container">
+                <div class="vertical-container">
+                    <p class="footer-text">About Us</p>
+                    <p class="footer-text">Change Your City</p>
+                    <p class="footer-text">Contact Us</p>
+                </div>
+                <div class="vertical-container">
+                    <p class="footer-text">FAQ</p>
+                    <p class="footer-text">Get Involved</p>
+                    <p class="footer-text">Social Media</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.querySelectorAll("button:not(.search-button)").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
+            document.querySelectorAll(".card-container").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
+        </script>
+
+    </body>
+
+</html>

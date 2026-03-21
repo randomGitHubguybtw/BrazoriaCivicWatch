@@ -1,0 +1,38 @@
+.footer {
+  display: flex;
+  position: absolute;
+  background-color: rgb(109, 130, 99);
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  border-top: solid 3px rgb(201, 155, 73);
+}
+
+.horizontal-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 350px;
+
+}
+
+.vertical-container {
+  display: flex;
+  flex-direction: column; 
+  text-align: center;
+  vertical-align: center;
+  align-items: center;
+  height: 100%;
+}
+
+.footer-text {
+  margin-bottom: 5px;
+}
+
+.footer-text:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
