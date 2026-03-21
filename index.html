@@ -38,7 +38,8 @@
         </div>
 
         <div class="card-wheel">
-            <div class="card-container">
+            <a href="webpages/meeting-selection-screen.html">
+            <div class="card-container recent-meetings-button">
                 <img class="card-photo" src="card-photos/recent-meeting.png.jpg">
                 <div class="card-overlay">
                     <div class="card-text">
@@ -46,6 +47,7 @@
                     </div>
                 </div>
             </div>
+            </a>
             <div class="card-container">
                 <img class="card-photo" src="card-photos/run-for-office.png">
                 <div class="card-overlay">
@@ -156,7 +158,7 @@
 
         <script>
             document.querySelectorAll("button:not(.search-button)").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
-            document.querySelectorAll(".card-container").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
+            document.querySelectorAll(".card-container:not(.recent-meetings-button)").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
         </script>
 
     </body>

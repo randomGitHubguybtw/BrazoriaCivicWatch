@@ -105,12 +105,12 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  margin-top: 45px;
+  margin-top: -50px;
 }
 
 .title-graphic {
   margin: 0;
-  height: 165px;
+  height: 200px;
   width: 700px;
   object-position: 56% 44%;
   object-fit: cover;
