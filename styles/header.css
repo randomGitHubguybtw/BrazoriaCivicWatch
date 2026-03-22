@@ -114,7 +114,7 @@
 .title-graphic {
   margin: 0;
   height: 175px;
-  width: 700px;
+  width: min(700px, 90vw);
   object-position: 56% 44%;
   object-fit: cover;
 }
