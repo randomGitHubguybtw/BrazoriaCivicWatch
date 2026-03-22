@@ -56,7 +56,7 @@
 }
 
 .search-bar {
-  background-color: rgb(109, 130, 999);
+  background-color: rgb(109, 130, 99);
   color: rgb(45, 35, 28);
   border: none;
   height: 93.3%;
@@ -75,7 +75,7 @@
 
 .search-button {
   padding: 0;
-  background-color: rgb(109, 130, 999);
+  background-color: rgb(109, 130, 99);
   border: solid 2px rgb(201, 155, 73);
   border-radius: 4px;
   margin-right: -2px;
