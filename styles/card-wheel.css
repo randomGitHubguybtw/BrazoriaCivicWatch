@@ -11,7 +11,7 @@
   background-color: green;
 }
 
-@media (max-width: 430px) {
+@media (max-width: 500px) {
   .card-wheel {
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 15vh;
