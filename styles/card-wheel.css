@@ -8,6 +8,7 @@
   padding: 10px 8px;
   align-items: start;
   justify-content: center;
+  background-color: blue;
 }
 
 @media (max-width: 360px) {
