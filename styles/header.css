@@ -20,22 +20,25 @@
 
 .middle {
   display: flex;
-  flex: 4;
+  flex: 1;
   justify-content: center;
   align-items: center;
-  margin: 0;
+  margin-right: 10px;
+  margin-left: 9.375vw;
 }
 
 .left {
   display: flex;
-  flex: 1;
+  width: 50px;
+  margin: 0;
 }
 
 .right {
   display: flex;
   vertical-align: center;
-  flex: 1;
+  width: 240px;
   overflow: hidden;
+  margin: 0;
 }
 
 .drop-down-burger {
@@ -51,7 +54,7 @@
 
 .mission {
   font-weight: 550;
-  font-size: clamp(14px, 1.5vw, 54px);
+  font-size: clamp(12px, 1.5vw, 54px);
   text-align: center;
 }
 
