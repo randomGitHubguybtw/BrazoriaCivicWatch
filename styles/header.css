@@ -108,13 +108,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  margin-top: -50px;
+  margin-top: -40px;
 }
 
 .title-graphic {
   margin: 0;
-  height: 200px;
+  height: 175px;
   width: 700px;
   object-position: 56% 44%;
   object-fit: cover;
