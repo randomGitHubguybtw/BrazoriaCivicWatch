@@ -86,6 +86,10 @@
                     <p class="footer-text">Social Media</p>
                 </div>
             </div>
+
+            <script>
+                 document.querySelectorAll(".footer-text").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
+            </script>
         </div>
 
   </body>
