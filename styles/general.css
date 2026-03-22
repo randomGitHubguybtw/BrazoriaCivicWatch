@@ -19,11 +19,11 @@ p {
 }
 
 a {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  display: block;
+  display: inline;
   width: 100%;
   height: 100%;
   align-items: center;
+  font-size: inherit;
+  color: inherit;
+  text-decoration: none;
 }

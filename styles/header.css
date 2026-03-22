@@ -59,6 +59,19 @@
   text-align: center;
 }
 
+.middle:hover {
+  text-decoration: underline;
+  text-decoration-color: rgb(45, 35, 28);
+}
+
+.middle a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
 .search-bar {
   background-color: rgb(109, 130, 99);
   color: rgb(45, 35, 28);
