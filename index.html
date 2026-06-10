@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="styles/header.css">
         <link rel="stylesheet" href="styles/voter-cards.css">
         <link rel="stylesheet" href="styles/footer.css">
+        <link rel="stylesheet" href="styles/election-countdown.css">
 
     </head>
     <body>
@@ -143,6 +144,13 @@
           </div>
         </div>
 
+        <div class="election-timer-container">
+            <p class="election-countdown-text-notifier" >Time till next election</p>
+            <div class="election-countdown js-election-countdown">
+                <p>1d: 11h: 43m: 12s</p>
+            </div>
+        </div>
+
         <div class="footer">
             <div class="horizontal-container">
                 <div class="vertical-container">
@@ -162,10 +170,7 @@
             </script>
         </div>
 
-        <script>
-            document.querySelectorAll("button:not(.search-button)").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
-            document.querySelectorAll(".card-container:not(.recent-meetings-button)").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
-        </script>
+        <script src="scripts/home.js"></script>
 
     </body>
 

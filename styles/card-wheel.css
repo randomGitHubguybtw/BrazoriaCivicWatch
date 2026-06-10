@@ -66,6 +66,7 @@
 }
 
 .card-text {
+  color: white;
   position:absolute;
   left: 12px;
   right: 12px;

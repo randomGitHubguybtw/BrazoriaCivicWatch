@@ -13,7 +13,7 @@
 .voter-card {
   display: flex;
   justify-content: center;
-  vertical-align: center;
+  align-items: center;
   margin-right: 3vw;
   height: 30vh;
 }
