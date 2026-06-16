@@ -113,16 +113,22 @@ const sidebar = document.querySelector('.js-sidebar');
 const screenOverlay = document.querySelector('.js-screen-overlay');
 const burgers = document.querySelectorAll('.js-burger');
 
-if (sidebar && burgers.length > 0) {
-  burgers.forEach((singleBurger) => {
-    singleBurger.addEventListener('click', () => {
-      if (!sidebar.classList.contains("active")) {
-        sidebar.classList.add("active");
-        screenOverlay.classList.add("active");
-      } else {
-        sidebar.classList.remove("active");
-        screenOverlay.classList.remove("active");
-      }
-    });
-  });
-}
+document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('js-burger')) {
+    const sidebar = document.querySelector('.js-sidebar');
+    const screenOverlay = document.querySelector('.js-screen-overlay');
+    
+    if (sidebar && screenOverlay) {
+      sidebar.classList.toggle('active');
+      screenOverlay.classList.toggle('active');
+    }
+  }
+  
+  if (event.target.classList.contains('js-screen-overlay')) {
+    const sidebar = document.querySelector('.js-sidebar');
+    const screenOverlay = document.querySelector('.js-screen-overlay');
+    
+    sidebar.classList.remove('active');
+    screenOverlay.classList.remove('active');
+  }
+});
