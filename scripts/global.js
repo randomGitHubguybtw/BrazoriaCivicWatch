@@ -1,12 +1,37 @@
+// 1. PUT SIDEBAR LOGIC AT THE VERY TOP
+document.addEventListener('click', (event) => {
+  const sidebar = document.querySelector('.js-sidebar');
+  const screenOverlay = document.querySelector('.js-screen-overlay');
+  
+  if (!sidebar || !screenOverlay) return;
+
+  if (event.target.classList.contains('js-burger')) {
+    sidebar.classList.toggle('active');
+    screenOverlay.classList.toggle('active');
+  }
+
+  if (event.target.classList.contains('js-screen-overlay')) {
+    sidebar.classList.remove('active');
+    screenOverlay.classList.remove('active');
+  }
+});
+
+// 2. Button links
 document.querySelectorAll("button:not(.search-button)")
   .forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
 document.querySelectorAll(".card-container:not(.recent-meetings-button)")
   .forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
 document.querySelectorAll(".footer-text").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
 
+// 3. Location tracking (Wrap the call in a check just in case the function is missing)
 if (!sessionStorage.getItem('isFirstVisit')) {
     sessionStorage.setItem('isFirstVisit', 'true');
-    initializeLocationTracking();
+    // Ensure the function exists before calling it to prevent fatal script crashes
+    if (typeof initializeLocationTracking === "function") {
+        initializeLocationTracking();
+    } else {
+        console.warn("Location tracking function is not defined yet.");
+    }
 }
 
 let lat;
@@ -16,15 +41,10 @@ let isd;
 let schoolDistricts;
 let cityLimits;
 
-//findCoords();
-//testCoords(69.348145, -49.351233)
-
-
 async function initJSON() {
   try {
     const responseSchool = await fetch('./locationJSON/schoolDistricts.json'); 
     schoolDistricts = await responseSchool.json();
-    
     console.log("Successfully loaded schoolDistricts JSON:", schoolDistricts);
 
     const responseCity = await fetch('./locationJSON/cityLimits.json'); 
@@ -35,14 +55,6 @@ async function initJSON() {
 }
 
 function testCoords(long, lat) {
-  //lat = 29.024689; //Clute Test Cords
-  //long = -95.398831;
-  //lat = 29.044967; // Brazoria Test Cords
-  //long = -95.569387;
-  //lat = 29.501905; //Sandy Point Test Cords
-  //long = -95.452163
-  //lat =  29.351639 //Rosharon Test Cords
-  //long = -95.459389
   setupMapsAndDistricts(long, lat);
 }
 
@@ -52,14 +64,13 @@ function findCoords() {
       lat = position.coords.latitude;
       long = position.coords.longitude;
       await initJSON();
-
       setupMapsAndDistricts(long, lat);
     },
       async error => {
         locationError();
       });
   }
-};
+}
 
 async function setupMapsAndDistricts(long, lat) {
   console.log("Checking Longitude:", long, "and Latitude:", lat);
@@ -96,37 +107,15 @@ async function setupMapsAndDistricts(long, lat) {
     locationError(null, isd);
   } else if (cityDistrictFound && !schoolDistrictFound) {
     locationError(city, null);
-  };
+  }
 
   console.log(isd);
   console.log(city);
-};
+}
 
 function locationError(city, isd) {
   city = city || "BRAZORIA COUNTY"
   isd = isd || "Brazosport"
   console.log(isd);
   console.log(city);
-};
-
-const sidebar = document.querySelector('.js-sidebar');
-const screenOverlay = document.querySelector('.js-screen-overlay');
-const burgers = document.querySelectorAll('.js-burger');
-
-document.addEventListener('click', (event) => {
-  const sidebar = document.querySelector('.js-sidebar');
-  const screenOverlay = document.querySelector('.js-screen-overlay');
-  const burgers = document.querySelectorAll('.js-burger');
-  
-  if (!sidebar || !screenOverlay) return;
-
-  if (event.target.classList.contains('js-burger')) {
-    sidebar.classList.toggle('active');
-    screenOverlay.classList.toggle('active');
-  }
-
-  if (event.target.classList.contains('js-screen-overlay')) {
-    sidebar.classList.remove('active');
-    screenOverlay.classList.remove('active');
-  }
-});
+}

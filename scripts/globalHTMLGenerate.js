@@ -1,26 +1,26 @@
 document.head.insertAdjacentHTML('beforeend', `
-  <link rel="stylesheet" href="/styles/card-wheel.css">
-  <link rel="stylesheet" href="/styles/content.css">
-  <link rel="stylesheet" href="/styles/general.css">
-  <link rel="stylesheet" href="/styles/header.css">
-  <link rel="stylesheet" href="/styles/voter-cards.css">
-  <link rel="stylesheet" href="/styles/footer.css">
-  <link rel="stylesheet" href="/styles/election-countdown.css">
-  <link rel="stylesheet" href="/styles/sidebar.css">
+  <link rel="stylesheet" href="styles/card-wheel.css">
+  <link rel="stylesheet" href="styles/content.css">
+  <link rel="stylesheet" href="styles/general.css">
+  <link rel="stylesheet" href="styles/header.css">
+  <link rel="stylesheet" href="styles/voter-cards.css">
+  <link rel="stylesheet" href="styles/footer.css">
+  <link rel="stylesheet" href="styles/election-countdown.css">
+  <link rel="stylesheet" href="styles/sidebar.css">
 `);
 
 document.querySelector('.js-header').innerHTML = `
   <div class="left">
     <div class="drop-down-burger">
-      <img class="burger js-burger" src="/icons/hamburger-menu.svg">
+      <img class="burger js-burger" src="icons/hamburger-menu.svg">
     </div>
   </div>
   <div class="middle">
-      <a href="/index.html"><p class="mission"> Keeping Brazoria easy to access and accountable since 2026!</p></a>
+      <a href="index.html"><p class="mission"> Keeping Brazoria easy to access and accountable since 2026!</p></a>
   </div>
   <div class="right">
     <button class="search-button">
-      <img class="search-icon" src="/icons/Brazoria Civic Watch Logo Black.png">
+      <img class="search-icon" src="icons/Brazoria Civic Watch Logo Black.png">
     </button>
     <input class="search-bar" type="text" placeholder="Search Any Query...">
   </div>`;
