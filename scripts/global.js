@@ -16,7 +16,7 @@ document.body.addEventListener('click', (event) => {
 });
 
 
-
+/*
 const isFirstVisitThisSession = !sessionStorage.getItem('locationTracked');
 
 const navEntries = window.performance?.getEntriesByType("navigation") || [];
@@ -38,6 +38,9 @@ if (isFirstVisitThisSession && !isReload && !isInternalLink) {
 } else {
   generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'));
 }
+  */
+
+findCoords()
 
 let lat;
 let long;
@@ -61,6 +64,7 @@ async function initJSON() {
 
 function testCoords(long, lat) {
   setupMapsAndDistricts(long, lat);
+  console.log('1')
 }
 
 function findCoords() {
@@ -79,7 +83,9 @@ function findCoords() {
 
 async function setupMapsAndDistricts(long, lat) {
   console.log("Checking Longitude:", long, "and Latitude:", lat);
+  console.log('2');
   await initJSON();
+  console.log('3');
 
   if (!schoolDistricts || !schoolDistricts.features) {
     console.error("ERROR: schoolDistricts data is missing or improperly formatted GeoJSON!", schoolDistricts);
@@ -89,12 +95,19 @@ async function setupMapsAndDistricts(long, lat) {
   const userLocation = turf.point([long, lat]); 
   let schoolDistrictFound = false;
   let cityDistrictFound = false;
+  console.log(schoolDistrictFound, cityDistrictFound)
+  console.log('4')
 
   for (const section of schoolDistricts.features) {
     if (turf.booleanPointInPolygon(userLocation, section)) {
+      console.log('t')
       isd = section.properties.Name;
       schoolDistrictFound = true;
-      break;
+      console.log(schoolDistrictFound)
+      console.log(isd)
+      console.log('5')
+    } else {
+      console.log('failed')
     }
   }
 
@@ -102,7 +115,6 @@ async function setupMapsAndDistricts(long, lat) {
     if (turf.booleanPointInPolygon(userLocation, section)) {
       city = section.properties.Name;
       cityDistrictFound = true;
-      break;
     }
   }
   
