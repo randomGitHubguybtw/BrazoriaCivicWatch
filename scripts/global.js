@@ -28,7 +28,7 @@ if (!sessionStorage.getItem('isFirstVisit')) {
     sessionStorage.setItem('isFirstVisit', 'true');
     // Ensure the function exists before calling it to prevent fatal script crashes
     if (typeof initializeLocationTracking === "function") {
-        initializeLocationTracking();
+        findCoords();
     } else {
         console.warn("Location tracking function is not defined yet.");
     }
