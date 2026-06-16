@@ -108,10 +108,13 @@ async function setupMapsAndDistricts(long, lat) {
   
   if (!cityDistrictFound && !schoolDistrictFound) {
     locationError();
+    return;
   } else if (!cityDistrictFound && schoolDistrictFound) {
     locationError(null, isd);
+    return;
   } else if (cityDistrictFound && !schoolDistrictFound) {
     locationError(city, null);
+    return;
   }
 
   saveCityAndIsd(city, isd)
@@ -126,5 +129,5 @@ function locationError(city, isd) {
 function saveCityAndIsd(startCity, startIsd) {
   sessionStorage.setItem('city', startCity);
   sessionStorage.setItem('isd', startIsd);
-    generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'));
+  generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'));
 }
