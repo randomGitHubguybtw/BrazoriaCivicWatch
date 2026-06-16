@@ -1,4 +1,3 @@
-// 1. PUT SIDEBAR LOGIC AT THE VERY TOP
 document.addEventListener('click', (event) => {
   const sidebar = document.querySelector('.js-sidebar');
   const screenOverlay = document.querySelector('.js-screen-overlay');
@@ -16,17 +15,10 @@ document.addEventListener('click', (event) => {
   }
 });
 
-// 2. Button links
-document.querySelectorAll("button:not(.search-button)")
-  .forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
-document.querySelectorAll(".card-container:not(.recent-meetings-button)")
-  .forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
-document.querySelectorAll(".footer-text").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
 
-// 3. Location tracking (Wrap the call in a check just in case the function is missing)
+
 if (!sessionStorage.getItem('isFirstVisit')) {
     sessionStorage.setItem('isFirstVisit', 'true');
-    // Ensure the function exists before calling it to prevent fatal script crashes
     if (typeof initializeLocationTracking === "function") {
         findCoords();
     } else {

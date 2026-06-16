@@ -19,7 +19,7 @@ document.querySelector('.js-header').innerHTML = `
       <a href="index.html"><p class="mission"> Keeping Brazoria easy to access and accountable since 2026!</p></a>
   </div>
   <div class="right">
-    <button class="search-button">
+    <button class="search-button js-search-button">
       <img class="search-icon" src="icons/Brazoria Civic Watch Logo Black.png">
     </button>
     <input class="search-bar" type="text" placeholder="Search Any Query...">
@@ -28,29 +28,30 @@ document.querySelector('.js-header').innerHTML = `
 document.querySelector('.js-sidebar-container').innerHTML = `
   <div class="screen-overlay js-screen-overlay"></div>
   <div class="sidebar js-sidebar">
-    <button>City: Clute</button>
-    <button>School District: BISD</button>
+    <button class="location-dropdown">City: Clute</button>
+    <button class="location-dropdown">School District: BISD</button>
+    <button data-target="index.html" class="sidebar-button js-sidebar-button">Home</button>
     <button class="sidebar-button">Most Recent Meeting</button>
-    <button class="sidebar-button">Run For Office</button>
-    <button class="sidebar-button">Candidate Interviews</button>
-    <button class="sidebar-button">Current Officials</button>
-    <button class="sidebar-button">Archive</button>
-    <button class="sidebar-button">Meeting Information</button>
-    <button class="sidebar-button">Government Websites</button>
-    <button class="sidebar-button">Register to Vote</button>
-    <button class="sidebar-button">Public Places</button>
+    <button class="sidebar-button js-sidebar-button">Run For Office</button>
+    <button class="sidebar-button js-sidebar-button">Candidate Interviews</button>
+    <button class="sidebar-button js-sidebar-button">Current Officials</button>
+    <button class="sidebar-button js-sidebar-button">Archive</button>
+    <button class="sidebar-button js-sidebar-button">Meeting Information</button>
+    <button class="sidebar-button js-sidebar-button">Government Websites</button>
+    <button class="sidebar-button js-sidebar-button">Register to Vote</button>
+    <button class="sidebar-button js-sidebar-button">Public Places</button>
   </div>`;
 
 document.querySelector('.js-footer').innerHTML = `
   <div class="horizontal-container">
       <div class="vertical-container">
-          <p class="footer-text">About Us</p>
-          <p class="footer-text">Change Your City</p>
-          <p class="footer-text">Contact Us</p>
+          <p class="footer-text js-footer-text">About Us</p>
+          <p class="footer-text js-footer-text">Change Your City</p>
+          <p class="footer-text js-footer-text">Contact Us</p>
       </div>
       <div class="vertical-container">
-          <p class="footer-text">FAQ</p>
-          <p class="footer-text">Get Involved</p>
-          <p class="footer-text">Social Media</p>
+          <p class="footer-text js-footer-text">FAQ</p>
+          <p class="footer-text js-footer-text">Get Involved</p>
+          <p class="footer-text js-footer-text">Social Media</p>
       </div>
   </div>`;

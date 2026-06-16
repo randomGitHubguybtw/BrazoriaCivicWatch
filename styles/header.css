@@ -55,7 +55,7 @@
 
 .mission {
   font-weight: 550;
-  font-size: clamp(9px, 1.5vw, 54px);
+  font-size: clamp(6px, 1.5vw, 54px);
   text-align: center;
 }
 
