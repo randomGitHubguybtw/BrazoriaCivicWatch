@@ -1,12 +1,12 @@
 document.querySelector("head").innerHTML +=
-  `<link rel="stylesheet" href="styles/card-wheel.css">
-  <link rel="stylesheet" href="styles/content.css">
-  <link rel="stylesheet" href="styles/general.css">
-  <link rel="stylesheet" href="styles/header.css">
-  <link rel="stylesheet" href="styles/voter-cards.css">
-  <link rel="stylesheet" href="styles/footer.css">
-  <link rel="stylesheet" href="styles/election-countdown.css">
-  <link rel="stylesheet" href="styles/sidebar.css">`
+  `<link rel="stylesheet" href="/styles/card-wheel.css">
+  <link rel="stylesheet" href="/styles/content.css">
+  <link rel="stylesheet" href="/styles/general.css">
+  <link rel="stylesheet" href="/styles/header.css">
+  <link rel="stylesheet" href="/styles/voter-cards.css">
+  <link rel="stylesheet" href="/styles/footer.css">
+  <link rel="stylesheet" href="/styles/election-countdown.css">
+  <link rel="stylesheet" href="/styles/sidebar.css">`
 
 document.querySelector('.js-header').innerHTML = `
   <div class="left">
