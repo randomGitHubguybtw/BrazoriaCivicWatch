@@ -114,17 +114,17 @@ const screenOverlay = document.querySelector('.js-screen-overlay');
 const burgers = document.querySelectorAll('.js-burger');
 
 document.addEventListener('click', (event) => {
-  const sidebar = document.querySelector('.js-sidebar');
-  const screenOverlay = document.querySelector('.js-screen-overlay');
-  
-  if (!sidebar || !screenOverlay) return;
-
   if (event.target.classList.contains('js-burger')) {
-    sidebar.classList.toggle('active');
-    screenOverlay.classList.toggle('active');
-  } 
-  
-  else if (event.target.classList.contains('js-screen-overlay')) {
+    const sidebar = document.querySelector('.js-sidebar');
+    const screenOverlay = document.querySelector('.js-screen-overlay');
+    
+    if (sidebar && screenOverlay) {
+      sidebar.classList.toggle('active');
+      screenOverlay.classList.toggle('active');
+    }
+  }
+
+  if (event.target.classList.contains('js-screen-overlay')) {
     sidebar.classList.remove('active');
     screenOverlay.classList.remove('active');
   }
