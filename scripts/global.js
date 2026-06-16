@@ -101,8 +101,7 @@ async function setupMapsAndDistricts(long, lat) {
     locationError(city, null);
   }
 
-  console.log(isd);
-  console.log(city);
+  generateHTML(city, isd);
 }
 
 function locationError(city, isd) {
@@ -110,4 +109,5 @@ function locationError(city, isd) {
   isd = isd || "Brazosport"
   console.log(isd);
   console.log(city);
-}
+};
+
