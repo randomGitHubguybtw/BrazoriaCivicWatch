@@ -41,13 +41,12 @@ a {
 
 @media (prefers-color-scheme: dark) {
   :root {
-  --primary-color: rgb(168, 84, 55);
-  --secondary-color: rgb(94, 112, 85);
-  --sickly-primary: rgb(36, 28, 24);
-  --background-color: rgb(24, 20, 18);
-  --accent-color: rgb(179, 137, 62);
-  --black-text-color: rgb(69, 58, 50);
-  --white-text-color: rgb(224, 218, 208);
-  --card-black-gradient: rgba(0, 0, 0, 0.65);
+  --primary-color: rgb(105, 68, 56);
+  --secondary-color: rgb(78, 89, 73);
+  --sickly-primary: rgb(15, 9, 7);
+  --background-color: rgb(42, 38, 35);
+  --accent-color: rgb(158, 129, 79);
+  --black-text-color: rgb(252, 246, 238);
+  --card-black-gradient: rgba(0, 0, 0, 0.8);
   }
 }
