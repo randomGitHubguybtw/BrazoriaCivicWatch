@@ -22,8 +22,8 @@
   height: 100%;
   width: 110px;
   border-radius: 10px;
-  background-color: rgb(186, 94, 62);
-  border: dashed 3px rgb(201, 155, 73);
+  background-color: var(--primary-color);
+  border: dashed 3px var(--accent-color);
   transition: width 0.2s, opacity 0.15s;
 }
 

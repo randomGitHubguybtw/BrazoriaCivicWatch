@@ -4,6 +4,9 @@ rgb(186, 94, 62)
 Secondary :
 rgb(109, 130, 99)
 
+Sickly Primary :
+rgb(20, 8, 4)
+
 Background :
 rgb(247, 243, 236)
 
@@ -16,5 +19,13 @@ rgb(45, 35, 28)
 White Text :
 rgb(255, 255, 255)
 
+
+DARK MODE:
+
+Background :
+rgb(8, 12, 19)
+
+White Text:
+rgb(247, 243, 236)
 
 

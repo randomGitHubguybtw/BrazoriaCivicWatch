@@ -15,12 +15,12 @@
 }
 
 .seperator {
-  background-color: rgb(109, 130, 99);
+  background-color: var(--secondary-color);
   font-size: 1px;
   height: 15px;
   width: 75vw;
   text-align: center;
-  border: solid 2px rgb(201, 155, 73);
+  border: solid 2px var(--accent-color);
   border-radius: 10px;
   display: block;
 }

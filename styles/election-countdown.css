@@ -10,13 +10,13 @@
   align-items: center;
   margin: 10px 20px 30px 20px;
   height: 120px;
-  background-color: rgb(186, 94, 62);
-  color: rgb(45, 35, 28);
+  background-color: var(--primary-color);
+  color: var(--black-text-color);
   font-size: 55px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-weight: bold;
   border-radius: 20px;
-  border: outset 5px rgb(201, 155, 73);
+  border: outset 5px var(--accent-color);
 }
 
 .election-countdown-text-notifier {

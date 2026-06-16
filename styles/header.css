@@ -1,6 +1,6 @@
 .header {
   display: flex;
-  background-color: rgb(186, 94, 62);
+  background-color: var(--primary-color);
   margin-top: 0;
   margin-left: 0;
   margin-right: 0;
@@ -8,14 +8,14 @@
   height: 45px;
   width: 100%;
   padding-left: 5px;
-  border-bottom: solid 3px rgb(201, 155, 73);
+  border-bottom: solid 3px var(--accent-color);
   justify-content: center;
   overflow: hidden;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 3;
 }
 
 .middle {
@@ -61,7 +61,7 @@
 
 .middle:hover {
   text-decoration: underline;
-  text-decoration-color: rgb(45, 35, 28);
+  text-decoration-color: var(--black-text-color);
 }
 
 .middle a {
@@ -73,11 +73,11 @@
 }
 
 .search-bar {
-  background-color: rgb(109, 130, 99);
-  color: rgb(45, 35, 28);
+  background-color: var(--secondary-color);
+  color: var(--black-text-color);
   border: none;
   height: 93.3%;
-  border: solid 2px rgb(201, 155, 73);
+  border: solid 2px var(--accent-color);
   width: 100%;
   font-size: 16px;
   border-radius: 4px;
@@ -92,8 +92,8 @@
 
 .search-button {
   padding: 0;
-  background-color: rgb(109, 130, 99);
-  border: solid 2px rgb(201, 155, 73);
+  background-color: var(--secondary-color);
+  border: solid 2px var(--accent-color);
   border-radius: 4px;
   margin-right: -2px;
   padding-top: 2px;
@@ -113,7 +113,7 @@
 }
 
 .search-bar::placeholder {
-  color:rgb(45, 35, 28);
+  color: var(--black-text-color);
   font-size: 16px;
 }
 
