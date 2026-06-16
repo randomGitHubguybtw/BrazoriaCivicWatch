@@ -1,7 +1,4 @@
-generateHTML("Brazoria County", "Brazosport ISD");
-
-function generateHTML(startCity, startIsd) {
-  document.head.insertAdjacentHTML('beforeend', `
+document.head.insertAdjacentHTML('beforeend', `
     <link rel="stylesheet" href="styles/card-wheel.css">
     <link rel="stylesheet" href="styles/content.css">
     <link rel="stylesheet" href="styles/general.css">
@@ -11,6 +8,8 @@ function generateHTML(startCity, startIsd) {
     <link rel="stylesheet" href="styles/election-countdown.css">
     <link rel="stylesheet" href="styles/sidebar.css">
   `);
+
+function generateHTML(startCity, startIsd) {
 
   document.querySelector('.js-header').innerHTML = `
     <div class="left">

@@ -17,13 +17,26 @@ document.body.addEventListener('click', (event) => {
 
 
 
-if (!sessionStorage.getItem('isFirstVisit')) {
-    sessionStorage.setItem('isFirstVisit', 'true');
-    if (typeof initializeLocationTracking === "function") {
+const isFirstVisitThisSession = !sessionStorage.getItem('locationTracked');
+
+const navEntries = window.performance?.getEntriesByType("navigation") || [];
+const isReload = navEntries.length > 0 
+    ? navEntries[0].type === "reload" 
+    : window.performance?.navigation?.type === 1;
+
+const isInternalLink = document.referrer.includes(window.location.hostname);
+
+if (isFirstVisitThisSession && !isReload && !isInternalLink) {
+    sessionStorage.setItem('locationTracked', 'true');
+    
+    if (typeof findCoords === "function") {
         findCoords();
+        console.log('did it!')
     } else {
         console.warn("Location tracking function is not defined yet.");
     }
+} else {
+  generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'));
 }
 
 let lat;
@@ -101,12 +114,17 @@ async function setupMapsAndDistricts(long, lat) {
     locationError(city, null);
   }
 
-  generateHTML(city, isd);
+  saveCityAndIsd(city, isd)
 }
 
 function locationError(city, isd) {
   city = city || "BRAZORIA COUNTY"
   isd = isd || "Brazosport"
-  generateHTML(city, isd);
+  saveCityAndIsd(city, isd);
 };
 
+function saveCityAndIsd(startCity, startIsd) {
+  sessionStorage.setItem('city', startCity);
+  sessionStorage.setItem('isd', startIsd);
+    generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'));
+}
