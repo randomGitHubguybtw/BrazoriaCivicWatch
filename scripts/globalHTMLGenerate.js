@@ -1,3 +1,5 @@
+generateHTML("Brazoria County", "Brazosport ISD");
+
 function generateHTML(startCity, startIsd) {
   document.head.insertAdjacentHTML('beforeend', `
     <link rel="stylesheet" href="styles/card-wheel.css">
@@ -98,6 +100,4 @@ function generateHTML(startCity, startIsd) {
             <p class="footer-text js-footer-text">Social Media</p>
         </div>
     </div>`;
-  }
-
-generateHTML("Brazoria County", "Brazosport ISD");
+}

@@ -1,4 +1,4 @@
-document.addEventListener('click', (event) => {
+document.body.addEventListener('click', (event) => {
   const sidebar = document.querySelector('.js-sidebar');
   const screenOverlay = document.querySelector('.js-screen-overlay');
   
@@ -107,7 +107,6 @@ async function setupMapsAndDistricts(long, lat) {
 function locationError(city, isd) {
   city = city || "BRAZORIA COUNTY"
   isd = isd || "Brazosport"
-  console.log(isd);
-  console.log(city);
+  generateHTML(city, isd);
 };
 
