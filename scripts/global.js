@@ -19,7 +19,7 @@ document.body.addEventListener('click', (event) => {
 
 
 
-testCoords(-92.664415, 38.179218);
+findCoords();
 
 let lat;
 let long;
@@ -131,6 +131,8 @@ function saveCityAndIsd(startCity, startIsd, isBarActive) {
   sessionStorage.setItem('city', fixNoun(startCity));
   sessionStorage.setItem('isd', startIsd);
   generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'), isBarActive);
+  console.log(sessionStorage.getItem('city'))
+  console.log(sessionStorage.getItem('isd'))
 }
 
 window.saveCityAndIsd = saveCityAndIsd;

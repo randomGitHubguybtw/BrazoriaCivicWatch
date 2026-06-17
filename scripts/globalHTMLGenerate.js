@@ -28,67 +28,76 @@ function generateHTML(startCity, startIsd, activeButton) {
       <input class="search-bar" type="text" placeholder="Search Any Query...">
     </div>`;
 
-  if (activeButton) {
-    document.querySelector('.js-sidebar-container').classList += activeButton;
+const sidebarContainer = document.querySelector('.js-sidebar-container');
+
+  if (sidebarContainer) {
+    sidebarContainer.innerHTML = `
+      <div class="screen-overlay js-screen-overlay"></div>
+      <div class="sidebar js-sidebar">
+        <div class="dropdown-box js-dropdown-container js-dropdown-box">
+          <input type="text" id="city-search" placeholder="Select your city..." value="${startCity}" autocomplete="off" class="location-dropdown city-dropdown js-city-search js-dropdown-input"></input>
+          <ul id="city-list" class="city-list dropdown-search js-city-list js-dropdown-list">
+            <li class="js-dropdown-item">Alvin</li>
+            <li class="js-dropdown-item">Angleton</li>
+            <li class="js-dropdown-item">Bailey's Prairie</li>
+            <li class="js-dropdown-item">Bonney</li>
+            <li class="js-dropdown-item">Brazoria</li>
+            <li class="js-dropdown-item">Brazoria County</li>
+            <li class="js-dropdown-item">Brookside Village</li>
+            <li class="js-dropdown-item">Clute</li>
+            <li class="js-dropdown-item">Danbury</li>
+            <li class="js-dropdown-item">Freeport</li>
+            <li class="js-dropdown-item">Hillcrest Village</li>
+            <li class="js-dropdown-item">Holiday Lakes</li>
+            <li class="js-dropdown-item">Iowa Colony</li>
+            <li class="js-dropdown-item">Jones Creek</li>
+            <li class="js-dropdown-item">Lake Jackson</li>
+            <li class="js-dropdown-item">Liverpool</li>
+            <li class="js-dropdown-item">Manvel</li>
+            <li class="js-dropdown-item">Oyster Creek</li>
+            <li class="js-dropdown-item">Pearland</li>
+            <li class="js-dropdown-item">Quintana</li>
+            <li class="js-dropdown-item">Richwood</li>
+            <li class="js-dropdown-item">Sandy Point</li>
+            <li class="js-dropdown-item">Surfside</li>
+            <li class="js-dropdown-item">Sweeny</li>
+            <li class="js-dropdown-item">West Columbia</li>
+          </ul>
+        </div>
+        <div class="dropdown-box js-dropdown-box">
+          <input type="text" id="school-search" placeholder="Select your ISD..." value="${startIsd}" autocomplete="off" class="location-dropdown school-dropdown js-isd-search js-dropdown-input"></input>
+          <ul id="school-list" class="school-list dropdown-search js-school-list js-dropdown-list">
+            <li class="js-dropdown-item">Alvin ISD</li>
+            <li class="js-dropdown-item">Angleton ISD</li>
+            <li class="js-dropdown-item">Brazosport ISD</li>
+            <li class="js-dropdown-item">Columbia-Brazoria ISD</li>
+            <li class="js-dropdown-item">Damon ISD</li>
+            <li class="js-dropdown-item">Danbury ISD</li>
+            <li class="js-dropdown-item">Friendswood ISD</li>
+            <li class="js-dropdown-item">Pearland ISD</li>
+            <li class="js-dropdown-item">Sweeny ISD</li>
+          </ul>
+        </div>
+        <button data-target="index.html" class="sidebar-button js-sidebar-button">Home</button>
+        <button class="sidebar-button">Most Recent Meeting</button>
+        <button class="sidebar-button js-sidebar-button">Run For Office</button>
+        <button class="sidebar-button js-sidebar-button">Candidate Interviews</button>
+        <button class="sidebar-button js-sidebar-button">Current Officials</button>
+        <button class="sidebar-button js-sidebar-button">Archive</button>
+        <button class="sidebar-button js-sidebar-button">Meeting Information</button>
+        <button class="sidebar-button js-sidebar-button">Government Websites</button>
+        <button class="sidebar-button js-sidebar-button">Register to Vote</button>
+        <button class="sidebar-button js-sidebar-button">Public Places</button>
+      </div>`;
+
+    if (activeButton) {
+      const sidebar = sidebarContainer.querySelector('.js-sidebar');
+      const overlay = sidebarContainer.querySelector('.js-screen-overlay');
+      
+      if (sidebar) sidebar.classList.add(activeButton);
+      if (overlay) overlay.classList.add(activeButton);
+    }
   }
-  document.querySelector('.js-sidebar-container').innerHTML = `
-    <div class="screen-overlay js-screen-overlay"></div>
-    <div class="sidebar js-sidebar">
-      <div class="dropdown-box js-dropdown-container, js-dropdown-box">
-        <input type="text" id="city-search" placeholder="Select your city..." value="${startCity}" autocomplete="off" class="location-dropdown city-dropdown js-city-search js-dropdown-input"></input>
-        <ul id="city-list" class="city-list dropdown-search js-city-list js-dropdown-list">
-          <li class="js-dropdown-item">Alvin</li>
-          <li class="js-dropdown-item">Angleton</li>
-          <li class="js-dropdown-item">Bailey's Prairie</li>
-          <li class="js-dropdown-item">Bonney</li>
-          <li class="js-dropdown-item">Brazoria</li>
-          <li class="js-dropdown-item">Brazoria County</li>
-          <li class="js-dropdown-item">Brookside Village</li>
-          <li class="js-dropdown-item">Clute</li>
-          <li class="js-dropdown-item">Danbury</li>
-          <li class="js-dropdown-item">Freeport</li>
-          <li class="js-dropdown-item">Hillcrest Village</li>
-          <li class="js-dropdown-item">Holiday Lakes</li>
-          <li class="js-dropdown-item">Iowa Colony</li>
-          <li class="js-dropdown-item">Jones Creek</li>
-          <li class="js-dropdown-item">Lake Jackson</li>
-          <li class="js-dropdown-item">Liverpool</li>
-          <li class="js-dropdown-item">Manvel</li>
-          <li class="js-dropdown-item">Oyster Creek</li>
-          <li class="js-dropdown-item">Pearland</li>
-          <li class="js-dropdown-item">Quintana</li>
-          <li class="js-dropdown-item">Richwood</li>
-          <li class="js-dropdown-item">Sandy Point</li>
-          <li class="js-dropdown-item">Surfside</li>
-          <li class="js-dropdown-item">Sweeny</li>
-          <li class="js-dropdown-item">West Columbia</li>
-        </ul>
-      </div>
-      <div class="dropdown-box js-dropdown-box">
-        <input type="text" id="school-search" placeholder="Select your ISD..." value="${startIsd}" autocomplete="off" class="location-dropdown school-dropdown js-isd-search js-dropdown-input"></input>
-        <ul id="school-list" class="school-list dropdown-search js-school-list js-dropdown-list">
-          <li class="js-dropdown-item">Alvin ISD</li>
-          <li class="js-dropdown-item">Angleton ISD</li>
-          <li class="js-dropdown-item">Brazosport ISD</li>
-          <li class="js-dropdown-item">Columbia-Brazoria ISD</li>
-          <li class="js-dropdown-item">Damon ISD</li>
-          <li class="js-dropdown-item">Danbury ISD</li>
-          <li class="js-dropdown-item">Friendswood ISD</li>
-          <li class="js-dropdown-item">Pearland ISD</li>
-          <li class="js-dropdown-item">Sweeny ISD</li>
-        </ul>
-      </div>
-      <button data-target="index.html" class="sidebar-button js-sidebar-button">Home</button>
-      <button class="sidebar-button">Most Recent Meeting</button>
-      <button class="sidebar-button js-sidebar-button">Run For Office</button>
-      <button class="sidebar-button js-sidebar-button">Candidate Interviews</button>
-      <button class="sidebar-button js-sidebar-button">Current Officials</button>
-      <button class="sidebar-button js-sidebar-button">Archive</button>
-      <button class="sidebar-button js-sidebar-button">Meeting Information</button>
-      <button class="sidebar-button js-sidebar-button">Government Websites</button>
-      <button class="sidebar-button js-sidebar-button">Register to Vote</button>
-      <button class="sidebar-button js-sidebar-button">Public Places</button>
-    </div>`;
 
   document.querySelector('.js-footer').innerHTML = `
     <div class="horizontal-container">
