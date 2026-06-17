@@ -1,3 +1,5 @@
+import { fixNoun } from "./utils/fixNoun.js";
+
 document.body.addEventListener('click', (event) => {
   const sidebar = document.querySelector('.js-sidebar');
   const screenOverlay = document.querySelector('.js-screen-overlay');
@@ -9,38 +11,15 @@ document.body.addEventListener('click', (event) => {
     screenOverlay.classList.toggle('active');
   }
 
-  if (event.target.classList.contains('js-screen-overlay')) {
+  if (event.target.classList.contains('js-screen-overlay') && !event.target.classList.contains('js-dropdown-item')) {
     sidebar.classList.remove('active');
     screenOverlay.classList.remove('active');
   }
 });
 
 
-/*
-const isFirstVisitThisSession = !sessionStorage.getItem('locationTracked');
 
-const navEntries = window.performance?.getEntriesByType("navigation") || [];
-const isReload = navEntries.length > 0 
-    ? navEntries[0].type === "reload" 
-    : window.performance?.navigation?.type === 1;
-
-const isInternalLink = document.referrer.includes(window.location.hostname);
-
-if (isFirstVisitThisSession && !isReload && !isInternalLink) {
-    sessionStorage.setItem('locationTracked', 'true');
-    
-    if (typeof findCoords === "function") {
-        findCoords();
-        console.log('did it!')
-    } else {
-        console.warn("Location tracking function is not defined yet.");
-    }
-} else {
-  generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'));
-}
-  */
-
-findCoords()
+findCoords();
 
 let lat;
 let long;
@@ -68,17 +47,21 @@ function testCoords(long, lat) {
 }
 
 function findCoords() {
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition( async position => {
-      lat = position.coords.latitude;
-      long = position.coords.longitude;
-      await initJSON();
-      setupMapsAndDistricts(long, lat);
-    },
-      async error => {
-        locationError();
-      });
-  }
+  if(sessionStorage.getItem('city') && sessionStorage.getItem('isd')) {
+    saveCityAndIsd(sessionStorage.getItem('city'), sessionStorage.getItem('isd'))
+  } else {
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition( async position => {
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+        await initJSON();
+        setupMapsAndDistricts(long, lat);
+      },
+        async error => {
+          locationError();
+        });
+    }
+}
 }
 
 async function setupMapsAndDistricts(long, lat) {
@@ -134,12 +117,14 @@ async function setupMapsAndDistricts(long, lat) {
 
 function locationError(city, isd) {
   city = city || "BRAZORIA COUNTY"
-  isd = isd || "Brazosport"
+  isd = isd || "Brazosport ISD"
   saveCityAndIsd(city, isd);
 };
 
-function saveCityAndIsd(startCity, startIsd) {
-  sessionStorage.setItem('city', startCity);
+function saveCityAndIsd(startCity, startIsd, isBarActive) {
+  sessionStorage.setItem('city', fixNoun(startCity));
   sessionStorage.setItem('isd', startIsd);
-  generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'));
+  generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'), isBarActive);
 }
+
+window.saveCityAndIsd = saveCityAndIsd;

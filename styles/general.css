@@ -1,3 +1,9 @@
+html {
+  scrollbar-color: var(--primary-color) var(--sickly-primary);
+  scrollbar-width: auto;
+  scroll-behavior: smooth;
+}
+
 body {
   position: relative;
   font-family: arial;

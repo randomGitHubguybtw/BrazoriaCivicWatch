@@ -9,7 +9,7 @@ document.head.insertAdjacentHTML('beforeend', `
     <link rel="stylesheet" href="styles/sidebar.css">
   `);
 
-function generateHTML(startCity, startIsd) {
+function generateHTML(startCity, startIsd, activeButton) {
 
   document.querySelector('.js-header').innerHTML = `
     <div class="left">
@@ -27,6 +27,9 @@ function generateHTML(startCity, startIsd) {
       <input class="search-bar" type="text" placeholder="Search Any Query...">
     </div>`;
 
+  if (activeButton) {
+    document.querySelector('.js-sidebar-container').classList += activeButton;
+  }
   document.querySelector('.js-sidebar-container').innerHTML = `
     <div class="screen-overlay js-screen-overlay"></div>
     <div class="sidebar js-sidebar">
@@ -61,7 +64,7 @@ function generateHTML(startCity, startIsd) {
         </ul>
       </div>
       <div class="dropdown-box js-dropdown-box">
-        <input type="text" id="school-search" placeholder="Select your ISD..." value="${startIsd}" autocomplete="off" class="location-dropdown school-dropdown js-school-search js-dropdown-input"></input>
+        <input type="text" id="school-search" placeholder="Select your ISD..." value="${startIsd}" autocomplete="off" class="location-dropdown school-dropdown js-isd-search js-dropdown-input"></input>
         <ul id="school-list" class="school-list dropdown-search js-school-list js-dropdown-list">
           <li class="js-dropdown-item">Alvin ISD</li>
           <li class="js-dropdown-item">Angleton ISD</li>
