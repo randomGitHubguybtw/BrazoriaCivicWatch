@@ -125,7 +125,7 @@ function saveCityAndIsd(startCity, startIsd, isBarActive) {
   if (startCity === 'CITY OF ALVIN') {
     startCity = 'ALVIN'
   }
-  if (startIsd = "ALVIN ISD; 2018 BOUNDARY ADJ. SPL  AND SAL ISD's") {
+  if (startIsd = "ALVIN ISD; 2018 BOUNDARY ADJ. SPL  AND SAL ISD'S") {
     startIsd = 'Alvin ISD'
   }
   sessionStorage.setItem('city', fixNoun(startCity));
