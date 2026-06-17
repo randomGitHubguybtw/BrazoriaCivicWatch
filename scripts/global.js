@@ -19,7 +19,7 @@ document.body.addEventListener('click', (event) => {
 
 
 
-findCoords();
+testCoords(-92.664415, 38.179218);
 
 let lat;
 let long;
@@ -125,7 +125,7 @@ function saveCityAndIsd(startCity, startIsd, isBarActive) {
   if (startCity === 'CITY OF ALVIN') {
     startCity = 'ALVIN'
   }
-  if (startIsd = "ALVIN ISD; 2018 BOUNDARY ADJ. SPL  AND SAL ISD'S") {
+  if (startIsd === "ALVIN ISD; 2018 BOUNDARY ADJ. SPL  AND SAL ISD'S") {
     startIsd = 'Alvin ISD'
   }
   sessionStorage.setItem('city', fixNoun(startCity));

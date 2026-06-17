@@ -10,6 +10,7 @@ document.head.insertAdjacentHTML('beforeend', `
   `);
 
 function generateHTML(startCity, startIsd, activeButton) {
+  console.log('hi')
 
   document.querySelector('.js-header').innerHTML = `
     <div class="left">
@@ -33,7 +34,7 @@ function generateHTML(startCity, startIsd, activeButton) {
   document.querySelector('.js-sidebar-container').innerHTML = `
     <div class="screen-overlay js-screen-overlay"></div>
     <div class="sidebar js-sidebar">
-      <div class="dropdown-box js-dropdown-box">
+      <div class="dropdown-box js-dropdown-container, js-dropdown-box">
         <input type="text" id="city-search" placeholder="Select your city..." value="${startCity}" autocomplete="off" class="location-dropdown city-dropdown js-city-search js-dropdown-input"></input>
         <ul id="city-list" class="city-list dropdown-search js-city-list js-dropdown-list">
           <li class="js-dropdown-item">Alvin</li>
