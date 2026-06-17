@@ -1,10 +1,24 @@
-document.body.addEventListener('click', (event) => {
-  
-  const routeTarget = event.target.closest('.js-div-button, .js-sidebar-button, .js-footer-text, button');
+import { saveCityAndIsd } from './locationStore.js';
+import { generateHTML } from './globalHTMLGenerate.js';
 
+document.body.addEventListener('click', (event) => {
+  const sidebar = document.querySelector('.js-sidebar');
+  const screenOverlay = document.querySelector('.js-screen-overlay');
+  
+  if (event.target.closest('.js-burger') || event.target.classList.contains('js-burger')) {
+    if (sidebar) sidebar.classList.toggle('active');
+    if (screenOverlay) screenOverlay.classList.toggle('active');
+    return;
+  }
+
+  if (event.target.classList.contains('js-screen-overlay') && !event.target.closest('.js-dropdown-item')) {
+    if (sidebar) sidebar.classList.remove('active');
+    if (screenOverlay) screenOverlay.classList.remove('active');
+  }
+
+  const routeTarget = event.target.closest('.js-div-button, .js-sidebar-button, .js-footer-text, button');
   if (!routeTarget) return;
   if (routeTarget.classList.contains('js-search-button')) return;
-  
 
   const destination = routeTarget.dataset.target || routeTarget.getAttribute('href');
 
@@ -15,7 +29,6 @@ document.body.addEventListener('click', (event) => {
     window.location.href = "webpages/construction.html";
   }
 });
-
 
 const observer = new MutationObserver((mutationsList) => {
   for (const mutation of mutationsList) {
@@ -41,7 +54,6 @@ document.querySelectorAll('.js-dropdown-input:not([readonly])').forEach(input =>
 });
 
 document.addEventListener('click', (e) => {
-  
   const clickedInput = e.target.closest('.js-dropdown-input');
   if (clickedInput) {
     closeAllDropdowns(clickedInput); 
@@ -103,14 +115,12 @@ document.addEventListener('keydown', (e) => {
       
       if (visibleOption) {
         e.target.value = visibleOption.textContent;
-        
         closeAllDropdowns();
         triggerSave();
       }
     }
   }
 });
-
 
 function closeAllDropdowns(exceptInput = null) {
   document.querySelectorAll('.js-dropdown-box').forEach(box => {
@@ -135,9 +145,7 @@ function triggerSave() {
   const city = cityInput ? cityInput.value : '';
   const isd = isdInput ? isdInput.value : '';
 
-  if (typeof window.saveCityAndIsd === 'function') {
-    window.saveCityAndIsd(city, isd, 'active');
-  } else {
-    saveCityAndIsd(city, isd, 'active'); 
-  }
+  const updatedData = saveCityAndIsd(city, isd);
+
+  generateHTML(updatedData.city, updatedData.isd, 'active'); 
 }

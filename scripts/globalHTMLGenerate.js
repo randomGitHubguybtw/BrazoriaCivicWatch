@@ -1,3 +1,5 @@
+import { locationDataReady } from './locationStore.js';
+
 document.head.insertAdjacentHTML('beforeend', `
     <link rel="stylesheet" href="styles/card-wheel.css">
     <link rel="stylesheet" href="styles/content.css">
@@ -9,8 +11,8 @@ document.head.insertAdjacentHTML('beforeend', `
     <link rel="stylesheet" href="styles/sidebar.css">
   `);
 
-function generateHTML(startCity, startIsd, activeButton) {
-  console.log('hi')
+export function generateHTML(startCity, startIsd, activeButton) {
+  console.log('Generating HTML for:', startCity, startIsd);
 
   document.querySelector('.js-header').innerHTML = `
     <div class="left">
@@ -113,3 +115,7 @@ const sidebarContainer = document.querySelector('.js-sidebar-container');
         </div>
     </div>`;
 }
+
+const { city, isd } = await locationDataReady;
+
+generateHTML(city, isd);
