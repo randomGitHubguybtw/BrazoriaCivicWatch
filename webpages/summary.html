@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-
-<!DOCTYPE html>
-<html>
-
   <head>
     <base href="../../">
 
@@ -25,13 +20,48 @@
 
     <div class="sidebar-container js-sidebar-container"></div>
 
-  <p>Come back soon for our very first Lake Jackson summary!</p>
+    <div class="title">
+      <picture>
+          <source srcset="icons/SummaryCivicWatchTitleDarkMode.png" media="(prefers-color-scheme: dark)">
+          <img style="object-position: 45% 55%; height: 225px; margin-top: 10px;" class="title-graphic" src="icons/SummaryCivicWatchTitle.png" alt="Brazoria Civic Watch Logo">
+      </picture>
+    </div>
+    
+    <div class="summary">
+      <div class="summary-title js-summary-title"><p class="js-town">MeetingDyba</p><p class="js-title-date">YY-MM-DD</p></div>
+      <div class="separator-container">
+          <div class="seperator">
+            
+          </div>
+        </div>
+      <div class="summary-text summary js-summary">There doesn't seem to be any summary here... yet! <a class="default-link">Volunteer to Help!</a></div>
+      <div class="separator-container">
+          <div class="seperator">
+            
+          </div>
+        </div>
+      <div><p>Transcription:</p>&bdquo;<p class="summary-text transcription js-transcription" >-Missing Transcription-</p>&bdquo;</div>
+      <div class="summary-text transcription-link js-transcription-link"><a class="default-link">transcriptionsource.org</a></div>
+      <div class="separator-container">
+          <div class="seperator">
+            
+          </div>
+        </div>
+      <div class="extra-info js-extra-info">
+        <div class="summary-text absent-list js-absent-list">Absentees: <p class="js-absentees absentees">None</p> </div>
+      </div>
+    </div>
 
   <div class="footer js-footer"></div>
 
+  <!--External Libraries-->
   <script src="importedJS/turf.min.js" defer></script>
 
+  <!--Data-->
+  <script type="module" src="scripts/utils/fixNoun.js"></script>
   <script type="module" src="scripts/locationStore.js"></script>
+
+  <!--Globals-->
   <script type="module" src="scripts/globalHTMLGenerate.js"></script>
   <script type="module" src="scripts/globalButtons.js"></script>
 

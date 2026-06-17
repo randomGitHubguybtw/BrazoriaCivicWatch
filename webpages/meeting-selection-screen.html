@@ -21,22 +21,9 @@
   </head>
   <body style="display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0">
 
-    <div class="header">
-            <div class="left">
-              <div class="drop-down-burger">
-               <img class="burger" src="icons/hamburger-menu.svg">
-               </div>
-            </div>
-            <div class="middle">
-                <a href="index.html"><p class="mission"> Keeping Brazoria easy to access and accountable since 2026</p></a>
-            </div>
-            <div class="right">
-              <button class="search-button">
-                <img class="search-icon" src="icons/Brazoria Civic Watch Logo Black.png">
-              </button>
-              <input class="search-bar" type="text" placeholder="Search Any Query...">
-            </div>
-        </div>
+    <div class="header js-header"></div>
+
+    <div class="sidebar-container js-sidebar-container"></div>
     
     <div class="separator-container"> 
           <div class="seperator">
@@ -45,26 +32,22 @@
      </div>
 
       <div class="meeting-selection-cards">
-        <a href="webpages/summaries/clute-summary.html">
-            <div class="card-container">
+            <div data-target="webpages/summary.html" data-cityorisd="city" class="card-container js-div-button">
                 <img class="card-photo" src="card-photos/register-to-vote.png">
                 <div class="card-overlay">
                     <div class="meeting-card-text">
-                        Clute City Council
+                        City Council
                     </div>
                 </div>
             </div>
-          </a>
-          <a href="webpages/summaries/lake-jackson-summary.html">
-            <div class="card-container">
+            <div data-target="webpages/summary.html" data-cityorisd="isd" class="card-container js-div-button">
                 <img class="card-photo" src="card-photos/public-place-locations.png">
                 <div class="card-overlay">
                     <div class="meeting-card-text">
-                        Lake Jackson City Council
+                        ISD School Board
                     </div>
                 </div>
             </div>
-          </a>
     </div>
 
     <div class="separator-container">
@@ -73,28 +56,16 @@
           </div>
      </div>
 
-     <div class="footer">
-            <div class="horizontal-container">
-                <div class="vertical-container">
-                    <p class="footer-text">About Us</p>
-                    <p class="footer-text">Change Your City</p>
-                    <p class="footer-text">Contact Us</p>
-                </div>
-                <div class="vertical-container">
-                    <p class="footer-text">FAQ</p>
-                    <p class="footer-text">Get Involved</p>
-                    <p class="footer-text">Social Media</p>
-                </div>
-            </div>
+     <div class="footer js-footer"></div>
 
-            <script>
-                 document.querySelectorAll(".footer-text").forEach(b => b.outerHTML = `<a href="webpages/construction.html">${b.outerHTML}</a>`);
-            </script>
-        </div>
-
+    <!--External Libraries-->
     <script src="importedJS/turf.min.js" defer></script>
 
+    <!--Data-->
+    <script type="module" src="scripts/utils/fixNoun.js"></script>
     <script type="module" src="scripts/locationStore.js"></script>
+
+    <!--Globals-->
     <script type="module" src="scripts/globalHTMLGenerate.js"></script>
     <script type="module" src="scripts/globalButtons.js"></script>
 

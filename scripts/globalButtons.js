@@ -1,5 +1,6 @@
 import { saveCityAndIsd } from './locationStore.js';
 import { generateHTML } from './globalHTMLGenerate.js';
+import{ runSummary } from './globalSummaries.js';
 
 document.body.addEventListener('click', (event) => {
   const sidebar = document.querySelector('.js-sidebar');
@@ -21,8 +22,12 @@ document.body.addEventListener('click', (event) => {
   if (routeTarget.classList.contains('js-search-button')) return;
 
   const destination = routeTarget.dataset.target || routeTarget.getAttribute('href');
+  const meeting = routeTarget.dataset.cityorisd;
 
-  if (destination) {
+  if(destination === 'webpages/summary.html') {
+    renderSummaryPage(new Date(), meeting);
+    window.location.href = destination;
+  } else if (destination) {
     window.location.href = destination;
   } else {
     event.preventDefault();
@@ -80,7 +85,7 @@ document.addEventListener('click', (e) => {
     input.value = clickedItem.textContent;
     
     closeAllDropdowns();
-    triggerSave();
+    triggerSave(clickedItem.textContent);
     return;
   }
 
@@ -116,7 +121,7 @@ document.addEventListener('keydown', (e) => {
       if (visibleOption) {
         e.target.value = visibleOption.textContent;
         closeAllDropdowns();
-        triggerSave();
+        triggerSave(visibleOption.textContent);
       }
     }
   }
@@ -138,7 +143,7 @@ function closeAllDropdowns(exceptInput = null) {
   });
 }
 
-function triggerSave() {
+function triggerSave(meetingType) {
   const cityInput = document.querySelector('.js-city-search');
   const isdInput = document.querySelector('.js-isd-search');
 
@@ -146,6 +151,17 @@ function triggerSave() {
   const isd = isdInput ? isdInput.value : '';
 
   const updatedData = saveCityAndIsd(city, isd);
+  const meetingDecide = meetingType.includes("ISD") ? 'isd' : 'city'
 
   generateHTML(updatedData.city, updatedData.isd, 'active'); 
+  if (window.location.pathname === "/webpages/summary.html") {
+    renderSummaryPage(new Date(), meetingDecide);
+    window.location.href = "webpages/summary.html";
+  }
+}
+
+function renderSummaryPage(targetDate, cityOrIsd) {
+  sessionStorage.setItem('triggerSummary', 'true');
+  sessionStorage.setItem('cityOrIsd', cityOrIsd);
+  sessionStorage.setItem('targetDate', targetDate.toISOString());
 }
