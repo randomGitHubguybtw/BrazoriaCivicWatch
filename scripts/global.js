@@ -122,6 +122,12 @@ function locationError(city, isd) {
 };
 
 function saveCityAndIsd(startCity, startIsd, isBarActive) {
+  if (startCity === 'CITY OF ALVIN') {
+    startCity = 'ALVIN'
+  }
+  if (startIsd = "ALVIN ISD; 2018 BOUNDARY ADJ. SPL  AND SAL ISD's") {
+    startIsd = 'Alvin ISD'
+  }
   sessionStorage.setItem('city', fixNoun(startCity));
   sessionStorage.setItem('isd', startIsd);
   generateHTML(sessionStorage.getItem('city'), sessionStorage.getItem('isd'), isBarActive);
