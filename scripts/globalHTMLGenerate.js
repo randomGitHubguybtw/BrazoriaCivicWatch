@@ -10,6 +10,7 @@ document.head.insertAdjacentHTML('beforeend', `
     <link rel="stylesheet" href="styles/election-countdown.css">
     <link rel="stylesheet" href="styles/sidebar.css">
     <link rel="stylesheet" href="styles/summary-page.css">
+    <link rel="stylesheet" href="styles/archive.css">
   `);
 
 export function generateHTML(startCity, startIsd, activeButton) {
@@ -86,7 +87,7 @@ const sidebarContainer = document.querySelector('.js-sidebar-container');
         <button class="sidebar-button js-sidebar-button">Run For Office</button>
         <button class="sidebar-button js-sidebar-button">Candidate Interviews</button>
         <button class="sidebar-button js-sidebar-button">Current Officials</button>
-        <button class="sidebar-button js-sidebar-button">Archive</button>
+        <button data-target="webpages/archive.html" class="sidebar-button js-sidebar-button">Archive</button>
         <button class="sidebar-button js-sidebar-button">Meeting Information</button>
         <button class="sidebar-button js-sidebar-button">Government Websites</button>
         <button class="sidebar-button js-sidebar-button">Register to Vote</button>

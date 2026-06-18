@@ -1,6 +1,7 @@
 import { saveCityAndIsd } from './locationStore.js';
 import { generateHTML } from './globalHTMLGenerate.js';
 import{ runSummary } from './globalSummaries.js';
+import{ renderSearch } from './globalArchive.js'
 
 document.body.addEventListener('click', (event) => {
   const sidebar = document.querySelector('.js-sidebar');
@@ -23,9 +24,10 @@ document.body.addEventListener('click', (event) => {
 
   const destination = routeTarget.dataset.target || routeTarget.getAttribute('href');
   const meeting = routeTarget.dataset.cityorisd;
+  const targetDateData = routeTarget.dataset.targetdate ? new Date(routeTarget.dataset.targetdate) : new Date();
 
   if(destination === 'webpages/summary.html') {
-    renderSummaryPage(new Date(), meeting);
+    renderSummaryPage(targetDateData, meeting);
     window.location.href = destination;
   } else if (destination) {
     window.location.href = destination;
@@ -157,6 +159,9 @@ function triggerSave(meetingType) {
   if (window.location.pathname === "/webpages/summary.html") {
     renderSummaryPage(new Date(), meetingDecide);
     window.location.href = "webpages/summary.html";
+  }
+  if (window.location.pathname === "/webpages/archive.html") {
+    renderSearch();
   }
 }
 

@@ -76,4 +76,5 @@
   text-overflow: ellipsis;
   overflow: hidden;
   user-select: none;
+  color: var(--white-text-color);
 }

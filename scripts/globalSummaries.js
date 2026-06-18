@@ -1,5 +1,6 @@
 import { locationDataReady } from './locationStore.js';
 import { masterSummaries } from '../data/summaries.js';
+import { fixDate } from './utils/fixDate.js';
 
 const { city, isd } = await locationDataReady; 
 
@@ -15,12 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export function runSummary(targetDate, targetMeeting) {
+  const summaryContainer = document.querySelector('.js-summary'); 
+  
+  if (!summaryContainer) return; 
+
+  const townTitle = document.querySelector('.js-town');
   const currentCity = sessionStorage.getItem('city');
   const currentIsd = sessionStorage.getItem('isd');
   const areaList = [];
-
-  const summaryContainer = document.querySelector('.js-summary'); 
-  const townTitle = document.querySelector('.js-town');
   const dateTitle = document.querySelector('.js-title-date');
   const transcription = document.querySelector('.js-transcription');
   const transcriptionLink = document.querySelector('.js-transcription-link');
@@ -67,7 +70,7 @@ export function runSummary(targetDate, targetMeeting) {
 
   if (summaryContainer && targetSummary) {
     summaryContainer.innerHTML = targetSummary.summary;
-    dateTitle.innerHTML = targetSummary.date;
+    dateTitle.innerHTML = fixDate(targetSummary.date);
     transcription.innerHTML = targetSummary.transcription;
     transcriptionLink.innerHTML = targetSummary.transcriptionLink;
     absentees.innerHTML = targetSummary.absentees;

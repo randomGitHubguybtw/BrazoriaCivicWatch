@@ -36,7 +36,7 @@ export const masterSummaries = [
     city: "Brazoria County",
     date: "2026-05-22",
     summary: "Here -------- we are ==== earlyy",
-    transcription: "What do we even do?? What does it even mean to be the county?",
+    transcription: "'1st' (nerd emoji) (pointing up emoji) (get it? yuk yuk cause this meeitng is earlier than the last one)",
     transcriptionLink: "https://www.youtube.com/",
     absentees: ["John", "Adams"]
   }, {

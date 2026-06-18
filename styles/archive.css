@@ -1,0 +1,65 @@
+.archive-search-container {
+  display: flex;
+  justify-content: center;
+}
+
+.archive-search {
+  width: 75vw;
+  height: 4vh;
+  margin-top: -10px;
+  background-color: var(--primary-color);
+  border: solid var(--secondary-color);
+  padding-left: 5px;
+  color: var(--black-text-color);
+}
+
+.archive-search::placeholder {
+  color: var(--black-text-color);
+  opacity: 60%;
+}
+
+.search-results {
+  margin-top: 15px;
+  border: solid 3px var(--secondary-color);
+  overflow: hidden;
+}
+
+.result {
+  background-color: var(--primary-color);
+  padding: 10px;
+  border: dashed 1px var(--accent-color);
+  display: inline-block;
+  width: 98.55%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: dashed 1px var(--accent-color);
+  width: 100%;
+  cursor: pointer;
+}
+
+.date {
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.result:hover {
+  opacity: 80%;
+}
+
+.preview {
+  opacity: 40%;
+  font-size: 12px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
