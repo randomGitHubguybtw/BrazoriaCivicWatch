@@ -20,7 +20,7 @@
 
 .voter-button {
   height: 100%;
-  width: 110px;
+  width: 25vw;
   border-radius: 10px;
   background-color: var(--primary-color);
   border: dashed 3px var(--accent-color);
@@ -28,7 +28,7 @@
 }
 
 .voter-button:hover {
-  width: 210px;
+  width: 33vw;
   cursor: pointer;
 }
 
