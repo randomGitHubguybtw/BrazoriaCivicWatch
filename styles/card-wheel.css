@@ -37,7 +37,7 @@
 
 .card-overlay {
   background-color: black;
-  background: linear-gradient(to top, var(--card-black-gradient), rgba(0, 0, 0, 1));
+  background: linear-gradient(to top, var(--card-black-gradient), rgba(0, 0, 0, 0.8));
   position: absolute;
   top: 0px;
   left: 0px;
