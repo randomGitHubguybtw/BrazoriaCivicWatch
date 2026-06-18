@@ -4,16 +4,27 @@ import { fixDate } from './utils/fixDate.js';
 
 const { city, isd } = await locationDataReady; 
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (sessionStorage.getItem('triggerSummary') === 'true') {
-    
-    const targetDateStr = sessionStorage.getItem('targetDate');
-    const targetDate = new Date(targetDateStr); 
-    const targetMeeting = sessionStorage.getItem('cityOrIsd');
+function initSummary() {
+  let targetDate;
+  let targetMeeting;
 
-    runSummary(targetDate, targetMeeting);
+  if (sessionStorage.getItem('triggerSummary') === 'true') {
+    const targetDateStr = sessionStorage.getItem('targetDate');
+    targetDate = targetDateStr ? new Date(targetDateStr) : new Date(); 
+    targetMeeting = sessionStorage.getItem('cityOrIsd');
+  } else {
+    targetDate = new Date();
+    targetMeeting = sessionStorage.getItem('cityOrIsd') || 'city';
   }
-});
+
+  runSummary(targetDate, targetMeeting);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSummary);
+} else {
+  initSummary();
+}
 
 export function runSummary(targetDate, targetMeeting) {
   const summaryContainer = document.querySelector('.js-summary'); 
