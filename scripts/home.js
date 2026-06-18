@@ -3,7 +3,7 @@ const targetDate = new Date('2026-11-03T00:00:00').getTime();
 const countdownElement = document.querySelector('.js-election-countdown');
 
 const timeInterval = setInterval(() => {
-  const now = new Date().getTime();
+    const now = new Date().getTime();
     const distance = targetDate - now;
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -14,7 +14,7 @@ const timeInterval = setInterval(() => {
     countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
     if (distance < 0) {
-        clearInterval(timerInterval);
+        clearInterval(timeInterval);
         countdownElement.innerHTML = "Go Vote!";
     }
 }, 1000);
@@ -28,61 +28,78 @@ document.addEventListener('DOMContentLoaded', () => {
     let startX = 0;
     let endX = 0;
     let isDragging = false;
+    let actionQueue = [];
 
-    // Sets up infinite loop visually by moving the last card to the front
     wheel.prepend(wheel.lastElementChild);
 
     const getScrollAmount = () => {
         const card = wheel.querySelector('.card-container');
-        return card.offsetWidth + 15; // Width of card + the CSS gap
+        return card.offsetWidth + 15;
     };
 
-    // Button / Slide Logic
-    const slideNext = () => {
-        if (isAnimating) return;
+    const processQueue = () => {
+        if (isAnimating || actionQueue.length === 0) return;
         isAnimating = true;
         
+        const action = actionQueue.shift();
         const shiftAmount = getScrollAmount();
         
-        wheel.style.transition = 'transform 0.3s ease';
-        wheel.style.transform = `translateX(-${shiftAmount}px)`;
-        
-        setTimeout(() => {
+        const duration = Math.max(50, 150 - (actionQueue.length * 30));
+
+        if (action === 'next') {
+            wheel.style.transition = `transform ${duration}ms ease`;
+            wheel.style.transform = `translateX(-${shiftAmount}px)`;
+            
+            setTimeout(() => {
+                wheel.style.transition = 'none';
+                wheel.appendChild(wheel.firstElementChild);
+                wheel.style.transform = 'translateX(0)';
+                isAnimating = false;
+                processQueue();
+            }, duration);
+        } else if (action === 'prev') {
             wheel.style.transition = 'none';
-            wheel.appendChild(wheel.firstElementChild);
+            wheel.prepend(wheel.lastElementChild);
+            wheel.style.transform = `translateX(-${shiftAmount}px)`;
+            
+            void wheel.offsetWidth;
+            
+            wheel.style.transition = `transform ${duration}ms ease`;
             wheel.style.transform = 'translateX(0)';
-            isAnimating = false;
-        }, 300);
+            
+            setTimeout(() => {
+                isAnimating = false;
+                processQueue();
+            }, duration);
+        }
     };
 
-    const slidePrev = () => {
-        if (isAnimating) return;
-        isAnimating = true;
-        
-        const shiftAmount = getScrollAmount();
-        
-        wheel.style.transition = 'none';
-        wheel.prepend(wheel.lastElementChild);
-        wheel.style.transform = `translateX(-${shiftAmount}px)`;
-        
-        void wheel.offsetWidth; // Force CSS refresh
-        
-        wheel.style.transition = 'transform 0.3s ease';
-        wheel.style.transform = 'translateX(0)';
-        
-        setTimeout(() => {
-            isAnimating = false;
-        }, 300);
+    const queueNext = () => {
+        if (actionQueue.length < 5) actionQueue.push('next');
+        processQueue();
     };
 
-    nextBtn.addEventListener('click', slideNext);
-    prevBtn.addEventListener('click', slidePrev);
+    const queuePrev = () => {
+        if (actionQueue.length < 5) actionQueue.push('prev');
+        processQueue();
+    };
 
-    // Swipe & Drag Logic
+    nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        queueNext();
+    });
+
+    prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        queuePrev();
+    });
+
     const handleDragStart = (e) => {
         isDragging = true;
         startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        endX = startX; // Reset to prevent stale values blocking clicks
+        endX = startX;
     };
 
     const handleDragEnd = (e) => {
@@ -92,21 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
         endX = e.type.includes('touch') ? e.changedTouches[0].clientX : e.clientX;
         const diff = startX - endX;
         
-        // Threshold for a swipe to trigger
         if (diff > 50) {
-            slideNext();
+            queueNext();
         } else if (diff < -50) {
-            slidePrev();
+            queuePrev();
         }
     };
 
-    // Prevent accidental link clicks ONLY if the user was intentionally dragging/swiping
     wheel.addEventListener('click', (e) => {
         if (Math.abs(startX - endX) > 10) {
             e.preventDefault();
+            e.stopPropagation();
         }
     });
-
 
     wheel.addEventListener('mousedown', handleDragStart);
     window.addEventListener('mouseup', handleDragEnd);

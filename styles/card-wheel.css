@@ -5,6 +5,10 @@
   margin: 0 auto;
   padding: 20px 50px; 
   box-sizing: border-box;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .carousel-view {
