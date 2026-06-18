@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html>
-
     <head>
-
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <meta property="og:title" content="Brazoria Civic Watch Homepage" />
         <meta property="og:image" content="icons/BrazoriaCivicWatchLinkPreview.png" />
-        <metaa name="thumbnail" content="icons/BrazoriaCivicWatchLinkPreview.png" />
-
+        <meta name="thumbnail" content="icons/BrazoriaCivicWatchLinkPreview.png" />
+        
         <title>Brazoria Civic Watch</title>
 
         <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
@@ -23,14 +20,12 @@
         <link rel="stylesheet" href="styles/sidebar.css">
         <link rel="stylesheet" href="styles/summary-page.css">
         <link rel="stylesheet" href="styles/archive.css">
-
     </head>
     <body>
-
         <div class="header js-header"></div>
-
+        
         <div class="sidebar-container js-sidebar-container"></div>
-
+        
         <div class="title">
             <picture>
                 <source srcset="icons/BrazoriaCivicWatchDarkModeFinal.png" media="(prefers-color-scheme: dark)">
@@ -38,84 +33,91 @@
             </picture>
         </div>
 
-        <div class="card-wheel">
-            <div data-target="webpages/meeting-selection-screen.html" class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/recent-meeting.png.jpg">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Recent Meetings
+        <div class="carousel-container">
+            <button class="carousel-arrow prev-arrow js-hands-off" id="prevBtn">&#10094;</button>
+
+            <div class="carousel-view">
+                <div class="card-wheel" id="cardWheel">
+                    <div data-target="webpages/meeting-selection-screen.html" class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/recent-meeting.png.jpg" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Recent Meetings
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/run-for-office.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Run for Office
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/candidate-interviews.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Candidate Interviews
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/officials-info.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Current Officials
+                            </div>
+                        </div>
+                    </div>
+                    <div data-target="webpages/archive.html" class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/archive.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Archive
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/locations-info.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Meeting Information
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/gov-websites.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Government Websites
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/register-to-vote.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Register to Vote
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container js-div-button">
+                        <img class="card-photo" src="card-photos/public-place-locations.png" draggable="false">
+                        <div class="card-overlay">
+                            <div class="card-text">
+                                Public Places
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/run-for-office.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Run for Office
-                    </div>
-                </div>
-            </div>
-            <div class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/candidate-interviews.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Candidate Interviews
-                    </div>
-                </div>
-            </div>
-            <div class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/officials-info.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Current Officials
-                    </div>
-                </div>
-            </div>
-            <div data-target="webpages/archive.html" class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/archive.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Archive
-                    </div>
-                </div>
-            </div>
-            <div class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/locations-info.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Meeting Information
-                    </div>
-                </div>
-            </div>
-            <div class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/gov-websites.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Government Websites
-                    </div>
-                </div>
-            </div>
-            <div class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/register-to-vote.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Register to Vote
-                    </div>
-                </div>
-            </div>
-            <div class="card-container js-div-button">
-                <img class="card-photo" src="card-photos/public-place-locations.png">
-                <div class="card-overlay">
-                    <div class="card-text">
-                        Public Places
-                    </div>
-                </div>
-            </div>
+
+            <button class="carousel-arrow next-arrow js-hands-off" id="nextBtn">&#10095;</button>
         </div>
 
         <div class="separator-container">
           <div class="seperator">
-            
           </div>
         </div>
 
@@ -149,7 +151,6 @@
 
         <div class="footer js-footer"></div>
 
-
         <!--External Libraries-->
         <script src="importedJS/turf.min.js" defer></script>
 
@@ -162,13 +163,10 @@
         <!--Globals-->
         <script type="module" src="scripts/globalHTMLGenerate.js"></script>
         <script type="module" src="scripts/globalButtons.js"></script>
-        <script type="module" src="scripts/globalSummaries.js"></script>
         <script type="module" src="scripts/globalArchive.js"></script>
+        <script type="module" src="scripts/globalSummaries.js"></script>
 
-
-        <!--Page-Specific-->
+        <!--Personal-->
         <script type="module" src="scripts/home.js"></script>
-
     </body>
-
 </html>

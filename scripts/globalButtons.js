@@ -18,8 +18,8 @@ document.body.addEventListener('click', (event) => {
     if (screenOverlay) screenOverlay.classList.remove('active');
   }
 
-  const routeTarget = event.target.closest('.js-div-button, .js-sidebar-button, .js-footer-text, button');
-  if (!routeTarget) return;
+  const routeTarget = event.target.closest('.js-div-button, .js-sidebar-button, .js-footer-text, button:not(.js-hands-off)');
+  if (!routeTarget || event.target.closest('.js-hands-off')) return;
   if (routeTarget.classList.contains('js-search-button')) return;
 
   const destination = routeTarget.dataset.target || routeTarget.getAttribute('href');
