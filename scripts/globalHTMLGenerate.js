@@ -11,6 +11,8 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/sidebar.css">
   <link rel="stylesheet" href="styles/summary-page.css">
   <link rel="stylesheet" href="styles/archive.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 `);
 
 export function generateHTML(startCity, startIsd, activeButton) {

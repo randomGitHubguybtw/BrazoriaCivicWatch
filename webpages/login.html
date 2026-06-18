@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Volunteer Login</title>
+</head>
+<body>
+    <a href="../index.html">← Back to Homepage</a>
+    <h2>System Login</h2>
+
+    <label>Email:</label><br>
+    <input type="email" id="emailInput"><br><br>
+
+    <label>Password:</label><br>
+    <input type="password" id="passwordInput"><br><br>
+
+    <button id="loginBtn">Log In</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script type="module">
+        const supabaseUrl = 'https://wytipsmhzgrtxhpojvjt.supabase.co';
+        const supabaseKey = 'sb_publishable_95Eiuz84ZNZxm83jTGrF-Q_GS6uViKk';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Your existing click listener
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            
+            if (error) {
+                alert("Error logging in: " + error.message);
+            } else {
+                window.location.href = "volunteer-portal.html"; 
+            }
+        });
+
+        // Your NEW Enter key listener
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('loginBtn').click();
+            }
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>

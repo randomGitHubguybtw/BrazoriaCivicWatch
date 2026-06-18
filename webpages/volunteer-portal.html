@@ -1,0 +1,21 @@
+<body>
+    <a href="../index.html">← Back to Homepage</a>
+    <h2>Archive a New Meeting</h2>
+    <div class="meeting-form">
+      <input type="hidden" id="editId">
+      <label>City:</label><br><input type="text" id="cityInput"><br><br>
+      <label>Date:</label><br><input type="date" id="dateInput" required><br><br>
+      <label>Absentees:</label><br><input type="text" id="absenteesInput"><br><br>
+      <label>Transcription Link:</label><br><input type="url" id="transcriptionLinkInput"><br><br>
+      <label>Transcription:</label><br><textarea id="transcriptionInput" rows="4"></textarea><br><br>
+      <label>Summary:</label><br><textarea id="summaryInput" rows="2"></textarea><br><br>
+      <button id="saveButton">Save to Archive</button>
+      <button id="cancelButton" style="display:none;">Cancel Edit</button>
+    </div>
+
+    <h2>My Submissions</h2>
+    <div id="mySubmissions"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../scripts/summaryInput.js"></script>
+</body>
