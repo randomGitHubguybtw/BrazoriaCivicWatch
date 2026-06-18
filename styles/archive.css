@@ -22,6 +22,7 @@
   margin-top: 15px;
   border: solid 3px var(--secondary-color);
   overflow: hidden;
+  border-radius: 5px;
 }
 
 .result {
@@ -38,6 +39,7 @@
   border: dashed 1px var(--accent-color);
   width: 100%;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .date {
