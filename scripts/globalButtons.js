@@ -44,10 +44,14 @@ const observer = new MutationObserver((mutationsList) => {
         if (node.nodeType === 1) { 
           if (node.classList.contains('js-dropdown-input')) {
             node.setAttribute('readonly', 'true');
+            node.readOnly = true;
           }
           if (node.querySelectorAll) {
             const inputs = node.querySelectorAll('.js-dropdown-input:not([readonly])');
-            inputs.forEach(input => input.setAttribute('readonly', 'true'));
+            inputs.forEach(input => {
+              input.setAttribute('readonly', 'true');
+              input.readOnly = true;
+            });
           }
         }
       });
@@ -58,7 +62,16 @@ observer.observe(document.body, { childList: true, subtree: true });
 
 document.querySelectorAll('.js-dropdown-input:not([readonly])').forEach(input => {
   input.setAttribute('readonly', 'true');
+  input.readOnly = true;
 });
+
+document.addEventListener('touchstart', (e) => {
+  const touchInput = e.target.closest('.js-dropdown-input');
+  if (touchInput) {
+    touchInput.readOnly = false;
+    touchInput.removeAttribute('readonly');
+  }
+}, { passive: true });
 
 document.addEventListener('click', (e) => {
   const clickedInput = e.target.closest('.js-dropdown-input');
@@ -68,9 +81,11 @@ document.addEventListener('click', (e) => {
     const dropdownBox = clickedInput.closest('.js-dropdown-box');
     const dropdownList = dropdownBox.querySelector('.js-dropdown-list');
     
+    clickedInput.readOnly = false;
+    clickedInput.removeAttribute('readonly');
+    clickedInput.focus();
+
     if (dropdownList && !dropdownList.classList.contains('show')) {
-      clickedInput.removeAttribute('readonly');
-      clickedInput.focus();
       clickedInput.dataset.originalValue = clickedInput.value;
       clickedInput.value = '';
       
@@ -138,6 +153,7 @@ function closeAllDropdowns(exceptInput = null) {
     if (input && list && input !== exceptInput) {
       list.classList.remove('show');
       input.setAttribute('readonly', 'true');
+      input.readOnly = true;
       
       let isValid = false;
       Array.from(list.children).forEach(li => {
