@@ -1,7 +1,7 @@
 import { saveCityAndIsd } from './locationStore.js';
 import { generateHTML } from './globalHTMLGenerate.js';
-import{ runSummary } from './globalSummaries.js';
-import{ renderSearch } from './globalArchive.js'
+import { runSummary } from './globalSummaries.js';
+import { renderSearch } from './globalArchive.js'
 
 document.body.addEventListener('click', (event) => {
   const sidebar = document.querySelector('.js-sidebar');
@@ -139,7 +139,14 @@ function closeAllDropdowns(exceptInput = null) {
       list.classList.remove('show');
       input.setAttribute('readonly', 'true');
       
-      if (input.value === '' && input.dataset.originalValue) {
+      let isValid = false;
+      Array.from(list.children).forEach(li => {
+        if (li.textContent === input.value) {
+          isValid = true;
+        }
+      });
+
+      if (!isValid && input.dataset.originalValue !== undefined) {
         input.value = input.dataset.originalValue;
       }
     }

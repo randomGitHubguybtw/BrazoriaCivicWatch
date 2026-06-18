@@ -19,7 +19,7 @@
 }
 
 .search-results {
-  margin-top: 15px;
+  margin: 15px 5px;
   border: solid 3px var(--secondary-color);
   overflow: hidden;
   border-radius: 5px;
