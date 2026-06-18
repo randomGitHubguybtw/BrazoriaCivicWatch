@@ -75,7 +75,7 @@ export function runSummary(targetDate, targetMeeting) {
       summaryContainer.innerHTML = `There doesn't seem to be any summary here... yet! <a class="default-link">Volunteer to Help!</a>`;
     }
     if (dateTitle) {
-      dateTitle.innerHTML = 'N/A'; 
+      dateTitle.innerHTML = 'Month D, Year'; 
     }
     console.error("No summaries found for this city.");
     return; 
