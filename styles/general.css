@@ -56,3 +56,24 @@ a {
   --card-black-gradient: rgba(0, 0, 0, 0.8);
   }
 }
+
+.skeleton {
+  background-color: #555 !important; /* Slightly lighter than your dark theme */
+  background-image: linear-gradient(
+    90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.1) 20%, 
+    rgba(255, 255, 255, 0.3) 60%, 
+    rgba(255, 255, 255, 0) 100%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 1.5s infinite linear !important;
+  color: transparent !important;
+  border: none !important;
+  pointer-events: none; 
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}

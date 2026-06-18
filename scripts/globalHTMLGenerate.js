@@ -1,17 +1,17 @@
 import { locationDataReady } from './locationStore.js';
 
 document.head.insertAdjacentHTML('beforeend', `
-    <link rel="stylesheet" href="styles/card-wheel.css">
-    <link rel="stylesheet" href="styles/content.css">
-    <link rel="stylesheet" href="styles/general.css">
-    <link rel="stylesheet" href="styles/header.css">
-    <link rel="stylesheet" href="styles/voter-cards.css">
-    <link rel="stylesheet" href="styles/footer.css">
-    <link rel="stylesheet" href="styles/election-countdown.css">
-    <link rel="stylesheet" href="styles/sidebar.css">
-    <link rel="stylesheet" href="styles/summary-page.css">
-    <link rel="stylesheet" href="styles/archive.css">
-  `);
+  <link rel="stylesheet" href="styles/card-wheel.css">
+  <link rel="stylesheet" href="styles/content.css">
+  <link rel="stylesheet" href="styles/general.css">
+  <link rel="stylesheet" href="styles/header.css">
+  <link rel="stylesheet" href="styles/voter-cards.css">
+  <link rel="stylesheet" href="styles/footer.css">
+  <link rel="stylesheet" href="styles/election-countdown.css">
+  <link rel="stylesheet" href="styles/sidebar.css">
+  <link rel="stylesheet" href="styles/summary-page.css">
+  <link rel="stylesheet" href="styles/archive.css">
+`);
 
 export function generateHTML(startCity, startIsd, activeButton) {
   console.log('Generating HTML for:', startCity, startIsd);
@@ -32,7 +32,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
       <input class="search-bar" type="text" placeholder="Search Any Query...">
     </div>`;
 
-const sidebarContainer = document.querySelector('.js-sidebar-container');
+  const sidebarContainer = document.querySelector('.js-sidebar-container');
 
   if (sidebarContainer) {
     sidebarContainer.innerHTML = `
@@ -118,6 +118,26 @@ const sidebarContainer = document.querySelector('.js-sidebar-container');
     </div>`;
 }
 
-const { city, isd } = await locationDataReady;
+// 1. Generate HTML immediately so the page doesn't block
+generateHTML("Locating...", "Locating...");
 
-generateHTML(city, isd);
+// 2. Add skeleton animation to the inputs
+const cityInput = document.querySelector('.js-city-search');
+const isdInput = document.querySelector('.js-isd-search');
+
+if (cityInput) cityInput.classList.add('skeleton');
+if (isdInput) isdInput.classList.add('skeleton');
+
+// 3. Wait for data in the background, update values, and remove skeletons
+locationDataReady.then(({ city, isd }) => {
+  if (cityInput) {
+    cityInput.value = city;
+    cityInput.classList.remove('skeleton');
+  }
+  if (isdInput) {
+    isdInput.value = isd;
+    isdInput.classList.remove('skeleton');
+  }
+}).catch(error => {
+  console.error("Location failed:", error);
+});

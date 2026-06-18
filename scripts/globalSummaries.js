@@ -2,8 +2,6 @@ import { locationDataReady } from './locationStore.js';
 import { masterSummaries } from '../data/summaries.js';
 import { fixDate } from './utils/fixDate.js';
 
-const { city, isd } = await locationDataReady; 
-
 function initSummary() {
   let targetDate;
   let targetMeeting;
@@ -17,7 +15,20 @@ function initSummary() {
     targetMeeting = sessionStorage.getItem('cityOrIsd') || 'city';
   }
 
-  runSummary(targetDate, targetMeeting);
+  const summaryContainer = document.querySelector('.js-summary');
+  
+  if (summaryContainer) {
+    summaryContainer.innerHTML = `
+      <div class="skeleton" style="height: 18px; width: 100%; margin-bottom: 8px; border-radius: 4px;"></div>
+      <div class="skeleton" style="height: 18px; width: 92%; margin-bottom: 8px; border-radius: 4px;"></div>
+      <div class="skeleton" style="height: 18px; width: 98%; margin-bottom: 8px; border-radius: 4px;"></div>
+      <div class="skeleton" style="height: 18px; width: 65%; border-radius: 4px;"></div>
+    `;
+  }
+
+  locationDataReady.then(() => {
+    runSummary(targetDate, targetMeeting);
+  });
 }
 
 if (document.readyState === 'loading') {
@@ -60,6 +71,12 @@ export function runSummary(targetDate, targetMeeting) {
     }
 
   if (areaList.length === 0) {
+    if (summaryContainer) {
+      summaryContainer.innerHTML = `There doesn't seem to be any summary here... yet! <a class="default-link">Volunteer to Help!</a>`;
+    }
+    if (dateTitle) {
+      dateTitle.innerHTML = 'N/A'; 
+    }
     console.error("No summaries found for this city.");
     return; 
   }
