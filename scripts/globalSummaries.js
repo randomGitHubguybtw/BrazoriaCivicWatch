@@ -17,12 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 export function runSummary(targetDate, targetMeeting) {
   const summaryContainer = document.querySelector('.js-summary'); 
-  
-  if (!summaryContainer) return; 
-
   const townTitle = document.querySelector('.js-town');
   const currentCity = sessionStorage.getItem('city');
   const currentIsd = sessionStorage.getItem('isd');
+
+  if (townTitle) {
+    townTitle.innerHTML = (targetMeeting === 'isd') ? currentIsd : currentCity;
+  }
+
+  if (!summaryContainer) return; 
+
   const areaList = [];
   const dateTitle = document.querySelector('.js-title-date');
   const transcription = document.querySelector('.js-transcription');
@@ -61,12 +65,6 @@ export function runSummary(targetDate, targetMeeting) {
   });
 
   targetSummary = closestSummary;
-
-    if (targetMeeting === 'isd') {
-      townTitle.innerHTML = currentIsd;
-    } else {
-      townTitle.innerHTML = currentCity;
-    }
 
   if (summaryContainer && targetSummary) {
     summaryContainer.innerHTML = targetSummary.summary;
