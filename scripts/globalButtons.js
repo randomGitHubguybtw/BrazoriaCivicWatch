@@ -70,6 +70,7 @@ document.addEventListener('click', (e) => {
     
     if (dropdownList && !dropdownList.classList.contains('show')) {
       clickedInput.removeAttribute('readonly');
+      clickedInput.focus();
       clickedInput.dataset.originalValue = clickedInput.value;
       clickedInput.value = '';
       
