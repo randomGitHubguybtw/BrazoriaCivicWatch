@@ -12,7 +12,7 @@
   height: 120px;
   background-color: var(--primary-color);
   color: var(--black-text-color);
-  font-size: clamp(20px, 10vw, 60px);
+  font-size: clamp(20px, 8.5vw, 60px);
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-weight: bold;
   border-radius: 20px;
