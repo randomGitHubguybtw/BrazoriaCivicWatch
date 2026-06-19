@@ -8,11 +8,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 20px 30px 20px;
+  margin: 10px 30px 30px 30px;
   height: 120px;
   background-color: var(--primary-color);
   color: var(--black-text-color);
-  font-size: 55px;
+  font-size: clamp(20px, 10vw, 60px);
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-weight: bold;
   border-radius: 20px;
@@ -21,7 +21,7 @@
 
 .election-countdown-text-notifier {
   text-align: center;
-  margin-top: 40px;
+  margin-top: -10px;
   font-weight: bold;
   font-size: 20px;
 }
