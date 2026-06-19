@@ -4,6 +4,16 @@ const supabaseUrl = 'https://wytipsmhzgrtxhpojvjt.supabase.co';
 const supabaseKey = 'sb_publishable_95Eiuz84ZNZxm83jTGrF-Q_GS6uViKk';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+const allowedCities = [
+  "Alvin", "Angleton", "Bailey's Prairie", "Bonney", "Brazoria", "Brazoria County",
+  "Brookside Village", "Clute", "Danbury", "Freeport", "Hillcrest Village",
+  "Holiday Lakes", "Iowa Colony", "Jones Creek", "Lake Jackson", "Liverpool",
+  "Manvel", "Oyster Creek", "Pearland", "Quintana", "Richwood", "Sandy Point",
+  "Surfside", "Sweeny", "West Columbia", "Alvin ISD", "Angleton ISD", "Brazosport ISD",
+  "Columbia-Brazoria ISD", "Damon ISD", "Danbury ISD", "Friendswood ISD", "Pearland ISD",
+  "Sweeny ISD"
+];
+
 async function checkAccess() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) window.location.replace("../webpages/login.html");
@@ -27,9 +37,9 @@ async function loadMySubmissions() {
   const container = document.getElementById('mySubmissions');
   container.innerHTML = data.map(m => `
     <div style="margin-bottom:10px;">
-      <strong>${m.city} (${m.date})</strong>
-      <button onclick="window.editMeeting('${m.id}')">Edit</button>
-      <button onclick="window.deleteMeeting('${m.id}')">Delete</button>
+      <strong class="meeting-date">${m.city} (${m.date})</strong>
+      <button class="js-hands-off edit-button" onclick="window.editMeeting('${m.id}')">Edit</button>
+      <button class="js-hands-off edit-button" onclick="window.deleteMeeting('${m.id}')">Delete</button>
     </div>
   `).join('');
 }
@@ -56,14 +66,29 @@ async function saveMeeting() {
   const { data: { user } } = await supabase.auth.getUser();
   const id = document.getElementById('editId').value;
   
+  const city = document.getElementById('cityInput').value.trim();
+  const date = document.getElementById('dateInput').value.trim();
+  const transcriptionLink = document.getElementById('transcriptionLinkInput').value.trim();
+  const summary = document.getElementById('summaryInput').value.trim();
+
+  if (!city || !date || !transcriptionLink || !summary) {
+    alert("Please fill out the required fields: Meeting Location, Date, Transcription Link, and Summary.");
+    return;
+  }
+
+  if (!allowedCities.includes(city)) {
+    alert("Please select a valid Meeting Location from the dropdown list.");
+    return;
+  }
+
   const payload = {
     user_id: user.id,
-    city: document.getElementById('cityInput').value,
-    date: document.getElementById('dateInput').value,
+    city: city,
+    date: date,
     absentees: document.getElementById('absenteesInput').value.split(',').map(n => n.trim()),
-    transcriptionLink: document.getElementById('transcriptionLinkInput').value,
+    transcriptionLink: transcriptionLink,
     transcription: document.getElementById('transcriptionInput').value,
-    summary: document.getElementById('summaryInput').value
+    summary: summary
   };
 
   if (id) {
