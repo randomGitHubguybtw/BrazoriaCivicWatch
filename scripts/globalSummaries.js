@@ -43,32 +43,35 @@ export function runSummary(targetDate, targetMeeting) {
   const currentCity = sessionStorage.getItem('city');
   const currentIsd = sessionStorage.getItem('isd');
 
-  if (townTitle) {
-    townTitle.innerHTML = (targetMeeting === 'isd') ? currentIsd : currentCity;
-  }
-
   if (!summaryContainer) return; 
 
   const areaList = [];
   const dateTitle = document.querySelector('.js-title-date');
   const transcription = document.querySelector('.js-transcription');
   const transcriptionLink = document.querySelector('.js-transcription-link');
-  const absentees = document.querySelector('.js-absentees')
-  let targetSummary;
+  const absentees = document.querySelector('.js-absentees');
 
   if (targetMeeting === 'isd') {
-      for (const summary of masterSummaries) {
-        if (summary.city === currentIsd) {
+    for (const summary of masterSummaries) {
+      if (currentIsd === 'All ISD') {
+        if (summary.city.includes('ISD')) {
           areaList.push(summary);
         }
+      } else if (summary.city === currentIsd) {
+        areaList.push(summary);
+      }
     }
   } else {
-      for (const summary of masterSummaries) {
-        if (summary.city === currentCity) {
+    for (const summary of masterSummaries) {
+      if (currentCity === 'All Cities') {
+        if (!summary.city.includes('ISD')) {
           areaList.push(summary);
         }
-  }
+      } else if (summary.city === currentCity) {
+        areaList.push(summary);
+      }
     }
+  }
 
   if (areaList.length === 0) {
     if (summaryContainer) {
@@ -77,7 +80,11 @@ export function runSummary(targetDate, targetMeeting) {
     if (dateTitle) {
       dateTitle.innerHTML = 'Month D, Year'; 
     }
-    console.error("No summaries found for this city.");
+    if (townTitle) {
+      const selectedArea = targetMeeting === 'isd' ? currentIsd : currentCity;
+      townTitle.innerHTML = (selectedArea === 'All Cities' || selectedArea === 'All ISD') ? 'No meetings!' : selectedArea;
+    }
+    console.error("No summaries found.");
     return; 
   }
 
@@ -92,9 +99,12 @@ export function runSummary(targetDate, targetMeeting) {
     }
   });
 
-  targetSummary = closestSummary;
+  const targetSummary = closestSummary;
 
   if (summaryContainer && targetSummary) {
+    if (townTitle) {
+      townTitle.innerHTML = targetSummary.city;
+    }
     summaryContainer.innerHTML = targetSummary.summary;
     dateTitle.innerHTML = fixDate(targetSummary.date);
     transcription.innerHTML = targetSummary.transcription;

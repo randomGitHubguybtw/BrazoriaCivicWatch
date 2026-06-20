@@ -70,6 +70,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
             <li class="js-dropdown-item">Surfside</li>
             <li class="js-dropdown-item">Sweeny</li>
             <li class="js-dropdown-item">West Columbia</li>
+            <li class="js-dropdown-item">All Cities</li>
           </ul>
         </div>
         <div class="dropdown-box js-dropdown-box">
@@ -84,6 +85,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
             <li class="js-dropdown-item">Friendswood ISD</li>
             <li class="js-dropdown-item">Pearland ISD</li>
             <li class="js-dropdown-item">Sweeny ISD</li>
+            <li class="js-dropdown-item">All ISD</li>
           </ul>
         </div>
         <button data-target="index.html" class="sidebar-button js-sidebar-button">Home</button>

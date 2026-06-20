@@ -14,7 +14,21 @@ export function renderSearch(searchTerm = '') {
   const searchWords = searchTerm.toLowerCase().split(/\s+/).filter(word => word.length > 0);
 
   const filteredSummaries = masterSummaries.filter(summary => {
-    const isCurrentArea = summary.city === currentCity || summary.city === currentIsd;
+    let isCityMatch = false;
+    if (currentCity === 'All Cities') {
+      isCityMatch = !summary.city.includes('ISD');
+    } else {
+      isCityMatch = summary.city === currentCity;
+    }
+
+    let isIsdMatch = false;
+    if (currentIsd === 'All ISD') {
+      isIsdMatch = summary.city.includes('ISD');
+    } else {
+      isIsdMatch = summary.city === currentIsd;
+    }
+
+    const isCurrentArea = isCityMatch || isIsdMatch;
     
     if (!isCurrentArea) return false;
 
