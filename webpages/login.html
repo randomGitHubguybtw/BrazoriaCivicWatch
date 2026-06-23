@@ -31,6 +31,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script type="module">
+        import { masterVolunteers } from "../data/volunteers.js";
+
         const supabaseUrl = 'https://wytipsmhzgrtxhpojvjt.supabase.co';
         const supabaseKey = 'sb_publishable_95Eiuz84ZNZxm83jTGrF-Q_GS6uViKk';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -44,7 +46,17 @@
             if (error) {
                 alert("Error logging in: " + error.message);
             } else {
-                window.location.href = "webpages/volunteer-portal.html"; 
+                masterVolunteers.forEach( volunteer => {
+                    if (volunteer.email === email) {
+                        if (volunteer.role === 'summarizer') {
+                            window.location.href = "webpages/volunteer-portal.html"; 
+                        } else if (volunteer.role === 'election seeker') {
+                            window.location.href = "webpages/election-volunteer-portal.html"; 
+                        } else if (volunteer.role === 'master') {
+                            window.location.href = "webpages/choose.html"; 
+                        }
+                    }
+                })
             }
         });
 
@@ -62,6 +74,7 @@
     <script type="module" src="scripts/utils/fixNoun.js"></script>
     <script type="module" src="scripts/utils/fixDate.js"></script>
     <script type="module" src="scripts/locationStore.js"></script>
+    <script type="module" src="data/volunteers.js"></script>
 
     <!--Globals-->
     <script type="module" src="scripts/globalHTMLGenerate.js"></script>

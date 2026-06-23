@@ -4,7 +4,7 @@ const supabaseUrl = 'https://wytipsmhzgrtxhpojvjt.supabase.co';
 const supabaseKey = 'sb_publishable_95Eiuz84ZNZxm83jTGrF-Q_GS6uViKk';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-const API_BASE = 'http://localhost:3000';
+const API_BASE = 'https://api.brazoriacivicwatch.org';
 
 const allowedCities = [
   "Alvin", "Angleton", "Bailey's Prairie", "Bonney", "Brazoria", "Brazoria County",

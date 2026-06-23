@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import Database from 'better-sqlite3';
+import crypto from 'crypto';
 
 const app = express();
 app.use(cors());
@@ -25,7 +26,8 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS overallElections (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date TEXT,
-    ballot_link TEXT
+    ballot_link TEXT,
+    voting_locations TEXT
   );
 
   CREATE TABLE IF NOT EXISTS seats (
@@ -37,15 +39,27 @@ db.exec(`
   );
 `);
 
-const SUPABASE_JWT_SECRET = 'YOUR_SUPABASE_JWT_SECRET';
+const supabaseJWK = {
+  kty: "EC",
+  crv: "P-256",
+  x: "3t_nPoX-iBS-5d15FT-HRkr_XIg-xC-_Feq7PGuaIZw",
+  y: "z7KKXgMbNjvZiNyrhWUh6PWvXKJy0BzIVBu7eaJPvDg"
+};
+
+const SUPABASE_PUBLIC_KEY = crypto.createPublicKey({ key: supabaseJWK, format: 'jwk' }).export({ type: 'spki', format: 'pem' });
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.sendStatus(401);
+  
+  if (!token) {
+    return res.sendStatus(401);
+  }
 
-  jwt.verify(token, SUPABASE_JWT_SECRET, { algorithms: ['HS256'] }, (err, user) => {
-    if (err) return res.sendStatus(403);
+  jwt.verify(token, SUPABASE_PUBLIC_KEY, { algorithms: ['ES256'] }, (err, user) => {
+    if (err) {
+      return res.sendStatus(403);
+    }
     req.user = user;
     next();
   });

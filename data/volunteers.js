@@ -1,4 +1,4 @@
-export const volunteers = [
+export const masterVolunteers = [
   {
     email: "andrew.cobb009@gmail.com",
     role: "master"

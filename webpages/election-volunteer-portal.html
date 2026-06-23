@@ -1,27 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <base href="../">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+
+  <head>
+    <base href="../../">
+
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Archive</title>
     <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
-    <title>Volunteer Portal</title>
+
+  </head>
+
 </head>
 <body>
 
-  <div class="header js-header"></div>
+    <div class="header js-header"></div>
 
-  <div class="sidebar-container js-sidebar-container"></div>
+    <div class="sidebar-container js-sidebar-container"></div>
 
-  <a href="../index.html" class="back-link default-link">← Back to Homepage</a>
-  
-  <h2 class="section-heading">Archive a New Meeting</h2>
+    <h2 class="section-heading">Mark a New Election</h2>
   
   <div class="meeting-form">
     <input type="hidden" id="editId">
     
-    <label class="form-label" for="cityInput">Meeting Location:</label>
-    <input list="cityOptions" id="cityInput" class="form-input" autocomplete="off" placeholder="Search for location...">
+    <label class="form-label" for="cityInput">Type of Election:</label>
+    <input list="cityOptions" id="cityInput" class="form-input" autocomplete="off" placeholder="Search tags...">
+    <datalist id="cityOptions">
+      <option value="Local">
+      <option value="State">
+      <option value="Major">
+    </datalist>
+
+    <label class="form-label" for="absenteesInput">Special Election?:</label>
+    <input type="checkbox" id="absenteesInput" class="form-input">
+
+    <label class="form-label" for="cityInput">Location of Election:</label>
+    <input list="cityOptions" id="cityInput" class="form-input" autocomplete="off" placeholder="Search cities...">
     <datalist id="cityOptions">
       <option value="Alvin">
       <option value="Angleton">
@@ -48,54 +63,42 @@
       <option value="Surfside">
       <option value="Sweeny">
       <option value="West Columbia">
-      <option value="Alvin ISD">
-      <option value="Angleton ISD">
-      <option value="Brazosport ISD">
-      <option value="Columbia-Brazoria ISD">
-      <option value="Damon ISD">
-      <option value="Danbury ISD">
-      <option value="Friendswood ISD">
-      <option value="Pearland ISD">
-      <option value="Sweeny ISD">
     </datalist>
     
-    <label class="form-label" for="dateInput">Date:</label>
+    <label class="form-label" for="dateInput">Date of Election:</label>
     <input type="date" id="dateInput" class="form-input" required>
+  
     
-    <label class="form-label" for="absenteesInput">Absentees:</label>
-    <input type="text" id="absenteesInput" class="form-input">
-    
-    <label class="form-label" for="transcriptionLinkInput">Transcription Link:</label>
+    <label class="form-label" for="transcriptionLinkInput">Ballot Link:</label>
     <input type="url" id="transcriptionLinkInput" class="form-input">
     
-    <label class="form-label" for="transcriptionInput">Transcription:</label>
+    <label class="form-label" for="transcriptionInput">Voting addresses:</label>
     <textarea id="transcriptionInput" class="form-textarea" rows="4"></textarea>
     
-    <label class="form-label" for="summaryInput">Summary:</label>
-    <textarea id="summaryInput" class="form-textarea" rows="2"></textarea>
-    
     <div class="button-container">
-      <button id="saveButton" class="action-button js-hands-off">Save to Archive</button>
-      <button id="cancelButton" class="action-button js-hands-off" style="display:none;">Cancel Edit</button>
+      <button id="electionSaveButton" class="action-button js-hands-off">Save Election</button>
+      <button id="electionCancelButton" class="action-button js-hands-off" style="display:none;">Cancel Edit</button>
     </div>
   </div>
 
-  <h2 class="section-heading">My Submissions (up to one month ago)</h2>
+  <h2 class="section-heading">My Submissions (up to two days ago)</h2>
   <div id="mySubmissions" class="submissions-container"></div>
 
-  <div class="footer js-footer"></div>
+    <div class="footer js-footer"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="../scripts/summaryInput.js"></script>
-
+  <!--External Libraries-->
   <script src="importedJS/turf.min.js" defer></script>
 
+  <!--Data-->
   <script type="module" src="scripts/utils/fixNoun.js"></script>
   <script type="module" src="scripts/utils/fixDate.js"></script>
   <script type="module" src="scripts/locationStore.js"></script>
 
+  <!--Globals-->
   <script type="module" src="scripts/globalHTMLGenerate.js"></script>
   <script type="module" src="scripts/globalButtons.js"></script>
   <script type="module" src="scripts/globalArchive.js"></script>
+
 </body>
+
 </html>
