@@ -25,6 +25,7 @@
   background-color: var(--primary-color);
   border: dashed 3px var(--accent-color);
   transition: width 0.2s, opacity 0.15s;
+  font-size: clamp(12px, 3vw, 35px);
 }
 
 .voter-button:hover {

@@ -44,6 +44,8 @@ const startCountdown = async () => {
         const [y, m, d] = next.date.split('-');
         const targetDate = new Date(y, m - 1, d).getTime();
 
+        sessionStorage.setItem('targetElection', next.election_id);
+
         if (timeInterval) clearInterval(timeInterval);
 
         timeInterval = setInterval(() => {

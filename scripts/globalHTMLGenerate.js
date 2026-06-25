@@ -13,6 +13,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/archive.css">
   <link rel="stylesheet" href="styles/login.css">
   <link rel="stylesheet" href="styles/volunteer-page.css">
+  <link rel="stylesheet" href="styles/voter-info.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 `);
@@ -27,7 +28,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
       </div>
     </div>
     <div class="middle">
-        <a href="index.html"><p class="mission"> Keeping Brazoria easy to access and accountable since 2026!</p></a>
+        <a href="index.html"><p class="mission"> Keeping Brazoria accessible since 2026!</p></a>
     </div>
     <div class="right">
       <button class="search-button js-search-button">

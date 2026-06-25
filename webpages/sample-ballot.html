@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <base href="../">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sample Ballot</title>
+
+    <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+
+  </head>
+  <body style=" display: flex; align-items: center; justify-content: center; flex-direction: column;">
+
+   <div class="header js-header"></div>
+
+   <div class="sidebar-container js-sidebar-container"></div>
+
+    <div class="title">
+      <picture>
+        <source srcset="icons/VoterInformationSampleBallotTitleDarkMode.png" media="(prefers-color-scheme: dark)">
+        <img class="title-graphic" style="object-position: 45% 55%; height: 200px; margin-top: -100px;" src="icons/VoterInformationSampleBallotTitle.png">
+      </picture>
+    </div>
+
+     <div class="separator-container">
+          <div class="seperator">
+            
+          </div>
+     </div>
+    
+    <div class="construction-warning">
+      <p>Oh no! It seems your city is missing a sample ballot at this time. Check your local government website for one!</p>
+    </div>
+
+     <div class="separator-container">
+          <div class="seperator">
+            
+          </div>
+    </div>
+
+    <div class="footer js-footer"></div>
+    
+    <!--External Libraries-->
+    <script src="importedJS/turf.min.js" defer></script>
+
+    <!--Data-->
+    <script type="module" src="scripts/utils/fixNoun.js"></script>
+    <script type="module" src="scripts/utils/fixDate.js"></script>
+    <script type="module" src="scripts/locationStore.js"></script>
+
+    <!--Globals-->
+    <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+    <script type="module" src="scripts/globalButtons.js"></script>
+    <script type="module" src="scripts/globalArchive.js"></script>
+
+    <script>
+      const API_BASE = 'https://api.brazoriacivicwatch.org';
+
+      const redirectToBallot = async () => {
+          const userCity = sessionStorage.getItem('city');
+
+          if (!userCity) return;
+
+          try {
+              const response = await fetch(`${API_BASE}/api/elections`);
+              
+              if (!response.ok) throw new Error();
+              
+              const allElections = await response.json();
+              const targetElectionId = sessionStorage.getItem('nextElection') || sessionStorage.getItem('targetElection');
+              
+              let targetElection = allElections.find(el => el.election_id === targetElectionId);
+
+              if (!targetElection) {
+                  const now = new Date();
+                  const upcoming = allElections
+                      .filter(el => {
+                          const [y, m, d] = el.date.split('-');
+                          const electionDate = new Date(y, m - 1, d);
+                          return electionDate >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                      })
+                      .sort((a, b) => new Date(a.date) - new Date(b.date));
+                      
+                  targetElection = upcoming[0];
+              }
+
+              if (!targetElection) return;
+
+              const columnName = `${userCity.replace(/ /g, '_')}_ballot_link`;
+              const ballotLink = targetElection[columnName];
+
+              if (ballotLink) {
+                  window.location.replace(ballotLink);
+              }
+          } catch (error) {
+          }
+      };
+
+      document.addEventListener('DOMContentLoaded', redirectToBallot);
+    </script>
+
+  </body>
+</html>
+
+
