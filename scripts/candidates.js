@@ -1,7 +1,10 @@
+import { fixDate } from './utils/fixDate.js';
+
 const API_BASE = 'https://api.brazoriacivicwatch.org';
 const candidatesContainer = document.querySelector('.js-candidates');
 
 const loadCandidates = async () => {
+  
     try {
         const userCity = sessionStorage.getItem('city');
         
@@ -49,6 +52,11 @@ const loadCandidates = async () => {
         }
 
         const targetElectionId = sessionStorage.getItem('nextElection') || sessionStorage.getItem('targetElection') || upcoming[0].election_id;
+
+        const dateDisplay = document.querySelector('.election-date');
+        if (dateDisplay) {
+            dateDisplay.innerHTML = fixDate(targetElectionId);
+        }
 
         const targetCandidates = relevantSeats.filter(seat => seat.election_id === targetElectionId);
 
