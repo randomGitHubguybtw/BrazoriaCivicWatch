@@ -70,3 +70,97 @@
   box-sizing: border-box;
   height: 6vh;
 }
+
+.candidate-message {
+  color: var(--white-text-color);
+  font-size: 1.2rem;
+  padding: 20px;
+}
+
+.candidates-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 20px;
+  align-items: start;
+}
+
+.seat-card {
+  border: 2px solid var(--accent-color);
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px var(--sickly-primary);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.seat-title {
+  margin: 0 0 16px 0;
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 8px;
+}
+
+.seat-candidates-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.candidate-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.candidate-name-party {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--black-text-color);
+}
+
+.candidate-links-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 16px;
+}
+
+.candidate-link {
+  color: var(--accent-color);
+  text-decoration: underline;
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+.candidate-link:hover {
+  color: var(--primary-color);
+}
+
+.candidate-no-link {
+  color: var(--inverted-secondary);
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.party-democrat {
+  color: #1d4ed8; 
+}
+
+.party-republican {
+  color: #b91c1c; 
+}
+
+.party-green {
+  color: #15803d; 
+}
+
+.party-libertarian {
+  color: #7e22ce; 
+}
+
+.party-other {
+  color: var(--black-text-color); 
+}

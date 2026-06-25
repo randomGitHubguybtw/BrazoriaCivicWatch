@@ -12,6 +12,8 @@ const loadVoterInformation = async () => {
             return;
         }
 
+        const isAllCities = userCity === 'All' || userCity === 'All Cities';
+
         const [electionsResponse, seatsResponse] = await Promise.all([
             fetch(`${API_BASE}/api/elections`),
             fetch(`${API_BASE}/api/seats`)
@@ -26,7 +28,7 @@ const loadVoterInformation = async () => {
             seat.scope === 'major' || 
             seat.scope === 'state' || 
             seat.scope === 'general' || 
-            (seat.scope === 'local' && seat.city === userCity)
+            (seat.scope === 'local' && (isAllCities || seat.city === userCity))
         );
 
         const validElectionIds = new Set(relevantSeats.map(seat => seat.election_id));
@@ -59,11 +61,14 @@ const loadVoterInformation = async () => {
         const allAddresses = await addressesResponse.json();
 
         const cityLocations = allLocations.filter(loc => 
-            loc.election_id === targetElectionId && loc.city === userCity
+            loc.election_id === targetElectionId && (isAllCities || loc.city === userCity)
         );
 
         if (cityLocations.length === 0) {
-            if (addressesContainer) addressesContainer.innerHTML = `<p class="highlightable voter-message">No polling locations currently assigned for ${userCity}.</p>`;
+            if (addressesContainer) {
+                const emptyText = isAllCities ? 'any area' : userCity;
+                addressesContainer.innerHTML = `<p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}.</p>`;
+            }
             return;
         }
 
@@ -84,7 +89,7 @@ const loadVoterInformation = async () => {
                     <h3 class="highlightable polling-card-title">${addr.name}</h3>
                     <p class="highlightable polling-card-address">${addr.address}</p>
                     <a class="highlightable polling-card-btn" 
-                       href="https://www.google.com/maps/search/?api=1&query=$${encodeURIComponent(addr.name + ' ' + addr.address)}" 
+                       href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr.name + ' ' + addr.address)}" 
                        target="_blank">
                        Get Directions
                     </a>
@@ -108,4 +113,10 @@ document.addEventListener('DOMContentLoaded', loadVoterInformation);
 
 document.addEventListener('click', () => {
     setTimeout(loadVoterInformation, 50);
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        setTimeout(loadVoterInformation, 50);
+    }
 });

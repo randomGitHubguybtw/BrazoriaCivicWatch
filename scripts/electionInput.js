@@ -322,6 +322,8 @@ const renderSeats = async () => {
                 <select id="partyInput" class="form-input" style="width: auto;">
                     <option value="Democratic">Democratic</option>
                     <option value="Republican">Republican</option>
+                    <option value="Green">Green</option>
+                    <option value="Libertarian">Libertarian</option>
                 </select>
                 <button type="button" id="saveNewSeatButton" class="action-button js-hands-off" style="width: auto; padding: 8px 12px;">Save</button>
                 <button type="button" id="cancelAddSeatButton" class="action-button js-hands-off" style="width: auto; padding: 8px 12px; background-color: #c62828;">Cancel</button>
