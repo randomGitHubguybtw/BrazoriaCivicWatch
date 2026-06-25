@@ -1,104 +1,30 @@
 <!DOCTYPE html>
 <html>
-
-  <head>
-    <base href="../../">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Archive</title>
-    <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
-
-  </head>
-
+<head>
+  <base href="../../">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archive</title>
+  <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
 </head>
 <body>
 
-    <div class="header js-header"></div>
-
-    <div class="sidebar-container js-sidebar-container"></div>
-
-    <h2 class="section-heading">Mark a New Election</h2>
+  <div class="header js-header"></div>
+  <div class="sidebar-container js-sidebar-container"></div>
+  <a href="../index.html" class="back-link default-link">← Back to Homepage</a>
+  <h2 class="section-heading">Mark a New Election</h2>
   
-  <div class="meeting-form">
-    <input type="hidden" id="editId">
-    
-    <label class="form-label" for="cityInput">Type of Election:</label>
-    <input list="cityOptions" id="cityInput" class="form-input" autocomplete="off" placeholder="Search tags...">
-    <datalist id="cityOptions">
-      <option value="Local">
-      <option value="State">
-      <option value="Major">
-    </datalist>
+  <form class="meeting-form js-meeting-form" onsubmit="event.preventDefault();" style="position: relative; min-height: 300px;">
+  </form>
 
-    <label class="form-label" for="absenteesInput">Special Election?:</label>
-    <input type="checkbox" id="absenteesInput" class="form-input">
+  <div class="footer js-footer"></div>
 
-    <label class="form-label" for="cityInput">Location of Election:</label>
-    <input list="cityOptions" id="cityInput" class="form-input" autocomplete="off" placeholder="Search cities...">
-    <datalist id="cityOptions">
-      <option value="Alvin">
-      <option value="Angleton">
-      <option value="Bailey's Prairie">
-      <option value="Bonney">
-      <option value="Brazoria">
-      <option value="Brazoria County">
-      <option value="Brookside Village">
-      <option value="Clute">
-      <option value="Danbury">
-      <option value="Freeport">
-      <option value="Hillcrest Village">
-      <option value="Holiday Lakes">
-      <option value="Iowa Colony">
-      <option value="Jones Creek">
-      <option value="Lake Jackson">
-      <option value="Liverpool">
-      <option value="Manvel">
-      <option value="Oyster Creek">
-      <option value="Pearland">
-      <option value="Quintana">
-      <option value="Richwood">
-      <option value="Sandy Point">
-      <option value="Surfside">
-      <option value="Sweeny">
-      <option value="West Columbia">
-    </datalist>
-    
-    <label class="form-label" for="dateInput">Date of Election:</label>
-    <input type="date" id="dateInput" class="form-input" required>
-  
-    
-    <label class="form-label" for="transcriptionLinkInput">Ballot Link:</label>
-    <input type="url" id="transcriptionLinkInput" class="form-input">
-    
-    <label class="form-label" for="transcriptionInput">Voting addresses:</label>
-    <textarea id="transcriptionInput" class="form-textarea" rows="4"></textarea>
-    
-    <div class="button-container">
-      <button id="electionSaveButton" class="action-button js-hands-off">Save Election</button>
-      <button id="electionCancelButton" class="action-button js-hands-off" style="display:none;">Cancel Edit</button>
-    </div>
-  </div>
-
-  <h2 class="section-heading">My Submissions (up to two days ago)</h2>
-  <div id="mySubmissions" class="submissions-container"></div>
-
-    <div class="footer js-footer"></div>
-
-  <!--External Libraries-->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="../scripts/electionInput.js"></script>
   <script src="importedJS/turf.min.js" defer></script>
-
-  <!--Data-->
-  <script type="module" src="scripts/utils/fixNoun.js"></script>
-  <script type="module" src="scripts/utils/fixDate.js"></script>
-  <script type="module" src="scripts/locationStore.js"></script>
-
-  <!--Globals-->
   <script type="module" src="scripts/globalHTMLGenerate.js"></script>
   <script type="module" src="scripts/globalButtons.js"></script>
   <script type="module" src="scripts/globalArchive.js"></script>
 
 </body>
-
 </html>

@@ -41,6 +41,7 @@ a {
 :root {
   --primary-color: rgb(186, 94, 62);
   --secondary-color: rgb(109, 130, 99);
+  --inverted-secondary: rgb(78, 89, 73);
   --sickly-primary: rgb(20, 8, 4);
   --background-color: rgb(247, 243, 236);
   --accent-color: rgb(201, 155, 73);
@@ -53,6 +54,7 @@ a {
   :root {
   --primary-color: rgb(105, 68, 56);
   --secondary-color: rgb(78, 89, 73);
+  --inverted-secondary: rgb(109, 130, 99);
   --sickly-primary: rgb(15, 9, 7);
   --background-color: rgb(42, 38, 35);
   --accent-color: rgb(158, 129, 79);

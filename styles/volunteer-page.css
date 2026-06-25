@@ -98,3 +98,17 @@
   color: var(--white-text-color);
   opacity: 40%;
 }
+
+.delete-loc-btn {
+  background-color: var(--primary-color);
+  padding: 3px 6px;
+  font-size: 14px;
+  border-radius: 8px;
+  margin-left: 5px;
+  border-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.delete-loc-btn:hover {
+  border-style: inset;
+}

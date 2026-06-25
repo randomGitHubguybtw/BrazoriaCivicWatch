@@ -1,23 +1,93 @@
-const targetDate = new Date('2026-11-03T00:00:00').getTime();
-
+const API_BASE = 'https://api.brazoriacivicwatch.org';
 const countdownElement = document.querySelector('.js-election-countdown');
+let timeInterval;
 
-const timeInterval = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
+const startCountdown = async () => {
+    try {
+        const userCity = sessionStorage.getItem('city');
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const [electionsResponse, seatsResponse] = await Promise.all([
+            fetch(`${API_BASE}/api/elections`),
+            fetch(`${API_BASE}/api/seats`)
+        ]);
 
-    countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        if (!electionsResponse.ok || !seatsResponse.ok) throw new Error("API error");
+        
+        const allElections = await electionsResponse.json();
+        const allSeats = await seatsResponse.json();
 
-    if (distance < 0) {
-        clearInterval(timeInterval);
-        countdownElement.innerHTML = "Go Vote!";
+        const relevantSeats = allSeats.filter(seat => 
+            seat.scope === 'major' || 
+            seat.scope === 'state' || 
+            seat.scope === 'general' || 
+            (seat.scope === 'local' && seat.city === userCity)
+        );
+
+        const validElectionIds = new Set(relevantSeats.map(seat => seat.election_id));
+        const now = new Date();
+
+        const upcoming = allElections
+            .filter(el => {
+                if (!validElectionIds.has(el.election_id)) return false;
+                const [y, m, d] = el.date.split('-');
+                const electionDate = new Date(y, m - 1, d);
+                return electionDate >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            })
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        if (upcoming.length === 0) {
+            if (countdownElement) countdownElement.innerHTML = "No upcoming elections";
+            return;
+        }
+
+        const next = upcoming[0];
+        const [y, m, d] = next.date.split('-');
+        const targetDate = new Date(y, m - 1, d).getTime();
+
+        if (timeInterval) clearInterval(timeInterval);
+
+        timeInterval = setInterval(() => {
+            const nowTime = new Date().getTime();
+            const distance = targetDate - nowTime;
+
+            const isVoteDay = new Date().toDateString() === new Date(y, m - 1, d).toDateString();
+
+            if (isVoteDay) {
+                clearInterval(timeInterval);
+                if (countdownElement) countdownElement.innerHTML = "Vote day!";
+                return;
+            }
+
+            if (distance < 0) {
+                clearInterval(timeInterval);
+                startCountdown();
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (countdownElement) {
+                countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+        }, 1000);
+
+    } catch (error) {
+        if (countdownElement) countdownElement.innerHTML = "Error loading timer";
     }
-}, 1000);
+};
+
+startCountdown();
+
+document.addEventListener('click', startCountdown);
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        startCountdown();
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const wheel = document.getElementById('cardWheel');
@@ -30,7 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDragging = false;
     let actionQueue = [];
 
-    wheel.prepend(wheel.lastElementChild);
+    if (wheel) {
+        wheel.prepend(wheel.lastElementChild);
+    }
 
     const getScrollAmount = () => {
         const card = wheel.querySelector('.card-container');
@@ -84,17 +156,21 @@ document.addEventListener('DOMContentLoaded', () => {
         processQueue();
     };
 
-    nextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        queueNext();
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            queueNext();
+        });
+    }
 
-    prevBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        queuePrev();
-    });
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            queuePrev();
+        });
+    }
 
     const handleDragStart = (e) => {
         isDragging = true;
@@ -116,16 +192,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    wheel.addEventListener('click', (e) => {
-        if (Math.abs(startX - endX) > 10) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    });
+    if (wheel) {
+        wheel.addEventListener('click', (e) => {
+            if (Math.abs(startX - endX) > 10) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
 
-    wheel.addEventListener('mousedown', handleDragStart);
-    window.addEventListener('mouseup', handleDragEnd);
-    
-    wheel.addEventListener('touchstart', handleDragStart, { passive: true });
-    wheel.addEventListener('touchend', handleDragEnd, { passive: true });
+        wheel.addEventListener('mousedown', handleDragStart);
+        window.addEventListener('mouseup', handleDragEnd);
+        
+        wheel.addEventListener('touchstart', handleDragStart, { passive: true });
+        wheel.addEventListener('touchend', handleDragEnd, { passive: true });
+    }
 });
