@@ -169,8 +169,8 @@ const renderLocations = async () => {
         <h3 class="section-heading" style="margin-top: 0;">Manage Polling Locations</h3>
         
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; justify-content: center;">
-            <input type="text" id="newLocName" class="form-input" placeholder="Building Name (e.g., Tom Reid Library)">
-            <input type="text" id="newLocAddress" class="form-input" placeholder="Full Address">
+            <input type="text" id="newLocName" class="form-input" placeholder="Building Name (e.g., Lake Jackson Civic Center)">
+            <input type="text" id="newLocAddress" class="form-input" placeholder="Full Address (e.g., 333 SH 332 Frontage Rd, Lake Jackson, TX 77566">
             <button type="button" id="addNewLocationBtn" class="action-button js-hands-off">Add Location</button>
         </div>
 
@@ -303,8 +303,8 @@ const renderSeats = async () => {
             <select id="scopeSelector" class="form-input" style="width: auto; display: inline-block; margin-left: 10px;">
                 <option value="local">Local</option>
                 <option value="state">State</option>
-                <option value="major">Major</option>
                 <option value="general">General</option>
+                <option value="major">Major</option>
             </select>
         </div>
 
@@ -313,7 +313,9 @@ const renderSeats = async () => {
         <div id="addSeatFormContainer" style="display: none; border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <input type="text" id="seatNameInput" class="form-input" placeholder="Seat Name" style="flex: 1; min-width: 150px;">
-                <input type="text" id="challengerNameInput" class="form-input" placeholder="Challenger Name" style="flex: 1; min-width: 150px;">
+                <input type="text" id="challengerNameInput" class="form-input" placeholder="Candidate Name" style="flex: 1; min-width: 150px;">
+                <input type="text" id="candidateWebsiteInput" class="form-input" placeholder="Candidate Website Home Page" style="flex: 1; min-width: 150px;">
+                <input type="text" id="candidateWikipediaInput" class="form-input" placeholder="Wikipedia Article" style="flex: 1; min-width: 150px;">
                 <label style="font-family: sans-serif; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                     <input type="checkbox" id="incumbentInput"> Incumbent
                 </label>
@@ -365,7 +367,9 @@ const renderSeats = async () => {
                     li.style.fontFamily = "sans-serif";
                     li.style.fontSize = "14px";
                     li.innerHTML = `
-                        <strong>${seat.seat_name}</strong> (${seat.party}) | Incumbent: ${seat.incumbent || 'No'} | Challenger: ${seat.name || 'None'}
+                        <div class="highlightable">
+                        <strong>${seat.seat_name}</strong> (${seat.party}) | Incumbent: ${seat.incumbent || 'No'} | Challenger: ${seat.name || 'None'} | Website: ${seat.website || 'None'} | Wikipedia: ${seat.wikipedia || 'None'}
+                        </div>
                         <button type="button" class="delete-seat-btn js-hands-off" data-id="${seat.id}" style="background-color: var(--primary-color); padding: 4px 8px; font-size: 12px; border: none; border-radius: 4px; color: #fff; cursor: pointer; margin-left: 10px;">Delete</button>
                     `;
                     seatsPreviewList.appendChild(li);
@@ -408,6 +412,8 @@ const renderSeats = async () => {
         document.getElementById('showAddSeatButton').style.display = 'inline-block';
         document.getElementById('seatNameInput').value = '';
         document.getElementById('challengerNameInput').value = '';
+        document.getElementById('candidateWebsiteInput').value = '';
+        document.getElementById('candidateWikipediaInput').value = '';
         document.getElementById('incumbentInput').checked = false;
         document.getElementById('partyInput').value = 'Democratic';
     });
@@ -415,6 +421,8 @@ const renderSeats = async () => {
     document.getElementById('saveNewSeatButton').addEventListener('click', async () => {
         const seatName = document.getElementById('seatNameInput').value;
         const challengerName = document.getElementById('challengerNameInput').value;
+        const candidateWebsite = document.getElementById('candidateWebsiteInput').value;
+        const candidateWikipedia = document.getElementById('candidateWikipediaInput').value;
         const isIncumbent = document.getElementById('incumbentInput').checked;
         const party = document.getElementById('partyInput').value;
         const scope = document.getElementById('scopeSelector').value;
@@ -435,6 +443,8 @@ const renderSeats = async () => {
             const existing = allExistingSeats.find(s => {
                 const matchesCore = (s.seat_name || '') === (seatName || '') &&
                                     (s.name || '') === (challengerName || '') &&
+                                    (s.website || '') === (candidateWebsite || '') &&
+                                    (s.wikipedia || '') === (candidateWikipedia || '') &&
                                     (s.party || '') === (party || '') &&
                                     (s.scope || '') === (scope || '') &&
                                     (s.incumbent || 'No') === incumbentStr;
@@ -468,12 +478,16 @@ const renderSeats = async () => {
                 name: challengerName, 
                 party: party, 
                 scope: scope, 
-                city: city
+                city: city, 
+                website: candidateWebsite, 
+                wikipedia: candidateWikipedia
             })
         });
 
         document.getElementById('seatNameInput').value = '';
         document.getElementById('challengerNameInput').value = '';
+        document.getElementById('candidateWebsiteInput').value = '';
+        document.getElementById('candidateWikipediaInput').value = '';
         document.getElementById('incumbentInput').checked = false;
         document.getElementById('partyInput').value = 'Democratic';
         document.getElementById('addSeatFormContainer').style.display = 'none';

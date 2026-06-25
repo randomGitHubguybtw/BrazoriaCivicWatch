@@ -112,3 +112,8 @@
 .delete-loc-btn:hover {
   border-style: inset;
 }
+
+.highlightable {
+  -webkit-user-select: text;
+  user-select: text;
+}
