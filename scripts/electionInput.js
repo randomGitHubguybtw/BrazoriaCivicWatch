@@ -1,8 +1,3 @@
-const supabaseUrl = 'https://wytipsmhzgrtxhpojvjt.supabase.co';
-const supabaseKey = 'sb_publishable_95Eiuz84ZNZxm83jTGrF-Q_GS6uViKk';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-const API_BASE = 'https://api.brazoriacivicwatch.org';
 const meetingForm = document.querySelector('.js-meeting-form');
 
 const savedPage = sessionStorage.getItem('electionPage') || '1';
@@ -12,16 +7,6 @@ let city = sessionStorage.getItem('electionCity') || '';
 let date = sessionStorage.getItem('electionDate') || '';
 let link = sessionStorage.getItem('electionLink') || '';
 let electionId = sessionStorage.getItem('electionId') || '';
-
-async function checkAccess() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) window.location.replace("../webpages/login.html");
-}
-
-async function getToken() {
-    const { data: { session } } = await supabase.auth.getSession();
-    return session?.access_token;
-}
 
 const getColumnName = (cityStr) => {
     return cityStr.replace(/'/g, "").replace(/ /g, "_") + "_ballot_link";
@@ -82,38 +67,26 @@ const navigateTo = (page) => {
 };
 
 const renderStepOne = () => {
+    const cityList = [
+      "Alvin", "Angleton", "Bailey's Prairie", "Bonney", "Brazoria", "Brazoria County",
+      "Brookside Village", "Clute", "Danbury", "Freeport", "Hillcrest Village",
+      "Holiday Lakes", "Iowa Colony", "Jones Creek", "Lake Jackson", "Liverpool",
+      "Manvel", "Oyster Creek", "Pearland", "Quintana", "Richwood", "Sandy Point",
+      "Surfside", "Sweeny", "West Columbia"
+    ];
+
+    const cityOptionsHtml = cityList.map(c => 
+      `<option value="${c}" ${city === c ? 'selected' : ''}>${c}</option>`
+    ).join('');
+
     meetingForm.innerHTML = `
         <h3 class="section-heading" style="margin-top: 0;">Election Details</h3>
         
         <label class="form-label" for="cityInput">Location of Election:</label>
-        <input list="cityOptions" id="cityInput" class="form-input js-city-input" autocomplete="off" placeholder="Search cities..." value="${city}" required>
-        <datalist id="cityOptions">
-          <option value="Alvin">
-          <option value="Angleton">
-          <option value="Bailey's Prairie">
-          <option value="Bonney">
-          <option value="Brazoria">
-          <option value="Brazoria County">
-          <option value="Brookside Village">
-          <option value="Clute">
-          <option value="Danbury">
-          <option value="Freeport">
-          <option value="Hillcrest Village">
-          <option value="Holiday Lakes">
-          <option value="Iowa Colony">
-          <option value="Jones Creek">
-          <option value="Lake Jackson">
-          <option value="Liverpool">
-          <option value="Manvel">
-          <option value="Oyster Creek">
-          <option value="Pearland">
-          <option value="Quintana">
-          <option value="Richwood">
-          <option value="Sandy Point">
-          <option value="Surfside">
-          <option value="Sweeny">
-          <option value="West Columbia">
-        </datalist>
+        <select id="cityInput" class="form-input js-city-input" required>
+          <option value="" disabled ${!city ? 'selected' : ''}>Select a city...</option>
+          ${cityOptionsHtml}
+        </select>
         
         <label class="form-label" for="dateInput">Date of Election:</label>
         <input type="date" id="dateInput" class="form-input js-date-input" value="${date}" required>
@@ -150,7 +123,7 @@ const renderStepOne = () => {
         }
     };
 
-    if (cityInputElem) cityInputElem.addEventListener('input', checkExistingBallotLink);
+    if (cityInputElem) cityInputElem.addEventListener('change', checkExistingBallotLink);
     if (dateInputElem) dateInputElem.addEventListener('input', checkExistingBallotLink);
 
     document.getElementById('electionSaveButton').addEventListener('click', async () => {

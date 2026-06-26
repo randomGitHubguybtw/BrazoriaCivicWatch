@@ -16,6 +16,18 @@ const allowedCities = [
   "Sweeny ISD"
 ];
 
+document.addEventListener('DOMContentLoaded', () => {
+  const cityInput = document.getElementById('cityInput');
+  if (cityInput && cityInput.tagName.toLowerCase() === 'input') {
+    const select = document.createElement('select');
+    select.id = 'cityInput';
+    select.className = cityInput.className;
+    select.innerHTML = '<option value="" disabled selected>Select a city...</option>' + 
+      allowedCities.map(c => `<option value="${c}">${c}</option>`).join('');
+    cityInput.parentNode.replaceChild(select, cityInput);
+  }
+});
+
 async function getToken() {
   const { data: { session } } = await supabase.auth.getSession();
   return session?.access_token;
