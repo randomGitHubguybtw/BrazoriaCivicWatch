@@ -100,6 +100,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <button class="sidebar-button js-sidebar-button">Register to Vote</button>
         <button class="sidebar-button js-sidebar-button">Public Places</button>
         <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: var(--inverted-secondary);">Volunteer Portal Login</button>
+        <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: var(--accent-color);">Report a Concern</button>
       </div>`;
 
     if (activeButton) {
