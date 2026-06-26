@@ -46,7 +46,7 @@ const loadVoterInformation = async () => {
             .sort((a, b) => new Date(a.date) - new Date(b.date));
 
         if (upcoming.length === 0) {
-            if (addressesContainer) addressesContainer.innerHTML = '<p class="highlightable voter-message">No upcoming elections found.</p>';
+            if (addressesContainer) addressesContainer.innerHTML = '<div class="defualt-location-text"><p class="highlightable voter-message">No upcoming elections found.</p><a href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank" class="default-link voter-message" style="color: var(--accent-color);" >Volunteer to Add Some!</a></div>';
             return;
         }
 
@@ -74,7 +74,7 @@ const loadVoterInformation = async () => {
         if (cityLocations.length === 0) {
             if (addressesContainer) {
                 const emptyText = isAllCities ? 'any area' : userCity;
-                addressesContainer.innerHTML = `<p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}.</p>`;
+                addressesContainer.innerHTML = `<div class="defualt-location-text"><p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}.</p> <a href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank" class="default-link">Volunteer to Change That!</a></div>`;
             }
             return;
         }
@@ -111,7 +111,7 @@ const loadVoterInformation = async () => {
 
     } catch (error) {
         if (addressesContainer) {
-            addressesContainer.innerHTML = `<p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}</p>`;
+            addressesContainer.innerHTML = `<div class="defualt-location-text"><p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}</p> <a href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank" class="default-link">Volunteer to Change That!</a></div>`;
         }
     }
 };

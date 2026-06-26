@@ -146,6 +146,12 @@
   font-style: italic;
 }
 
+.defualt-location-text {
+  display: grid;
+  text-align: center;
+  justify-content: center;
+}
+
 .party-democrat {
   color: #1d4ed8; 
 }

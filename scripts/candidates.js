@@ -47,7 +47,7 @@ const loadCandidates = async () => {
             .sort((a, b) => new Date(a.date) - new Date(b.date));
 
         if (upcoming.length === 0) {
-            if (candidatesContainer) candidatesContainer.innerHTML = '<p class="highlightable candidate-message">No upcoming elections found.</p>';
+            if (candidatesContainer) candidatesContainer.innerHTML = '<p class="highlightable candidate-message">No upcoming elections found.</p><a href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank" class="default-link candidate-message" style="color: var(--accent-color);" >Volunteer to Add Some!</a>';
             return;
         }
 
