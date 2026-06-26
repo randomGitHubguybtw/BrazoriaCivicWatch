@@ -303,6 +303,14 @@ const renderSeats = async () => {
                 <input type="text" id="challengerNameInput" class="form-input" placeholder="Candidate Name" style="flex: 1; min-width: 150px;">
                 <input type="text" id="candidateWebsiteInput" class="form-input" placeholder="Candidate Website Home Page" style="flex: 1; min-width: 150px;">
                 <input type="text" id="candidateWikipediaInput" class="form-input" placeholder="Wikipedia Article" style="flex: 1; min-width: 150px;">
+                
+                <input list="interviewOptions" id="interviewedInput" class="form-input" placeholder="Interview link" autocomplete="off" style="flex: 1; min-width: 150px;">
+                <datalist id="interviewOptions">
+                    <option value="None scheduled">
+                    <option value="Refused to comment">
+                    <option value="Scheduled">
+                </datalist>
+
                 <label style="font-family: sans-serif; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                     <input type="checkbox" id="incumbentInput"> Incumbent
                 </label>
@@ -357,7 +365,7 @@ const renderSeats = async () => {
                     li.style.fontSize = "14px";
                     li.innerHTML = `
                         <div class="highlightable">
-                        <strong>${seat.seat_name}</strong> (${seat.party}) | Incumbent: ${seat.incumbent || 'No'} | Challenger: ${seat.name || 'None'} | Website: ${seat.website || 'None'} | Wikipedia: ${seat.wikipedia || 'None'}
+                        <strong>${seat.seat_name}</strong> (${seat.party}) | Incumbent: ${seat.incumbent || 'No'} | Challenger: ${seat.name || 'None'} | Website: ${seat.website || 'None'} | Wikipedia: ${seat.wikipedia || 'None'} | Interview: ${seat.interviewed || 'None'}
                         </div>
                         <button type="button" class="delete-seat-btn js-hands-off" data-id="${seat.id}" style="background-color: var(--primary-color); padding: 4px 8px; font-size: 12px; border: none; border-radius: 4px; color: #fff; cursor: pointer; margin-left: 10px;">Delete</button>
                     `;
@@ -403,6 +411,7 @@ const renderSeats = async () => {
         document.getElementById('challengerNameInput').value = '';
         document.getElementById('candidateWebsiteInput').value = '';
         document.getElementById('candidateWikipediaInput').value = '';
+        document.getElementById('interviewedInput').value = '';
         document.getElementById('incumbentInput').checked = false;
         document.getElementById('partyInput').value = 'Democratic';
     });
@@ -412,6 +421,7 @@ const renderSeats = async () => {
         const challengerName = document.getElementById('challengerNameInput').value;
         const candidateWebsite = document.getElementById('candidateWebsiteInput').value;
         const candidateWikipedia = document.getElementById('candidateWikipediaInput').value;
+        const interviewed = document.getElementById('interviewedInput').value;
         const isIncumbent = document.getElementById('incumbentInput').checked;
         const party = document.getElementById('partyInput').value;
         const scope = document.getElementById('scopeSelector').value;
@@ -434,6 +444,7 @@ const renderSeats = async () => {
                                     (s.name || '') === (challengerName || '') &&
                                     (s.website || '') === (candidateWebsite || '') &&
                                     (s.wikipedia || '') === (candidateWikipedia || '') &&
+                                    (s.interviewed || '') === (interviewed || '') &&
                                     (s.party || '') === (party || '') &&
                                     (s.scope || '') === (scope || '') &&
                                     (s.incumbent || 'No') === incumbentStr;
@@ -469,7 +480,8 @@ const renderSeats = async () => {
                 scope: scope, 
                 city: city, 
                 website: candidateWebsite, 
-                wikipedia: candidateWikipedia
+                wikipedia: candidateWikipedia,
+                interviewed: interviewed
             })
         });
 
@@ -477,6 +489,7 @@ const renderSeats = async () => {
         document.getElementById('challengerNameInput').value = '';
         document.getElementById('candidateWebsiteInput').value = '';
         document.getElementById('candidateWikipediaInput').value = '';
+        document.getElementById('interviewedInput').value = '';
         document.getElementById('incumbentInput').checked = false;
         document.getElementById('partyInput').value = 'Democratic';
         document.getElementById('addSeatFormContainer').style.display = 'none';

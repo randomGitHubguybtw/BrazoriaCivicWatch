@@ -88,6 +88,19 @@ const loadCandidates = async () => {
                     const wikiLink = c.wikipedia ? `<a class="highlightable candidate-link" href="${c.wikipedia}" target="_blank">Wikipedia Article</a>` : '<span class="highlightable candidate-no-link">No wikipedia article available</span>';
                     const webLink = c.website ? `<a class="highlightable candidate-link" href="${c.website}" target="_blank">Campaign Website</a>` : '';
 
+                    let interviewHtml = '';
+                    const interviewData = c.interviewed ? c.interviewed.trim() : '';
+
+                    if (interviewData === 'None scheduled' || interviewData === 'Not scheduled' || interviewData === '') {
+                        interviewHtml = '<span class="highlightable candidate-no-link">This candidate does not have an interview scheduled</span>';
+                    } else if (interviewData === 'Scheduled') {
+                        interviewHtml = '<span class="highlightable candidate-no-link">This candidates interview is scheduled</span>';
+                    } else if (interviewData === 'Refused to comment' || interviewData === 'Refused') {
+                        interviewHtml = '<span class="highlightable candidate-no-link">This candidate has refused an interview</span>';
+                    } else {
+                        interviewHtml = `<a class="highlightable candidate-link" href="${interviewData}" target="_blank">Candidate Interview</a>`;
+                    }
+
                     const partyName = c.party || 'Independent';
                     const partyLower = partyName.toLowerCase();
                     let partyClass = 'party-other';
@@ -105,6 +118,7 @@ const loadCandidates = async () => {
                             <div class="candidate-links-container">
                                 ${webLink}
                                 ${wikiLink}
+                                ${interviewHtml}
                             </div>
                         </div>
                     `;
