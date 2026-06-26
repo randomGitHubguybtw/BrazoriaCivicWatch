@@ -1,3 +1,8 @@
+const supabaseUrl = 'https://wytipsmhzgrtxhpojvjt.supabase.co';
+const supabaseKey = 'sb_publishable_95Eiuz84ZNZxm83jTGrF-Q_GS6uViKk';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+const API_BASE = 'https://api.brazoriacivicwatch.org';
 const meetingForm = document.querySelector('.js-meeting-form');
 
 const savedPage = sessionStorage.getItem('electionPage') || '1';
@@ -7,6 +12,16 @@ let city = sessionStorage.getItem('electionCity') || '';
 let date = sessionStorage.getItem('electionDate') || '';
 let link = sessionStorage.getItem('electionLink') || '';
 let electionId = sessionStorage.getItem('electionId') || '';
+
+async function checkAccess() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) window.location.replace("../webpages/login.html");
+}
+
+async function getToken() {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token;
+}
 
 const getColumnName = (cityStr) => {
     return cityStr.replace(/'/g, "").replace(/ /g, "_") + "_ballot_link";
@@ -174,8 +189,7 @@ const renderLocations = async () => {
             } else {
                 currentLocationsId = `loc_${city.replace(/[^a-zA-Z0-9]/g, '')}_${electionId}`;
             }
-        } catch (err) {
-        }
+        } catch (err) {}
     };
     
     const loadLocations = async () => {
