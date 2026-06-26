@@ -111,7 +111,7 @@ const loadVoterInformation = async () => {
 
     } catch (error) {
         if (addressesContainer) {
-            addressesContainer.innerHTML = '<p class="highlightable voter-message">Error loading polling data. Please try again later.</p>';
+            addressesContainer.innerHTML = `<p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}</p>`;
         }
     }
 };
