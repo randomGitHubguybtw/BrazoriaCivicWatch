@@ -100,7 +100,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <button class="sidebar-button js-sidebar-button">Register to Vote</button>
         <button class="sidebar-button js-sidebar-button">Public Places</button>
         <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: var(--inverted-secondary);">Volunteer Portal Login</button>
-        <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: var(--accent-color);">Report a Concern</button>
+        <button data-target="https://forms.gle/4sEn3ooneF7AyH4C7" class="sidebar-button js-sidebar-button" style="background-color: var(--accent-color);">Report a Concern</button>
       </div>`;
 
     if (activeButton) {
@@ -121,7 +121,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         </div>
         <div class="vertical-container">
             <p class="footer-text js-footer-text">FAQ</p>
-            <p class="footer-text js-footer-text">Get Involved</p>
+            <p data-target="https://forms.gle/oTUAUNgc3TBwZozB6" class="footer-text js-footer-text">Get Involved</p>
             <p class="footer-text js-footer-text">Social Media</p>
         </div>
     </div>`;

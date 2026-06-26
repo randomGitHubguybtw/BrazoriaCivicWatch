@@ -30,7 +30,11 @@ document.body.addEventListener('click', (event) => {
     renderSummaryPage(targetDateData, meeting);
     window.location.href = destination;
   } else if (destination) {
-    window.location.href = destination;
+    if (destination.startsWith('http://') || destination.startsWith('https://')) {
+      window.open(destination, '_blank', 'noopener,noreferrer');
+    } else {
+      window.location.href = destination;
+    }
   } else {
     event.preventDefault();
     window.location.href = "webpages/construction.html";

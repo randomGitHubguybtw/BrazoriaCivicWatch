@@ -75,7 +75,7 @@ export function runSummary(targetDate, targetMeeting) {
 
   if (areaList.length === 0) {
     if (summaryContainer) {
-      summaryContainer.innerHTML = `There doesn't seem to be any summary here... yet! <a class="default-link">Volunteer to Help!</a>`;
+      summaryContainer.innerHTML = `There doesn't seem to be any summary here... yet! <a href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank" class="default-link">Volunteer to Help!</a>`;
     }
     if (dateTitle) {
       dateTitle.innerHTML = 'Month D, Year'; 
