@@ -72,23 +72,23 @@
 
 .edit-button {
   background-color: var(--secondary-color);
-  font-size: clamp(12px, 2vw, 20px);
-  padding: 5px 15px;
-  border: inset 3px var(--accent-color);
+  font-size: clamp(14px, 2.2vw, 20px);
+  padding: 1.5px 4.5px;
+  border: inset 2px var(--accent-color);
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 3px;
 }
 
 .edit-button:hover {
-  border: inset 3.5px var(--accent-color);
+  border: inset 2.5px var(--accent-color);
 }
 
 .edit-button:active {
-  border: outset 3px var(--accent-color);
+  border: outset 2.2px var(--accent-color);
 }
 
 .meeting-date {
-  font-size: clamp(14px, 4vw, 24px);
+  font-size: clamp(10px, 4vw, 24px);
   font-weight: bold;
   margin-right: 15px;
   color: var(--accent-color);
