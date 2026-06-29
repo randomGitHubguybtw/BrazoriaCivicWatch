@@ -303,7 +303,7 @@
         padding: 0 !important;
     }
     
-    .voting-time-container * {
+    .voting-time-container p, .voting-time-container h3 {
         display: inline !important;
         margin: 0 4px !important;
         padding: 0 !important;
@@ -313,7 +313,7 @@
     .candidates-grid-layout {
         display: block !important;
         column-count: 2 !important;
-        column-gap: 12px !important;
+        column-gap: 0 !important;
     }
 
     .seat-card {
@@ -321,7 +321,7 @@
         page-break-inside: avoid !important;
         border: 1px solid #000 !important;
         border-radius: 0 !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 0 !important;
         padding: 4px !important;
         min-height: 0 !important;
         box-shadow: none !important;
@@ -340,7 +340,7 @@
 
     .candidate-info {
         font-size: 9pt !important;
-        margin: 0 0 2px 0 !important;
+        margin: 0 !important;
         padding: 0 !important;
     }
 

@@ -226,7 +226,7 @@ const loadCandidates = async () => {
         
         const printSeats = document.createElement('div');
         printSeats.className = 'print-only-seats';
-        printSeats.innerHTML = `<strong>Elected Seats:</strong> ${uniqueSeatsArray.join('<b>;</b> ')}`;
+        printSeats.innerHTML = `<strong>Elected Seats:</strong> ${uniqueSeatsArray.join('<strong>;</strong> ')}`;
 
         const printLocations = document.createElement('div');
         printLocations.className = 'print-only-locations';
@@ -253,7 +253,7 @@ const loadCandidates = async () => {
             const printFooter = document.createElement('div');
             printFooter.className = 'print-only-footer';
             
-            const footerLocationsHtml = otherAddresses.map(addr => `<span class="print-location-item-compact"><b>${addr.name}</b> (${addr.address})</span>`).join(' <b>|</b> ');
+            const footerLocationsHtml = otherAddresses.map(addr => `<span class="print-location-item-compact"><b>${addr.name}</b> (${addr.address})</span>`).join(' <strong>|</strong> ');
             printFooter.innerHTML = `<div class="print-location-title">Other Polling Locations:</div><div class="print-location-compact-list">${footerLocationsHtml}</div>`;
 
             if (candidatesContainer && candidatesContainer.parentNode) {
