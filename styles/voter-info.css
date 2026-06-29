@@ -198,22 +198,173 @@
   opacity: 60%;
 }
 
-.candidate-result-date {
-  flex-shrink: 0;
-  font-weight: bold;
+.print-only-header, .print-only-locations, .print-only-footer, .print-only-seats, .print-only-link {
+    display: none;
 }
 
-.candidate-result:hover {
-  opacity: 80%;
-}
+@media print {
+    body, .candidates-grid-layout, .seat-card, .candidate-info {
+        background: #fff !important;
+        background-color: #fff !important;
+        color: #000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        line-height: 1 !important;
+    }
 
-.candidate-result-preview {
-  opacity: 40%;
-  font-size: 12px;
-  display: inline-block;
-  flex: 1;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    .header, .js-header, .sidebar-container, .js-sidebar-container, .title, .candidate-search-wrapper, .candidate-search, #candidateSearchInput, .footer, .js-footer, img, iframe, button {
+        display: none !important;
+    }
+
+    .screen-only-link {
+        display: none !important;
+    }
+
+    .print-only-link {
+        display: inline !important;
+    }
+
+    .print-only-header {
+        display: block !important;
+        text-align: center !important;
+        font-size: 20pt !important;
+        margin: 0 0 4px 0 !important;
+        padding: 0 !important;
+        color: #000 !important;
+        font-weight: bold !important;
+    }
+
+    .print-only-seats {
+        display: block !important;
+        text-align: center !important;
+        font-size: 9pt !important;
+        margin: 6px 0 !important;
+        padding: 6px 4px !important;
+        color: #000 !important;
+        line-height: 1.3 !important;
+        border-top: 1px solid #000 !important;
+        border-bottom: 1px solid #000 !important;
+    }
+
+    .print-only-locations {
+        display: block !important;
+        margin: 0 0 8px 0 !important;
+        padding: 0 !important;
+        color: #000 !important;
+        border-bottom: 1px solid #000 !important;
+        padding-bottom: 6px !important;
+    }
+
+    .print-only-footer {
+        display: block !important;
+        margin: 8px 0 0 0 !important;
+        padding: 6px 0 0 0 !important;
+        color: #000 !important;
+        border-top: 1px solid #000 !important;
+        page-break-before: auto !important;
+    }
+
+    .print-location-title {
+        text-align: center !important;
+        font-weight: bold !important;
+        font-size: 11pt !important;
+        margin-bottom: 4px !important;
+    }
+
+    .print-location-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px 12px !important;
+        text-align: left !important;
+    }
+
+    .print-location-item {
+        font-size: 8pt !important;
+        line-height: 1.15 !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .print-location-compact-list {
+        text-align: center !important;
+        font-size: 7.5pt !important;
+        line-height: 1.2 !important;
+    }
+
+    .print-location-item-compact {
+        display: inline !important;
+    }
+
+    .voting-time-container {
+        display: block !important;
+        text-align: center !important;
+        margin: 0 0 4px 0 !important;
+        padding: 0 !important;
+    }
+    
+    .voting-time-container * {
+        display: inline !important;
+        margin: 0 4px !important;
+        padding: 0 !important;
+        font-size: 10pt !important;
+    }
+
+    .candidates-grid-layout {
+        display: block !important;
+        column-count: 2 !important;
+        column-gap: 12px !important;
+    }
+
+    .seat-card {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        border: 1px solid #000 !important;
+        border-radius: 0 !important;
+        margin-bottom: 6px !important;
+        padding: 4px !important;
+        min-height: 0 !important;
+        box-shadow: none !important;
+        display: inline-block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .seat-title {
+        font-size: 10pt !important;
+        margin: 0 0 2px 0 !important;
+        border-bottom: 1px solid #000 !important;
+        padding-bottom: 1px !important;
+        color: #000 !important;
+    }
+
+    .candidate-info {
+        font-size: 9pt !important;
+        margin: 0 0 2px 0 !important;
+        padding: 0 !important;
+    }
+
+    .candidate-name-party {
+        font-size: 11pt !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #000 !important;
+    }
+
+    .candidate-links-container {
+        font-size: 7pt !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+    }
+
+    .candidate-no-link {
+        color: #333 !important;
+        font-style: italic !important;
+    }
+    
+    .party-democrat, .party-republican, .party-green, .party-libertarian, .party-other {
+        color: #000 !important;
+        font-weight: bold !important;
+    }
 }

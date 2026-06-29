@@ -129,17 +129,21 @@ const loadCandidates = async () => {
             return;
         }
 
-        const isAllCities = userCity.startsWith('All ') || userCity === 'All';
+        const isAllCities = userCity === 'All' || userCity === 'All Cities' || userCity.startsWith('All ');
 
-        const [electionsResponse, seatsResponse] = await Promise.all([
+        const [electionsResponse, seatsResponse, locationsResponse, addressesResponse] = await Promise.all([
             fetch(`${API_BASE}/api/elections`),
-            fetch(`${API_BASE}/api/seats`)
+            fetch(`${API_BASE}/api/seats`),
+            fetch(`${API_BASE}/api/polling_locations`),
+            fetch(`${API_BASE}/api/polling_addresses`)
         ]);
 
-        if (!electionsResponse.ok || !seatsResponse.ok) throw new Error();
+        if (!electionsResponse.ok || !seatsResponse.ok || !locationsResponse.ok || !addressesResponse.ok) throw new Error();
         
         const allElections = await electionsResponse.json();
         const allSeats = await seatsResponse.json();
+        const allLocations = await locationsResponse.json();
+        const allAddresses = await addressesResponse.json();
 
         const relevantSeats = allSeats.filter(seat => {
             if (seat.scope === 'general' || seat.scope === 'state' || seat.scope === 'major') return true;
@@ -186,8 +190,6 @@ const loadCandidates = async () => {
                 const primaryLabel = document.createElement('h3');
                 primaryLabel.className = 'primary-election-label highlightable';
                 primaryLabel.textContent = 'Primary Election';
-                primaryLabel.style.textAlign = 'center';
-                primaryLabel.style.marginTop = '5px';
                 dateContainer.appendChild(primaryLabel);
             }
         }
@@ -200,6 +202,63 @@ const loadCandidates = async () => {
                 candidatesContainer.innerHTML = `<p class="highlightable candidate-message">No candidates currently listed for ${emptyText}.</p>`;
             }
             return;
+        }
+
+        const cityLocations = allLocations.filter(loc => 
+            loc.election_id === targetElectionId && (isAllCities || loc.city === userCity)
+        );
+        const validLocationIds = new Set(cityLocations.map(loc => loc.locations_id));
+        const mainAddresses = allAddresses.filter(addr => validLocationIds.has(addr.locations_id));
+
+        const otherLocations = allLocations.filter(loc => 
+            loc.election_id === targetElectionId && (!isAllCities && loc.city !== userCity)
+        );
+        const otherLocationIds = new Set(otherLocations.map(loc => loc.locations_id));
+        const otherAddresses = allAddresses.filter(addr => otherLocationIds.has(addr.locations_id) && !validLocationIds.has(addr.locations_id));
+
+        document.querySelectorAll('.print-only-header, .print-only-locations, .print-only-footer, .print-only-seats').forEach(el => el.remove());
+
+        const uniqueSeatsArray = Array.from(new Set(targetCandidates.map(c => c.seat_name || "Unknown Seat")));
+
+        const printHeader = document.createElement('h1');
+        printHeader.className = 'print-only-header';
+        printHeader.innerHTML = '<i>Brazoria Civic Watch</i> Sample Ballot';
+        
+        const printSeats = document.createElement('div');
+        printSeats.className = 'print-only-seats';
+        printSeats.innerHTML = `<strong>Elected Seats:</strong> ${uniqueSeatsArray.join('<b>;</b> ')}`;
+
+        const printLocations = document.createElement('div');
+        printLocations.className = 'print-only-locations';
+        
+        if (mainAddresses.length > 0) {
+            const locationsHtml = mainAddresses.map(addr => `<div class="print-location-item"><b>${addr.name}</b><br>${addr.address}</div>`).join('');
+            printLocations.innerHTML = `<div class="print-location-title">Your Polling Locations:</div><div class="print-location-grid">${locationsHtml}</div>`;
+        } else {
+            printLocations.innerHTML = `<div class="print-location-title">Your Polling Locations:</div><p>No specific locations listed for your area.</p>`;
+        }
+
+        const dateContainer = document.querySelector('.voting-time-container');
+        if (dateContainer && dateContainer.parentNode) {
+            dateContainer.parentNode.insertBefore(printHeader, dateContainer);
+            dateContainer.parentNode.insertBefore(printSeats, dateContainer.nextSibling);
+            dateContainer.parentNode.insertBefore(printLocations, printSeats.nextSibling);
+        } else if (candidatesContainer && candidatesContainer.parentNode) {
+            candidatesContainer.parentNode.insertBefore(printHeader, candidatesContainer);
+            candidatesContainer.parentNode.insertBefore(printSeats, candidatesContainer);
+            candidatesContainer.parentNode.insertBefore(printLocations, candidatesContainer);
+        }
+
+        if (otherAddresses.length > 0) {
+            const printFooter = document.createElement('div');
+            printFooter.className = 'print-only-footer';
+            
+            const footerLocationsHtml = otherAddresses.map(addr => `<span class="print-location-item-compact"><b>${addr.name}</b> (${addr.address})</span>`).join(' <b>|</b> ');
+            printFooter.innerHTML = `<div class="print-location-title">Other Polling Locations:</div><div class="print-location-compact-list">${footerLocationsHtml}</div>`;
+
+            if (candidatesContainer && candidatesContainer.parentNode) {
+                candidatesContainer.parentNode.insertBefore(printFooter, candidatesContainer.nextSibling);
+            }
         }
 
         const seatsGrouped = {};
@@ -224,20 +283,26 @@ const loadCandidates = async () => {
             for (const [seatGroupName, candidatesList] of sortedSeats) {
                 let candidatesHTML = candidatesList.map(c => {
                     const isIncumbent = (c.incumbent && (c.incumbent.toLowerCase() === 'y' || c.incumbent.toLowerCase() === 'yes')) ? 'Yes' : 'No';
+
                     const wikiLink = c.wikipedia ? `<a class="highlightable candidate-link" href="${c.wikipedia}" target="_blank">Wikipedia Article</a>` : '<span class="highlightable candidate-no-link">No wikipedia article available</span>';
                     const webLink = c.website ? `<a class="highlightable candidate-link" href="${c.website}" target="_blank">Campaign Website</a>` : '';
 
-                    let interviewHtml = '';
+                    let interviewHtmlScreen = '';
+                    let interviewHtmlPaper = '';
                     const interviewData = c.interviewed ? c.interviewed.trim() : '';
 
                     if (interviewData === 'None scheduled' || interviewData === 'Not scheduled' || interviewData === '') {
-                        interviewHtml = '<span class="highlightable candidate-no-link">This candidate does not have an interview scheduled</span>';
+                        interviewHtmlScreen = '<span class="highlightable candidate-no-link">This candidate does not have an interview scheduled</span>';
+                        interviewHtmlPaper = '<span class="highlightable candidate-no-link">This candidate does not have an interview scheduled</span>';
                     } else if (interviewData === 'Scheduled') {
-                        interviewHtml = '<span class="highlightable candidate-no-link">This candidates interview is scheduled</span>';
+                        interviewHtmlScreen = '<span class="highlightable candidate-no-link">This candidate\'s interview is scheduled</span>';
+                        interviewHtmlPaper = '<span class="highlightable candidate-no-link">This candidate\'s interview is scheduled</span>';
                     } else if (interviewData === 'Refused to comment' || interviewData === 'Refused') {
-                        interviewHtml = '<span class="highlightable candidate-no-link">This candidate has refused an interview</span>';
+                        interviewHtmlScreen = '<span class="highlightable candidate-no-link">This candidate has refused an interview</span>';
+                        interviewHtmlPaper = '<span class="highlightable candidate-no-link">This candidate has refused an interview</span>';
                     } else {
-                        interviewHtml = `<a class="highlightable candidate-link" href="${interviewData}" target="_blank">Candidate Interview</a>`;
+                        interviewHtmlScreen = `<a class="highlightable candidate-link" href="${interviewData}" target="_blank">Candidate Interview</a>`;
+                        interviewHtmlPaper = '<span class="highlightable candidate-no-link">This candidate has agreed to an interview</span>';
                     }
 
                     const partyName = c.party || 'Independent';
@@ -255,9 +320,10 @@ const loadCandidates = async () => {
                                 <span class="${partyClass}">${partyName}:</span> ${c.name || 'Unknown'}, Incumbent (${isIncumbent})
                             </h4>
                             <div class="candidate-links-container">
-                                ${webLink}
-                                ${wikiLink}
-                                ${interviewHtml}
+                                <span class="screen-only-link">${webLink}</span>
+                                <span class="screen-only-link">${wikiLink}</span>
+                                <span class="screen-only-link">${interviewHtmlScreen}</span>
+                                <span class="print-only-link">${interviewHtmlPaper}</span>
                             </div>
                         </div>
                     `;
@@ -276,10 +342,25 @@ const loadCandidates = async () => {
             candidatesContainer.innerHTML = gridHTML;
             
             initializeSearch();
-            
             applySearch();
 
-            setTimeout(equalizeRowHeights, 150);
+            setTimeout(() => {
+                equalizeRowHeights();
+
+                const urlParams = new URLSearchParams(window.location.search);
+                if (sessionStorage.getItem('printRequested') === 'true' || urlParams.get('print') === 'true') {
+                    setTimeout(() => {
+                        window.print();
+                        sessionStorage.removeItem('printRequested');
+                        
+                        if (urlParams.get('print') === 'true') {
+                            urlParams.delete('print');
+                            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                            window.history.replaceState({}, document.title, newUrl);
+                        }
+                    }, 500); 
+                }
+            }, 150);
         }
 
     } catch (error) {
@@ -291,7 +372,11 @@ const loadCandidates = async () => {
 
 document.addEventListener('DOMContentLoaded', loadCandidates);
 
-document.addEventListener('click', () => {
+document.addEventListener('click', (event) => {
+    const printBtn = event.target.closest('[data-print="true"]');
+    if (printBtn) {
+        sessionStorage.setItem('printRequested', 'true');
+    }
     setTimeout(loadCandidates, 50);
 });
 

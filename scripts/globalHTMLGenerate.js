@@ -94,7 +94,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <button data-target="index.html" class="sidebar-button js-sidebar-button"><strong>Home</strong></button>
         <button data-target="webpages/meeting-selection-screen.html" class="sidebar-button">Most Recent Meeting</button>
         <button class="sidebar-button js-sidebar-button">Run For Office</button>
-        <button class="sidebar-button js-sidebar-button">Candidate Interviews</button>
+        <button data-target="webpages/candidates.html" class="sidebar-button js-sidebar-button">Candidate Interviews</button>
         <button class="sidebar-button js-sidebar-button">Current Officials</button>
         <button data-target="webpages/archive.html" class="sidebar-button js-sidebar-button">Archive</button>
         <button class="sidebar-button js-sidebar-button">Meeting Information</button>
