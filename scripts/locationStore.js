@@ -58,18 +58,18 @@ async function fetchMaps() {
   };
 }
 
-export function saveCityAndIsd(startCity = "All Cities", startIsd = "All ISDs", startBoardOfEd = "All State Board of Education Districts", startCongressDist = "All Congressional Districts", startPrecinct = "All Justice of the Peace Precincts", startStateRep = "All State Representative Districts", startStateSen = "All State Senate Districts", startCollege = "None", startDrainage = "None", startHospital = "None", startMud = "None", startNavigation = "None") {
+export function saveCityAndIsd(startCity = "All Cities", startIsd = "All ISDs", startBoardOfEd = "All State Board of Education Districts", startCongressDist = "All Congressional Districts", startPrecinct = "All Justice of the Peace Precincts", startStateRep = "All State Representative Districts", startStateSen = "All State Senate Districts", startCollege = "All College Districts", startDrainage = "All Drainage Districts", startHospital = "All Hospital Districts", startMud = "All MUDs", startNavigation = "All Navigation Precincts") {
   if (startCity === 'CITY OF ALVIN' || startCity === 'ALVIN') {
     startCity = 'Alvin';
   }
   if (startCity === 'BRAZORIA COUNTY') {
-    startCity = 'None';
+    startCity = 'Brazoria County';
   }
   if (startIsd === "ALVIN ISD; 2018 BOUNDARY ADJ. SPL  AND SAL ISD'S") {
     startIsd = 'Alvin ISD';
   }
   if (startDrainage === 'NO DISTRICT') {
-    startDrainage = 'None';
+    startDrainage = 'All Drainage Districts';
   }
  
   const cleanCity = (startCity === "None" || startCity === "All Cities") ? startCity : fixNoun(startCity);
@@ -127,11 +127,11 @@ async function processLocation(lat, long) {
   let finalPrecinct = "All Justice of the Peace Precincts";
   let finalStateRep = "All State Representative Districts";
   let finalStateSen = "All State Senate Districts";
-  let finalCollege = "None";
-  let finalDrainage = "None";
-  let finalHospital = "None";
-  let finalMud = "None";
-  let finalNavigation = "None";
+  let finalCollege = "All College Districts";
+  let finalDrainage = "All Drainage Districts";
+  let finalHospital = "All Hospital Districts";
+  let finalMud = "All MUDs";
+  let finalNavigation = "All Navigation Precincts";
 
   const mudNameDictionary = {
     "Brazoria County MUD #26": "Shadow Creek Ranch MUD (#26)",
@@ -328,7 +328,7 @@ export async function forceRecalculate() {
     const { lat, long } = await getCoordinates();
     return await processLocation(lat, long);
   } catch (error) {
-    return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "None", "None", "None", "None", "None");
+    return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "All College Districts", "All Drainage Districts", "All Hospital Districts", "All MUDs", "All Navigation Precincts");
   }
 }
 
@@ -387,6 +387,6 @@ export const locationDataReady = (async function initLocation() {
     const { lat, long } = await getCoordinates();
     return await processLocation(lat, long);
   } catch (error) {
-    return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "None", "None", "None", "None", "None");
+    return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "All College Districts", "All Drainage Districts", "All Hospital Districts", "All MUDs", "All Navigation Precincts");
   }
 })();
