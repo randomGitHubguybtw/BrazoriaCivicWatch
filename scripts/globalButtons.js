@@ -571,10 +571,10 @@ if (dropdownsListContainer) {
         <input type="text" placeholder="Select Navigation District..." class="location-dropdown js-navigation-search js-dropdown-input" style="border: inset 3px var(--accent-color); color: var(--black-text-color); cursor: pointer;"></input>
         <ul class="dropdown-search js-dropdown-list" style="color: var(--black-text-color);">
           <li class="js-dropdown-item">None</li>
-          <li class="js-dropdown-item">Navigation Precinct 1</li>
-          <li class="js-dropdown-item">Navigation Precinct 2</li>
-          <li class="js-dropdown-item">Navigation Precinct 3</li>
-          <li class="js-dropdown-item">Navigation Precinct 4</li>
+          <li class="js-dropdown-item">Precinct 1</li>
+          <li class="js-dropdown-item">Precinct 2</li>
+          <li class="js-dropdown-item">Precinct 3</li>
+          <li class="js-dropdown-item">Precinct 4</li>
           <li class="js-dropdown-item">All Navigation Precincts</li>
         </ul>
       </div>
