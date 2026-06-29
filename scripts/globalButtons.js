@@ -282,6 +282,99 @@ function renderSummaryPage(targetDate, cityOrIsd) {
   sessionStorage.setItem('targetDate', targetDate.toISOString());
 }
 
+async function fetchFile(names) {
+  for (let name of names) {
+    try {
+      let res = await fetch(name);
+      if (res.ok) return await res.json();
+    } catch(e) {}
+  }
+  return null;
+}
+
+function doBBoxesIntersect(b1, b2) {
+  return !(b2[0] > b1[2] || b2[2] < b1[0] || b2[1] > b1[3] || b2[3] < b1[1]);
+}
+
+async function loadDynamicDistricts() {
+  try {
+    const countiesRes = await fetchFile(['./locationJSON/counties.json', 'counties.json', '../counties.json', '/counties.json']);
+    const congressRes = await fetchFile(['./locationJSON/congressDistricts.json', 'congressDistricts.json', '../locationJSON/congressDistricts.json']);
+    const senateRes = await fetchFile(['./locationJSON/stateSenDistricts.json', 'stateSenDistricts.json', '../locationJSON/stateSenDistricts.json']);
+    const repRes = await fetchFile(['./locationJSON/stateRepDistricts.json', 'stateRepDistricts.json', '../locationJSON/stateRepDistricts.json']);
+
+    if (!countiesRes || !window.turf) return;
+
+    const brazoria = countiesRes.features.find(f => f.properties && String(f.properties.CNTY_NM || '').toLowerCase() === 'brazoria');
+    if (!brazoria || !brazoria.geometry) return;
+
+    const brazoriaBbox = window.turf.bbox(brazoria);
+
+    const getDistName = (feat) => {
+      let p = feat.properties;
+      if (!p) return 'Unknown';
+      if (p.District) return p.District;
+      if (p.DIST_NBR) return p.DIST_NBR;
+      if (p.DISTRICT) return p.DISTRICT;
+      if (p.DIST_NM) return p.DIST_NM;
+      for (let k in p) {
+        if (k.toUpperCase().includes('DIST')) return p[k];
+      }
+      return 'Unknown';
+    };
+
+    const processGeo = (geoData, inputSelector, allText) => {
+      if (!geoData || !geoData.features) return;
+      const valid = [];
+      
+      geoData.features.forEach(f => {
+        if (!f.geometry) return;
+        
+        const featureBbox = window.turf.bbox(f);
+        
+        if (doBBoxesIntersect(brazoriaBbox, featureBbox)) {
+          try {
+            const overlap = window.turf.intersect(brazoria, f);
+            if (overlap && window.turf.area(overlap) > 10000) {
+              let name = getDistName(f);
+              if (!valid.includes(name)) valid.push(name);
+            }
+          } catch (err) {
+            if (window.turf.booleanIntersects(brazoria, f)) {
+              let name = getDistName(f);
+              if (!valid.includes(name)) valid.push(name);
+            }
+          }
+        }
+      });
+      
+      valid.sort((a, b) => {
+        let na = parseInt(String(a).replace(/\D/g, '')) || 0;
+        let nb = parseInt(String(b).replace(/\D/g, '')) || 0;
+        return na - nb;
+      });
+
+      const input = document.querySelector(inputSelector);
+      if (input && input.nextElementSibling) {
+        const ul = input.nextElementSibling;
+        let html = '<li class="js-dropdown-item">None</li>';
+        valid.forEach(v => {
+          html += `<li class="js-dropdown-item">District ${v}</li>`;
+        });
+        html += `<li class="js-dropdown-item">${allText}</li>`;
+        ul.innerHTML = html;
+      }
+    };
+
+    setTimeout(() => processGeo(congressRes, '.js-congress-search', 'All Congressional Districts'), 10);
+    setTimeout(() => processGeo(senateRes, '.js-statesen-search', 'All State Senate Districts'), 50);
+    setTimeout(() => processGeo(repRes, '.js-staterep-search', 'All State Representative Districts'), 100);
+
+  } catch (e) {
+    console.error("Error dynamically loading districts:", e);
+  }
+}
+
 const dropdownsListContainer = document.querySelector('.js-dropdowns-list');
 
 if (dropdownsListContainer) {
@@ -388,11 +481,7 @@ if (dropdownsListContainer) {
       <div class="dropdown-wrapper">
         <input type="text" placeholder="Select Congress District..." class="location-dropdown js-congress-search js-dropdown-input" style="border: inset 3px var(--accent-color); color: var(--black-text-color); cursor: pointer;"></input>
         <ul class="dropdown-search js-dropdown-list" style="color: var(--black-text-color);">
-          <li class="js-dropdown-item">None</li>
-          <li class="js-dropdown-item">District 9</li>
-          <li class="js-dropdown-item">District 14</li>
-          <li class="js-dropdown-item">District 22</li>
-          <li class="js-dropdown-item">All Congressional Districts</li>
+          <li class="js-dropdown-item">Loading Districts...</li>
         </ul>
       </div>
     </div>
@@ -417,10 +506,7 @@ if (dropdownsListContainer) {
       <div class="dropdown-wrapper">
         <input type="text" placeholder="Select State Rep District..." class="location-dropdown js-staterep-search js-dropdown-input" style="border: inset 3px var(--accent-color); color: var(--black-text-color); cursor: pointer;"></input>
         <ul class="dropdown-search js-dropdown-list" style="color: var(--black-text-color);">
-          <li class="js-dropdown-item">None</li>
-          <li class="js-dropdown-item">District 25</li>
-          <li class="js-dropdown-item">District 29</li>
-          <li class="js-dropdown-item">All State Representative Districts</li>
+          <li class="js-dropdown-item">Loading Districts...</li>
         </ul>
       </div>
     </div>
@@ -430,10 +516,7 @@ if (dropdownsListContainer) {
       <div class="dropdown-wrapper">
         <input type="text" placeholder="Select State Sen District..." class="location-dropdown js-statesen-search js-dropdown-input" style="border: inset 3px var(--accent-color); color: var(--black-text-color); cursor: pointer;"></input>
         <ul class="dropdown-search js-dropdown-list" style="color: var(--black-text-color);">
-          <li class="js-dropdown-item">None</li>
-          <li class="js-dropdown-item">District 11</li>
-          <li class="js-dropdown-item">District 17</li>
-          <li class="js-dropdown-item">All State Senate Districts</li>
+          <li class="js-dropdown-item">Loading Districts...</li>
         </ul>
       </div>
     </div>
@@ -609,6 +692,8 @@ if (dropdownsListContainer) {
       document.getElementById('long-input').value = long;
     }
   });
+
+  loadDynamicDistricts();
 
   locationDataReady.then(data => {
     updateInputsFromData(data);

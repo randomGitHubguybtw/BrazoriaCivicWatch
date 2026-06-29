@@ -261,6 +261,95 @@ const genOpts = (list) => {
     return list.map(item => `<li class="js-elec-dropdown-item highlightable" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--secondary-color); color: var(--black-text-color); font-family: sans-serif;">${item}</li>`).join('');
 };
 
+async function fetchFile(names) {
+    for (let name of names) {
+        try {
+            let res = await fetch(name);
+            if (res.ok) return await res.json();
+        } catch(e) {}
+    }
+    return null;
+}
+
+function doBBoxesIntersect(b1, b2) {
+    return !(b2[0] > b1[2] || b2[2] < b1[0] || b2[1] > b1[3] || b2[3] < b1[1]);
+}
+
+async function loadDynamicDistricts() {
+    try {
+        const countiesRes = await fetchFile(['./locationJSON/counties.json', 'counties.json', '../counties.json', '/counties.json']);
+        const congressRes = await fetchFile(['./locationJSON/congressDistricts.json', 'congressDistricts.json', '../locationJSON/congressDistricts.json']);
+        const senateRes = await fetchFile(['./locationJSON/stateSenDistricts.json', 'stateSenDistricts.json', '../locationJSON/stateSenDistricts.json']);
+        const repRes = await fetchFile(['./locationJSON/stateRepDistricts.json', 'stateRepDistricts.json', '../locationJSON/stateRepDistricts.json']);
+
+        if (!countiesRes || !window.turf) return;
+
+        const brazoria = countiesRes.features.find(f => f.properties && String(f.properties.CNTY_NM || '').toLowerCase() === 'brazoria');
+        if (!brazoria || !brazoria.geometry) return;
+
+        const brazoriaBbox = window.turf.bbox(brazoria);
+
+        const getDistName = (feat) => {
+            let p = feat.properties;
+            if (!p) return 'Unknown';
+            if (p.District) return p.District;
+            if (p.DIST_NBR) return p.DIST_NBR;
+            if (p.DISTRICT) return p.DISTRICT;
+            if (p.DIST_NM) return p.DIST_NM;
+            for (let k in p) {
+                if (k.toUpperCase().includes('DIST')) return p[k];
+            }
+            return 'Unknown';
+        };
+
+        const processGeo = (geoData, inputId) => {
+            if (!geoData || !geoData.features) return;
+            const valid = [];
+            
+            geoData.features.forEach(f => {
+                if (!f.geometry) return;
+                
+                const featureBbox = window.turf.bbox(f);
+                
+                if (doBBoxesIntersect(brazoriaBbox, featureBbox)) {
+                    try {
+                        const overlap = window.turf.intersect(brazoria, f);
+                        if (overlap && window.turf.area(overlap) > 10000) {
+                            let name = getDistName(f);
+                            if (!valid.includes(name)) valid.push(name);
+                        }
+                    } catch (err) {
+                        if (window.turf.booleanIntersects(brazoria, f)) {
+                             let name = getDistName(f);
+                             if (!valid.includes(name)) valid.push(name);
+                        }
+                    }
+                }
+            });
+            
+            valid.sort((a, b) => {
+                let na = parseInt(String(a).replace(/\D/g, '')) || 0;
+                let nb = parseInt(String(b).replace(/\D/g, '')) || 0;
+                return na - nb;
+            });
+
+            const input = document.getElementById(inputId);
+            if (input && input.nextElementSibling) {
+                const ul = input.nextElementSibling;
+                const opts = ['None', ...valid.map(v => `District ${v}`)];
+                ul.innerHTML = genOpts(opts);
+            }
+        };
+
+        setTimeout(() => processGeo(congressRes, 'elecCongressDistInput'), 10);
+        setTimeout(() => processGeo(senateRes, 'elecStateSenInput'), 50);
+        setTimeout(() => processGeo(repRes, 'elecStateRepInput'), 100);
+
+    } catch (e) {
+        console.error("Error dynamically loading districts:", e);
+    }
+}
+
 const updateSeatCount = async () => {
     saveStepOneData();
     const countDisplay = document.getElementById('seatCountDisplay');
@@ -289,10 +378,10 @@ const renderStepOne = () => {
     const cityList = ["None", "Alvin", "Angleton", "Bailey's Prairie", "Bonney", "Brazoria", "Brookside Village", "Clute", "Danbury", "Freeport", "Hillcrest Village", "Holiday Lakes", "Iowa Colony", "Jones Creek", "Lake Jackson", "Liverpool", "Manvel", "Oyster Creek", "Pearland", "Quintana", "Richwood", "Sandy Point", "Surfside", "Sweeny", "West Columbia"];
     const isdList = ["None", "Alvin ISD", "Angleton ISD", "Brazosport ISD", "Columbia-Brazoria ISD", "Damon ISD", "Danbury ISD", "Friendswood ISD", "Pearland ISD", "Sweeny ISD"];
     const boardOfEdList = ["None", "District 7", "District 8"];
-    const congressDistList = ["None", "District 9", "District 14", "District 22"];
+    const congressDistList = ["Loading Districts..."];
     const precinctList = ["None", "Precinct 1", "Precinct 2", "Precinct 3", "Precinct 4"];
-    const stateRepList = ["None", "District 25", "District 29"];
-    const stateSenList = ["None", "District 11", "District 17"];
+    const stateRepList = ["Loading Districts..."];
+    const stateSenList = ["Loading Districts..."];
     const collegeList = ["None", "Alvin Community College District", "Brazosport College District"];
     const drainageList = ["None", "Angleton Drainage Dist.", "Brazoria Co. Conservation & Reclamation Dist.", "Danbury Drainage Dist.", "Iowa Colony Drainage Dist.", "Pearland Drainage Dist.", "Velasco Drainage Dist.", "West Brazoria County Drainage Dist."];
     const hospitalList = ["None", "Angleton-Danbury Hospital District", "Sweeny Hospital District", "West Columbia-Damon Hospital District"];
@@ -428,6 +517,8 @@ const renderStepOne = () => {
             navigateTo(2);
         }
     });
+
+    loadDynamicDistricts();
 };
 
 const renderLocations = async () => {
@@ -599,18 +690,22 @@ const renderSeats = async () => {
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 
                 <select id="districtTypeInput" class="form-input" style="width: auto; color: var(--black-text-color);">
-                    <option value="City">City</option>
-                    <option value="ISD">ISD</option>
-                    <option value="Board of Education">Board of Education</option>
-                    <option value="Congressional">Congressional</option>
-                    <option value="Justice of the Peace">Justice of the Peace</option>
-                    <option value="State Representative">State Representative</option>
-                    <option value="State Senate">State Senate</option>
-                    <option value="College">College</option>
-                    <option value="Drainage">Drainage</option>
-                    <option value="Hospital">Hospital</option>
-                    <option value="MUD">MUD</option>
-                    <option value="Navigation">Navigation</option>
+                    ${(() => {
+                        const opts = [];
+                        if (city && city !== 'None') opts.push('<option value="City">City</option>');
+                        if (isd && isd !== 'None') opts.push('<option value="ISD">ISD</option>');
+                        if (boardOfEd && boardOfEd !== 'None') opts.push('<option value="Board of Education">Board of Education</option>');
+                        if (congressDist && congressDist !== 'None') opts.push('<option value="Congressional">Congressional</option>');
+                        if (precinct && precinct !== 'None') opts.push('<option value="Justice of the Peace">Justice of the Peace</option>');
+                        if (stateRep && stateRep !== 'None') opts.push('<option value="State Representative">State Representative</option>');
+                        if (stateSen && stateSen !== 'None') opts.push('<option value="State Senate">State Senate</option>');
+                        if (college && college !== 'None') opts.push('<option value="College">College</option>');
+                        if (drainage && drainage !== 'None') opts.push('<option value="Drainage">Drainage</option>');
+                        if (hospital && hospital !== 'None') opts.push('<option value="Hospital">Hospital</option>');
+                        if (mud && mud !== 'None') opts.push('<option value="MUD">MUD</option>');
+                        if (navigation && navigation !== 'None') opts.push('<option value="Navigation">Navigation</option>');
+                        return opts.length > 0 ? opts.join('') : '<option value="">No local districts set</option>';
+                    })()}
                 </select>
 
                 <input type="text" id="seatNameInput" class="form-input" placeholder="Seat Name" style="flex: 1; min-width: 150px; color: var(--black-text-color);">

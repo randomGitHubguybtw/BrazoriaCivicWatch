@@ -172,3 +172,48 @@
   color: var(--black-text-color); 
 }
 
+.candidates-grid-layout {
+    display: grid;
+    align-items: stretch;
+}
+
+.candidate-search-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.candidate-search-input {
+  width: 75vw;
+  height: 4vh;
+  margin-top: -10px;
+  background-color: var(--primary-color);
+  border: solid var(--secondary-color);
+  padding-left: 5px;
+  color: var(--black-text-color);
+  margin: 15px;
+}
+
+.candidate-search-input::placeholder {
+  color: var(--black-text-color);
+  opacity: 60%;
+}
+
+.candidate-result-date {
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.candidate-result:hover {
+  opacity: 80%;
+}
+
+.candidate-result-preview {
+  opacity: 40%;
+  font-size: 12px;
+  display: inline-block;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

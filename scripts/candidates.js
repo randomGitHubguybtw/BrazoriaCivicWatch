@@ -3,6 +3,86 @@ import { fixDate } from './utils/fixDate.js';
 const API_BASE = 'https://api.brazoriacivicwatch.org';
 const candidatesContainer = document.querySelector('.js-candidates');
 
+function equalizeRowHeights() {
+    const cards = Array.from(document.querySelectorAll('.seat-card')).filter(card => card.style.display !== 'none');
+    if (!cards.length) return;
+
+    cards.forEach(card => {
+        card.style.minHeight = '';
+    });
+
+    let rows = [];
+    let currentRow = [];
+    let currentTop = -1;
+
+    cards.forEach(card => {
+        const top = card.getBoundingClientRect().top;
+        if (currentTop === -1 || Math.abs(currentTop - top) > 5) {
+            if (currentRow.length > 0) {
+                rows.push(currentRow);
+            }
+            currentRow = [card];
+            currentTop = top;
+        } else {
+            currentRow.push(card);
+        }
+    });
+
+    if (currentRow.length > 0) {
+        rows.push(currentRow);
+    }
+
+    rows.forEach(row => {
+        const maxHeight = Math.max(...row.map(card => card.offsetHeight));
+        row.forEach(card => {
+            card.style.minHeight = `${maxHeight}px`;
+        });
+    });
+}
+
+window.addEventListener('resize', equalizeRowHeights);
+
+function applySearch() {
+    const searchInput = document.getElementById('candidateSearchInput');
+    if (!searchInput) return;
+    
+    const searchTerm = searchInput.value.toLowerCase();
+    const cards = document.querySelectorAll('.seat-card');
+    
+    cards.forEach(card => card.style.minHeight = '');
+
+    cards.forEach(card => {
+        const cardText = card.textContent.toLowerCase();
+        if (cardText.includes(searchTerm)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    requestAnimationFrame(() => {
+        equalizeRowHeights();
+    });
+}
+
+function initializeSearch() {
+    const searchContainer = document.querySelector('.candidate-search');
+    if (searchContainer && !searchContainer.querySelector('input')) {
+        
+        searchContainer.classList.add('candidate-search-wrapper');
+
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.id = 'candidateSearchInput';
+        searchInput.placeholder = 'Search candidates, parties, or seats...';
+        searchInput.classList.add('candidate-search-input');
+        
+        searchContainer.appendChild(searchInput);
+
+        searchInput.addEventListener('input', applySearch);
+    }
+}
+
 function checkCandidateMatch(seatCity) {
     if (!seatCity) return false;
     if (seatCity === 'County') return true;
@@ -93,6 +173,25 @@ const loadCandidates = async () => {
             dateDisplay.innerHTML = fixDate(targetElectionId);
         }
 
+        const activeElection = allElections.find(el => el.election_id === targetElectionId);
+        const existingIndicator = document.querySelector('.primary-election-label');
+        if (existingIndicator) existingIndicator.remove();
+
+        let isPrimaryElection = false;
+
+        if (activeElection && activeElection.isPrimary === 1) {
+            isPrimaryElection = true;
+            const dateContainer = document.querySelector('.voting-time-container');
+            if (dateContainer) {
+                const primaryLabel = document.createElement('h3');
+                primaryLabel.className = 'primary-election-label highlightable';
+                primaryLabel.textContent = 'Primary Election';
+                primaryLabel.style.textAlign = 'center';
+                primaryLabel.style.marginTop = '5px';
+                dateContainer.appendChild(primaryLabel);
+            }
+        }
+
         const targetCandidates = relevantSeats.filter(seat => seat.election_id === targetElectionId);
 
         if (targetCandidates.length === 0) {
@@ -106,18 +205,23 @@ const loadCandidates = async () => {
         const seatsGrouped = {};
         targetCandidates.forEach(cand => {
             const seatName = cand.seat_name || "Unknown Seat";
-            if (!seatsGrouped[seatName]) {
-                seatsGrouped[seatName] = [];
+            const partyName = cand.party || "Independent";
+            
+            const groupKey = isPrimaryElection ? `${seatName} - ${partyName}` : seatName;
+            
+            if (!seatsGrouped[groupKey]) {
+                seatsGrouped[groupKey] = [];
             }
-            seatsGrouped[seatName].push(cand);
+            seatsGrouped[groupKey].push(cand);
         });
+
+        const sortedSeats = Object.entries(seatsGrouped).sort((a, b) => b[1].length - a[1].length);
 
         if (candidatesContainer) {
             candidatesContainer.classList.add('candidates-grid-layout');
-
             let gridHTML = '';
 
-            for (const [seatName, candidatesList] of Object.entries(seatsGrouped)) {
+            for (const [seatGroupName, candidatesList] of sortedSeats) {
                 let candidatesHTML = candidatesList.map(c => {
                     const isIncumbent = (c.incumbent && (c.incumbent.toLowerCase() === 'y' || c.incumbent.toLowerCase() === 'yes')) ? 'Yes' : 'No';
                     const wikiLink = c.wikipedia ? `<a class="highlightable candidate-link" href="${c.wikipedia}" target="_blank">Wikipedia Article</a>` : '<span class="highlightable candidate-no-link">No wikipedia article available</span>';
@@ -161,7 +265,7 @@ const loadCandidates = async () => {
 
                 gridHTML += `
                     <div class="seat-card">
-                        <h3 class="highlightable seat-title">${seatName}</h3>
+                        <h3 class="highlightable seat-title">${seatGroupName}</h3>
                         <div class="seat-candidates-wrapper">
                             ${candidatesHTML}
                         </div>
@@ -170,6 +274,12 @@ const loadCandidates = async () => {
             }
 
             candidatesContainer.innerHTML = gridHTML;
+            
+            initializeSearch();
+            
+            applySearch();
+
+            setTimeout(equalizeRowHeights, 150);
         }
 
     } catch (error) {
