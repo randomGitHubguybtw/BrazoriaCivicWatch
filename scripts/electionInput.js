@@ -683,9 +683,13 @@ const renderSeats = async () => {
                 <option value="general">General</option>
             </select>
         </div>
-
-        <ul id="seatsPreviewList" style="margin-bottom: 20px; list-style-type: none; padding: 0; width: 50vw;"></ul>
         
+        <button type="button" id="showAddSeatButton" class="action-button js-hands-off" style="margin-bottom: 20px; color: var(--black-text-color);">+ Add Seat</button>
+
+        <div class="button-container">
+            <button type="button" id="finalFinishButton" class="action-button js-hands-off" style="color: var(--black-text-color);">Save & Finish</button>
+        </div>
+
         <div id="addSeatFormContainer" style="display: none; border: 1px solid var(--accent-color); padding: 15px; margin-bottom: 20px; border-radius: 4px; width: 50vw; box-sizing: border-box;">
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 
@@ -739,11 +743,7 @@ const renderSeats = async () => {
             </div>
         </div>
 
-        <button type="button" id="showAddSeatButton" class="action-button js-hands-off" style="margin-bottom: 20px; color: var(--black-text-color);">+ Add Seat</button>
-
-        <div class="button-container">
-            <button type="button" id="finalFinishButton" class="action-button js-hands-off" style="color: var(--black-text-color);">Save & Finish</button>
-        </div>
+        <ul id="seatsPreviewList" style="margin-bottom: 20px; list-style-type: none; padding: 0; width: 50vw;"></ul>
     `;
 
     document.getElementById('backToLocationsLink').addEventListener('click', (e) => {
