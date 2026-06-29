@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <base href="../../">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Archive</title>
+    <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+
+  </head>
+
+</head>
+<body>
+
+    <div class="header js-header"></div>
+
+    <div class="sidebar-container js-sidebar-container"></div>
+
+    <div class="title">
+      <picture>
+          <source srcset="icons/BrazoriaCivicWatchDarkModeFinal.png" media="(prefers-color-scheme: dark)">
+          <img style="object-position: 45% 55%; height: 225px; margin-top: 10px;" class="title-graphic" src="icons/Brazoria Civic Watch Final.png" alt="Brazoria Civic Watch Logo">
+      </picture>
+    </div>
+
+    <div class="separator-container"> 
+          <div class="seperator">
+            
+          </div>
+        </div>
+
+    <div class="js-dropdowns-list"></div>
+
+    <div class="separator-container"> 
+          <div class="seperator">
+            
+          </div>
+        </div>
+
+  <div class="footer js-footer"></div>
+
+  <!--External Libraries-->
+  <script src="importedJS/turf.min.js" defer></script>
+
+  <!--Data-->
+  <script type="module" src="scripts/utils/fixNoun.js"></script>
+  <script type="module" src="scripts/utils/fixDate.js"></script>
+  <script type="module" src="scripts/locationStore.js"></script>
+
+  <!--Globals-->
+  <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+  <script type="module" src="scripts/globalButtons.js"></script>
+  <script type="module" src="scripts/globalArchive.js"></script>
+
+</body>
+
+</html>

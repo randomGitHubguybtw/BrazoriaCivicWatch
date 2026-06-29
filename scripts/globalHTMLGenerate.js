@@ -14,6 +14,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/login.css">
   <link rel="stylesheet" href="styles/volunteer-page.css">
   <link rel="stylesheet" href="styles/voter-info.css">
+  <link rel="stylesheet" href="styles/location-choose.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 `);
@@ -89,7 +90,8 @@ export function generateHTML(startCity, startIsd, activeButton) {
             <li class="js-dropdown-item">All ISD</li>
           </ul>
         </div>
-        <button data-target="index.html" class="sidebar-button js-sidebar-button">Home</button>
+        <button data-target="webpages/location-choose.html" style="background-color: var(--inverted-secondary); color: var(--black-text-color);" class="sidebar-button js-sidebar-button">Change Precise Location</button>
+        <button data-target="index.html" class="sidebar-button js-sidebar-button"><strong>Home</strong></button>
         <button data-target="webpages/meeting-selection-screen.html" class="sidebar-button">Most Recent Meeting</button>
         <button class="sidebar-button js-sidebar-button">Run For Office</button>
         <button class="sidebar-button js-sidebar-button">Candidate Interviews</button>

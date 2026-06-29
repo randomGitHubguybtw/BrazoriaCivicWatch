@@ -1,0 +1,109 @@
+.js-dropdowns-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 15px;
+  gap: 15px;
+}
+
+.dropdown-box {
+  position: relative;
+  width: 50vw;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .dropdown-box {
+    width: 80vw;
+  }
+}
+
+.dropdown-label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-size: clamp(12px, 3vw, 24px);
+  color: var(--black-text-color);
+}
+
+.location-dropdown {
+  background-color: var(--accent-color);
+  color: var(--black-text-color);
+  width: 100%;
+  font-size: clamp(5px, 4vw, 17px);
+  padding: 15px;
+  border: solid 3px var(--primary-color);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.location-dropdown:focus {
+  outline: none;
+  border: solid 3px var(--primary-color);
+}
+
+.location-dropdown::placeholder {
+  color: var(--black-text-color);
+  padding: 2px;
+}
+
+.dropdown-search {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary-color);
+  border: outset 3px var(--secondary-color);
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.dropdown-search.show {
+  display: block;
+}
+
+.dropdown-search.hide-border {
+  border: none;
+}
+
+.dropdown-search li {
+  padding: 8px;
+  cursor: pointer;
+  color: var(--black-text-color);
+  font-size: clamp(5px, 4vw, 17px);
+  border-bottom: solid 1px var(--secondary-color);
+  word-wrap: break-word;
+}
+
+.dropdown-search li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-search li:hover {
+  background-color: var(--inverted-secondary);
+}
+
+.location-button {
+  width: 40vw;
+  height: 8vw;
+  font-size: 3vw;
+  background-color: var(--secondary-color);
+  border: outset 3px var(--accent-color);
+  cursor: pointer;
+}
+
+.location-button:hover {
+  opacity: 90%;
+}
+
+.location-button:active {
+  border: inset 3px var(--accent-color);
+}

@@ -3,8 +3,42 @@ import { fixDate } from './utils/fixDate.js';
 const API_BASE = 'https://api.brazoriacivicwatch.org';
 const candidatesContainer = document.querySelector('.js-candidates');
 
+function checkCandidateMatch(seatCity) {
+    if (!seatCity) return false;
+    if (seatCity === 'County') return true;
+
+    const firstUnderscore = seatCity.indexOf('_');
+    let typePart = 'City';
+    let valPart = seatCity;
+
+    if (firstUnderscore !== -1) {
+        typePart = seatCity.substring(0, firstUnderscore).trim();
+        valPart = seatCity.substring(firstUnderscore + 1).trim();
+    }
+
+    const sessionMap = {
+        "City": "city",
+        "ISD": "isd",
+        "Board of Education": "boardOfEd",
+        "Congressional": "congressDist",
+        "Justice of the Peace": "precinct",
+        "State Representative": "stateRep",
+        "State Senate": "stateSen",
+        "College": "college",
+        "Drainage": "drainage",
+        "Hospital": "hospital",
+        "MUD": "mud",
+        "Navigation": "navigation"
+    };
+
+    const sessionKey = sessionMap[typePart] || 'city';
+    const userVal = (sessionStorage.getItem(sessionKey) || 'None').trim();
+
+    if (userVal.startsWith('All ') || userVal === 'All') return true;
+    return userVal === valPart;
+}
+
 const loadCandidates = async () => {
-  
     try {
         const userCity = sessionStorage.getItem('city');
         
@@ -15,7 +49,7 @@ const loadCandidates = async () => {
             return;
         }
 
-        const isAllCities = userCity === 'All' || userCity === 'All Cities';
+        const isAllCities = userCity.startsWith('All ') || userCity === 'All';
 
         const [electionsResponse, seatsResponse] = await Promise.all([
             fetch(`${API_BASE}/api/elections`),
@@ -27,12 +61,13 @@ const loadCandidates = async () => {
         const allElections = await electionsResponse.json();
         const allSeats = await seatsResponse.json();
 
-        const relevantSeats = allSeats.filter(seat => 
-            seat.scope === 'major' || 
-            seat.scope === 'state' || 
-            seat.scope === 'general' || 
-            (seat.scope === 'local' && (isAllCities || seat.city === userCity))
-        );
+        const relevantSeats = allSeats.filter(seat => {
+            if (seat.scope === 'general' || seat.scope === 'state' || seat.scope === 'major') return true;
+            if (seat.scope === 'local') {
+                return checkCandidateMatch(seat.city);
+            }
+            return false;
+        });
 
         const validElectionIds = new Set(relevantSeats.map(seat => seat.election_id));
         const now = new Date();
