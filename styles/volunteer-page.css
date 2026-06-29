@@ -41,7 +41,7 @@
 }
 
 .action-button {
-  width: clamp(30px, 30vw, 300px);
+  width: clamp(30px, 28vw, 300px);
   height: clamp(50px, 5hw, 100px);
   font-size: clamp(10px, 2vw, 40px);
   background-color: var(--secondary-color);
@@ -50,7 +50,7 @@
 }
 
 .action-button:hover {
-  border: inset 3.2px var(--accent-color);
+  border: inset 3.1px var(--accent-color);
 }
 
 .action-button:active {
