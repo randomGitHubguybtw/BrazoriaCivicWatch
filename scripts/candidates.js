@@ -285,7 +285,8 @@ const loadCandidates = async () => {
                     const isIncumbent = (c.incumbent && (c.incumbent.toLowerCase() === 'y' || c.incumbent.toLowerCase() === 'yes')) ? 'Yes' : 'No';
 
                     const wikiLink = c.wikipedia ? `<a class="highlightable candidate-link" href="${c.wikipedia}" target="_blank">Wikipedia Article</a>` : '<span class="highlightable candidate-no-link">No wikipedia article available</span>';
-                    const webLink = c.website ? `<a class="highlightable candidate-link" href="${c.website}" target="_blank">Campaign Website</a>` : '';
+                    
+                    const webLink = c.website ? `<a class="highlightable candidate-link" href="${c.website}" target="_blank">Campaign Website</a>` : '<span class="highlightable candidate-no-link">No candidate homepage found</span>';
 
                     let interviewHtmlScreen = '';
                     let interviewHtmlPaper = '';

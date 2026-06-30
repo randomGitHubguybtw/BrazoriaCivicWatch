@@ -1,0 +1,6 @@
+.text-block {
+  display: grid;
+  text-align: center;
+  justify-content: center;
+  margin: 15px 0;
+}

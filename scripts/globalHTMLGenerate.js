@@ -15,6 +15,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/volunteer-page.css">
   <link rel="stylesheet" href="styles/voter-info.css">
   <link rel="stylesheet" href="styles/location-choose.css">
+  <link rel="stylesheet" href="styles/contact-us.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 `);
@@ -119,7 +120,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <div class="vertical-container">
             <p class="footer-text js-footer-text">About Us</p>
             <p class="footer-text js-footer-text">Change Your City</p>
-            <p class="footer-text js-footer-text">Contact Us</p>
+            <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
         </div>
         <div class="vertical-container">
             <p class="footer-text js-footer-text">FAQ</p>
@@ -129,17 +130,14 @@ export function generateHTML(startCity, startIsd, activeButton) {
     </div>`;
 }
 
-// 1. Generate HTML immediately so the page doesn't block
 generateHTML("Locating...", "Locating...");
 
-// 2. Add skeleton animation to the inputs
 const cityInput = document.querySelector('.js-city-search');
 const isdInput = document.querySelector('.js-isd-search');
 
 if (cityInput) cityInput.classList.add('skeleton');
 if (isdInput) isdInput.classList.add('skeleton');
 
-// 3. Wait for data in the background, update values, and remove skeletons
 locationDataReady.then(({ city, isd }) => {
   if (cityInput) {
     cityInput.value = city;
