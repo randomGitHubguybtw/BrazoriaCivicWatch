@@ -134,9 +134,14 @@ generateHTML("Locating...", "Locating...");
 
 const cityInput = document.querySelector('.js-city-search');
 const isdInput = document.querySelector('.js-isd-search');
+const preciseLocationBtn = document.querySelector('button[data-target="webpages/location-choose.html"]');
 
 if (cityInput) cityInput.classList.add('skeleton');
 if (isdInput) isdInput.classList.add('skeleton');
+if (preciseLocationBtn) {
+  preciseLocationBtn.disabled = true;
+  preciseLocationBtn.textContent = "Please wait...";
+}
 
 locationDataReady.then(({ city, isd }) => {
   if (cityInput) {
@@ -147,6 +152,14 @@ locationDataReady.then(({ city, isd }) => {
     isdInput.value = isd;
     isdInput.classList.remove('skeleton');
   }
+  if (preciseLocationBtn) {
+    preciseLocationBtn.disabled = false;
+    preciseLocationBtn.textContent = "Change Precise Location";
+  }
 }).catch(error => {
   console.error("Location failed:", error);
+  if (preciseLocationBtn) {
+    preciseLocationBtn.disabled = false;
+    preciseLocationBtn.textContent = "Change Precise Location";
+  }
 });
