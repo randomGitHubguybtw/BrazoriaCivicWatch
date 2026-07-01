@@ -7,8 +7,12 @@ const meetingForm = document.querySelector('.js-meeting-form');
 
 const savedPage = sessionStorage.getItem('electionPage') || '1';
 let currentPage = parseInt(savedPage);
+let showArchivedAdmin = false;
 
-let originalDate = sessionStorage.getItem('originalElectionDate') || '';
+async function getToken() {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token;
+}
 
 const cleanSessionVar = (key) => {
     let val = sessionStorage.getItem(`election${key.charAt(0).toUpperCase() + key.slice(1)}`) || sessionStorage.getItem(key) || 'None';
@@ -28,36 +32,17 @@ let hospital = cleanSessionVar('hospital');
 let mud = cleanSessionVar('mud');
 let navigation = cleanSessionVar('navigation');
 
-let date = sessionStorage.getItem('electionDate') || '';
-let electionId = sessionStorage.getItem('electionId') || '';
-let isPrimary = sessionStorage.getItem('electionIsPrimary') === 'true';
+function checkJurisdictionMatch(jurisdictionStr) {
+    if (!jurisdictionStr) return false;
+    if (jurisdictionStr === 'County') return true;
 
-if (!originalDate && date) {
-    originalDate = date;
-    sessionStorage.setItem('originalElectionDate', originalDate);
-}
-
-async function checkAccess() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) window.location.replace("../webpages/login.html");
-}
-
-async function getToken() {
-    const { data: { session } } = await supabase.auth.getSession();
-    return session?.access_token;
-}
-
-function checkSeatMatch(seatCity) {
-    if (!seatCity) return false;
-    if (seatCity === 'County') return true;
-
-    const firstUnderscore = seatCity.indexOf('_');
+    const firstUnderscore = jurisdictionStr.indexOf('_');
     let typePart = 'City';
-    let valPart = seatCity;
+    let valPart = jurisdictionStr;
 
     if (firstUnderscore !== -1) {
-        typePart = seatCity.substring(0, firstUnderscore).trim();
-        valPart = seatCity.substring(firstUnderscore + 1).trim();
+        typePart = jurisdictionStr.substring(0, firstUnderscore).trim();
+        valPart = jurisdictionStr.substring(firstUnderscore + 1).trim();
     }
 
     const sessionMap = {
@@ -162,9 +147,6 @@ function closeAllElecDropdowns(exceptInput = null) {
 }
 
 const saveStepOneData = () => {
-    const dateInputElem = document.querySelector('.js-date-input');
-    const isPrimaryElem = document.getElementById('isPrimaryInput');
-
     city = document.getElementById('elecCityInput')?.value || city;
     isd = document.getElementById('elecIsdInput')?.value || isd;
     boardOfEd = document.getElementById('elecBoardOfEdInput')?.value || boardOfEd;
@@ -178,10 +160,6 @@ const saveStepOneData = () => {
     mud = document.getElementById('elecMudInput')?.value || mud;
     navigation = document.getElementById('elecNavigationInput')?.value || navigation;
 
-    if (dateInputElem) date = dateInputElem.value;
-    if (date) electionId = date;
-    isPrimary = isPrimaryElem ? isPrimaryElem.checked : false;
-
     sessionStorage.setItem('electionCity', city);
     sessionStorage.setItem('electionIsd', isd);
     sessionStorage.setItem('electionBoardOfEd', boardOfEd);
@@ -194,67 +172,13 @@ const saveStepOneData = () => {
     sessionStorage.setItem('electionHospital', hospital);
     sessionStorage.setItem('electionMud', mud);
     sessionStorage.setItem('electionNavigation', navigation);
-    sessionStorage.setItem('electionDate', date);
-    sessionStorage.setItem('electionId', electionId);
-    sessionStorage.setItem('electionIsPrimary', isPrimary);
-};
-
-const saveElectionToDB = async () => {
-    if (!date) return false;
-    const token = await getToken();
-    try {
-        if (originalDate && originalDate !== date) {
-            const resChange = await fetch(`${API_BASE}/api/elections/change-date`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ oldDate: originalDate, newDate: date })
-            });
-            if (!resChange.ok) {
-                const errData = await resChange.json();
-                alert("Could not change date: " + (errData.error || "Unknown error"));
-                return false;
-            }
-            originalDate = date;
-            sessionStorage.setItem('originalElectionDate', originalDate);
-        }
-
-        const res = await fetch(`${API_BASE}/api/elections`);
-        let existingElection = null;
-        if (res.ok) {
-            const elections = await res.json();
-            existingElection = elections.find(el => el.date === date);
-        }
-        if (existingElection) {
-            await fetch(`${API_BASE}/api/elections/${existingElection.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ isPrimary: isPrimary })
-            });
-        } else {
-            await fetch(`${API_BASE}/api/elections`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ date: date, election_id: electionId, isPrimary: isPrimary })
-            });
-        }
-
-        if (!originalDate) {
-            originalDate = date;
-            sessionStorage.setItem('originalElectionDate', originalDate);
-        }
-
-        return true;
-    } catch (err) {
-        return false;
-    }
 };
 
 const navigateTo = (page) => {
     currentPage = page;
     sessionStorage.setItem('electionPage', page);
     if (page === 1) renderStepOne();
-    else if (page === 2) renderLocations();
-    else if (page === 3) renderSeats();
+    else if (page === 2) renderOfficials();
 };
 
 const genOpts = (list) => {
@@ -350,30 +274,6 @@ async function loadDynamicDistricts() {
     }
 }
 
-const updateSeatCount = async () => {
-    saveStepOneData();
-    const countDisplay = document.getElementById('seatCountDisplay');
-    if (!countDisplay) return;
-    if (!date) {
-        countDisplay.textContent = 'Please select a date to see seat count.';
-        return;
-    }
-    try {
-        const res = await fetch(`${API_BASE}/api/seats`);
-        if (!res.ok) return;
-        const allSeats = await res.json();
-        const count = allSeats.filter(s => {
-            if (s.election_id !== date) return false;
-            if (s.scope === 'general' || s.scope === 'state' || s.scope === 'major') return true;
-            if (s.scope === 'local') return checkSeatMatch(s.city);
-            return false;
-        }).length;
-        countDisplay.textContent = `Total matching seats for this election: ${count}`;
-    } catch (err) {
-        countDisplay.textContent = 'Could not load seat count.';
-    }
-};
-
 const renderStepOne = () => {
     const cityList = ["None", "Alvin", "Angleton", "Bailey's Prairie", "Bonney", "Brazoria", "Brookside Village", "Clute", "Danbury", "Freeport", "Hillcrest Village", "Holiday Lakes", "Iowa Colony", "Jones Creek", "Lake Jackson", "Liverpool", "Manvel", "Oyster Creek", "Pearland", "Quintana", "Richwood", "Sandy Point", "Surfside", "Sweeny", "West Columbia"];
     const isdList = ["None", "Alvin ISD", "Angleton ISD", "Brazosport ISD", "Columbia-Brazoria ISD", "Damon ISD", "Danbury ISD", "Friendswood ISD", "Pearland ISD", "Sweeny ISD"];
@@ -389,16 +289,7 @@ const renderStepOne = () => {
     const navigationList = ["None", "Precinct 1", "Precinct 2", "Precinct 3", "Precinct 4"];
 
     meetingForm.innerHTML = `
-        <h3 class="section-heading" style="margin-top: 0; color: var(--black-text-color);">Election Details</h3>
-        <p id="seatCountDisplay" style="text-align: center; font-weight: bold; color: var(--black-text-color); margin-bottom: 15px;">Loading seat count...</p>
-        
-        <label class="form-label" for="dateInput" style="color: var(--black-text-color);">Date of Election:</label>
-        <input type="date" id="dateInput" class="form-input js-date-input" value="${date}" required style="margin-bottom: 20px; color: var(--black-text-color);">
-
-        <label class="form-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 25px; color: var(--black-text-color);">
-            <input type="checkbox" id="isPrimaryInput" style="transform: scale(1.5);" ${isPrimary ? 'checked' : ''}>
-            Is Primary Election?
-        </label>
+        <h3 style="margin-top: 0; color: var(--black-text-color); text-align: center; margin: 0px 10px;">Select the jurisdictions you would like to view</h3>
 
         <label class="form-label" style="color: var(--black-text-color);">City Jurisdiction:</label>
         <div class="js-elec-dropdown-box" style="position: relative; width: 50vw; margin-bottom: 15px;">
@@ -497,7 +388,7 @@ const renderStepOne = () => {
         </div>
         
         <div class="button-container">
-          <button type="button" id="electionSaveButton" class="action-button js-hands-off" style="color: var(--black-text-color);">Next: Locations</button>
+          <button type="button" id="electionSaveButton" class="action-button js-hands-off" style="color: var(--black-text-color);">Next: Manage Officials</button>
         </div>
     `;
 
@@ -506,191 +397,39 @@ const renderStepOne = () => {
         input.readOnly = true;
     });
 
-    meetingForm.addEventListener('change', updateSeatCount);
-    updateSeatCount();
-
-    document.getElementById('electionSaveButton').addEventListener('click', async () => {
+    document.getElementById('electionSaveButton').addEventListener('click', () => {
         saveStepOneData();
-        if (!date) return;
-        const success = await saveElectionToDB();
-        if (success) {
-            navigateTo(2);
-        }
+        navigateTo(2);
     });
 
     loadDynamicDistricts();
 };
 
-const renderLocations = async () => {
+const renderOfficials = async () => {
     meetingForm.innerHTML = `
         <div style="margin-bottom: 15px;">
             <a href="#" class="default-link js-hands-off" id="backToStepOneLink" style="color: var(--black-text-color);">← Back to Details</a>
         </div>
-        <h3 class="section-heading" style="margin-top: 0; color: var(--black-text-color);">Manage Polling Locations</h3>
+        <h3 class="section-heading" id="manageOfficialsHeading" style="margin-top: 0; color: var(--black-text-color);">Manage Active Officials</h3>
         
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; justify-content: center; width: 50vw;">
-            <input type="text" id="newLocName" class="form-input" placeholder="Building Name (e.g., Lake Jackson Civic Center)" style="width: 100%; box-sizing: border-box; color: var(--black-text-color);">
-            <input type="text" id="newLocAddress" class="form-input" placeholder="Full Address (e.g., 333 SH 332 Frontage Rd, Lake Jackson, TX 77566" style="width: 100%; box-sizing: border-box; color: var(--black-text-color);">
-            <button type="button" id="addNewLocationBtn" class="action-button js-hands-off" style="width: 100%; color: var(--black-text-color);">Add Location</button>
-        </div>
-
-        <ul id="locationsPreviewList" style="margin-bottom: 20px; list-style-type: none; padding: 0; width: 50vw;"></ul>
-
-        <div class="button-container">
-            <button type="button" id="nextToSeatsButton" class="action-button js-hands-off" style="color: var(--black-text-color);">Next: Manage Seats</button>
-        </div>
-    `;
-
-    document.getElementById('backToStepOneLink').addEventListener('click', (e) => {
-        e.preventDefault();
-        navigateTo(1);
-    });
-
-    const locationsPreviewList = document.getElementById('locationsPreviewList');
-    let currentLocationsId = null;
-    let isParentCreated = false;
-
-    const initParentLocation = async () => {
-        try {
-            const resPoll = await fetch(`${API_BASE}/api/polling_locations`);
-            const pollingLocs = resPoll.ok ? await resPoll.json() : [];
-            const existing = pollingLocs.find(pl => pl.election_id === electionId && pl.city === city);
-            if (existing) {
-                currentLocationsId = existing.locations_id;
-                isParentCreated = true;
-            } else {
-                currentLocationsId = `loc_${city.replace(/[^a-zA-Z0-9]/g, '')}_${electionId}`;
-            }
-        } catch (err) {}
-    };
-    
-    const loadLocations = async () => {
-        if (!currentLocationsId) await initParentLocation();
-
-        locationsPreviewList.innerHTML = '<li style="font-family: sans-serif; font-size: 14px; color: var(--black-text-color);">Loading locations...</li>';
-        try {
-            const resAddr = await fetch(`${API_BASE}/api/polling_addresses`);
-            const pollingAddrs = resAddr.ok ? await resAddr.json() : [];
-
-            const myAddrs = pollingAddrs.filter(pa => pa.locations_id === currentLocationsId);
-
-            if (myAddrs.length > 0) {
-                locationsPreviewList.innerHTML = '';
-                myAddrs.forEach(addr => {
-                    const li = document.createElement('li');
-                    li.style.padding = "8px";
-                    li.style.borderBottom = "1px solid var(--secondary-color)";
-                    li.style.fontFamily = "sans-serif";
-                    li.style.fontSize = "14px";
-                    li.style.color = "var(--black-text-color)";
-                    li.innerHTML = `
-                        <strong>${addr.name}</strong> - ${addr.address}
-                        <button type="button" class="edit-loc-btn js-hands-off" data-id="${addr.id}" data-name="${addr.name.replace(/"/g, '&quot;')}" data-address="${addr.address.replace(/"/g, '&quot;')}" style="background-color: var(--secondary-color); padding: 4px 8px; font-size: 12px; border: inset 2px var(--accent-color); border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-left: 10px;">Edit</button>
-                        <button type="button" class="delete-loc-btn js-hands-off" data-id="${addr.id}" style="background-color: var(--primary-color); padding: 4px 8px; font-size: 12px; border: none; border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-left: 5px;">Delete</button>
-                    `;
-                    locationsPreviewList.appendChild(li);
-                });
-
-                document.querySelectorAll('.edit-loc-btn').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        const token = await getToken();
-                        const id = btn.getAttribute('data-id');
-                        document.getElementById('newLocName').value = btn.getAttribute('data-name');
-                        document.getElementById('newLocAddress').value = btn.getAttribute('data-address');
-                        try {
-                            await fetch(`${API_BASE}/api/polling_addresses/${id}`, {
-                                method: 'DELETE',
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            await loadLocations();
-                        } catch (err) {}
-                    });
-                });
-
-                document.querySelectorAll('.delete-loc-btn').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        const token = await getToken();
-                        const id = btn.getAttribute('data-id');
-                        try {
-                            const response = await fetch(`${API_BASE}/api/polling_addresses/${id}`, {
-                                method: 'DELETE',
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            if (response.ok) {
-                                await loadLocations();
-                            }
-                        } catch (err) {}
-                    });
-                });
-            } else {
-                locationsPreviewList.innerHTML = '<li style="font-family: sans-serif; font-size: 14px; color: var(--black-text-color);">No locations found for this election.</li>';
-            }
-        } catch (err) {
-            locationsPreviewList.innerHTML = '<li style="font-family: sans-serif; font-size: 14px; color: #c62828;">Error connecting to API.</li>';
-        }
-    };
-
-    await loadLocations();
-
-    document.getElementById('addNewLocationBtn').addEventListener('click', async () => {
-        const name = document.getElementById('newLocName').value;
-        const address = document.getElementById('newLocAddress').value;
-
-        if (!name || !address) return;
-
-        const token = await getToken();
-
-        try {
-            if (!isParentCreated) {
-                await fetch(`${API_BASE}/api/polling_locations`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ election_id: electionId, city: city, locations_id: currentLocationsId })
-                });
-                isParentCreated = true;
-            }
-
-            await fetch(`${API_BASE}/api/polling_addresses`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ name: name, address: address, locations_id: currentLocationsId })
-            });
-
-            document.getElementById('newLocName').value = '';
-            document.getElementById('newLocAddress').value = '';
-            await loadLocations(); 
-        } catch (err) {}
-    });
-
-    document.getElementById('nextToSeatsButton').addEventListener('click', () => {
-        navigateTo(3);
-    });
-};
-
-const renderSeats = async () => {
-    meetingForm.innerHTML = `
-        <div style="margin-bottom: 15px;">
-            <a href="#" class="default-link js-hands-off" id="backToLocationsLink" style="color: var(--black-text-color);">← Back to Locations</a>
-        </div>
-        <h3 class="section-heading" style="margin-top: 0; color: var(--black-text-color);">Manage Seats for Election Date: ${date}</h3>
-        
-        <div style="margin-bottom: 20px;">
-            <label for="scopeSelector" style="font-family: sans-serif; font-size: 14px; font-weight: bold; color: var(--black-text-color);">Select Scope:</label>
-            <select id="scopeSelector" class="form-input" style="width: auto; display: inline-block; margin-left: 10px; color: var(--black-text-color);">
-                <option value="local">Local</option>
-                <option value="general">General</option>
-            </select>
+        <div style="margin-bottom: 20px; display: flex; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <label for="scopeSelector" style="font-family: sans-serif; font-size: 14px; font-weight: bold; color: var(--black-text-color);">Select Scope:</label>
+                <select id="scopeSelector" class="form-input" style="width: auto; display: inline-block; margin-left: 10px; color: var(--black-text-color);">
+                    <option value="local">Local</option>
+                    <option value="general">General</option>
+                </select>
+            </div>
+            <button type="button" id="toggleArchivedAdminBtn" class="action-button js-hands-off" style="width: auto; padding: 4px 12px; font-size: 14px; color: var(--black-text-color);">View Archived Officials</button>
         </div>
         
-        <button type="button" id="showAddSeatButton" class="action-button js-hands-off" style="margin-bottom: 20px; color: var(--black-text-color);">+ Add Seat</button>
+        <button type="button" id="showAddOfficialButton" class="action-button js-hands-off" style="margin-bottom: 20px; color: var(--black-text-color);">+ Add Official</button>
 
         <div class="button-container">
             <button type="button" id="finalFinishButton" class="action-button js-hands-off" style="color: var(--black-text-color);">Save & Finish</button>
         </div>
 
-        <div id="addSeatFormContainer" style="display: none; border: 1px solid var(--accent-color); padding: 15px; margin-bottom: 20px; border-radius: 4px; width: 50vw; box-sizing: border-box;">
+        <div id="addOfficialFormContainer" style="display: none; border: 1px solid var(--accent-color); padding: 15px; margin-bottom: 20px; border-radius: 4px; width: 50vw; box-sizing: border-box;">
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 
                 <select id="districtTypeInput" class="form-input" style="width: auto; color: var(--black-text-color);">
@@ -712,22 +451,15 @@ const renderSeats = async () => {
                     })()}
                 </select>
 
-                <input type="text" id="seatNameInput" class="form-input" placeholder="Seat Name" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
-                <input type="text" id="challengerNameInput" class="form-input" placeholder="Candidate Name" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
-                <input type="text" id="candidateWebsiteInput" class="form-input" placeholder="Candidate Website Home Page" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
-                <input type="text" id="candidateWikipediaInput" class="form-input" placeholder="Wikipedia Article" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
-                
-                <input list="interviewOptions" id="interviewedInput" class="form-input" placeholder="Interview link" autocomplete="off" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
-                <datalist id="interviewOptions">
-                    <option value="None scheduled">
-                    <option value="Refused to comment">
-                    <option value="Scheduled">
-                    <option value="Requested">
-                </datalist>
-
-                <label style="font-family: sans-serif; font-size: 14px; display: flex; align-items: center; gap: 5px; color: var(--black-text-color);">
-                    <input type="checkbox" id="incumbentInput"> Incumbent
-                </label>
+                <input type="text" id="positionInput" class="form-input" placeholder="Position (e.g., Mayor)" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="text" id="nameInput" class="form-input" placeholder="Official Name" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="text" id="websiteInput" class="form-input" placeholder="Website" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="text" id="wikipediaInput" class="form-input" placeholder="Wikipedia Article" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="email" id="emailInput" class="form-input" placeholder="Email Address" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="text" id="photoInput" class="form-input" placeholder="Photo URL" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="text" id="absentPercentageInput" class="form-input" placeholder="Absent Percentage (e.g. 5.5)" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="date" id="dateEnteredInput" class="form-input" placeholder="Date Entered Office" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="date" id="dateLeftFormInput" class="form-input" placeholder="Date Left Office" style="flex: 1; min-width: 150px; color: var(--black-text-color); display: none;">
                 
                 <input list="partyOptionsList" id="partyInput" class="form-input" placeholder="Party" style="width: auto; color: var(--black-text-color);">
                 <datalist id="partyOptionsList">
@@ -739,44 +471,115 @@ const renderSeats = async () => {
                     <option value="Independent">
                 </datalist>
                 
-                <button type="button" id="saveNewSeatButton" class="action-button js-hands-off" style="width: auto; padding: 8px 12px; color: var(--black-text-color);">Save</button>
-                <button type="button" id="cancelAddSeatButton" class="action-button js-hands-off" style="width: auto; padding: 8px 12px; background-color: #c62828; color: var(--black-text-color); border: none;">Cancel</button>
+                <button type="button" id="saveNewOfficialButton" class="action-button js-hands-off" style="width: auto; padding: 8px 12px; color: var(--black-text-color);">Save</button>
+                <button type="button" id="cancelAddOfficialButton" class="action-button js-hands-off" style="width: auto; padding: 8px 12px; background-color: #c62828; color: var(--black-text-color); border: none;">Cancel</button>
             </div>
         </div>
 
-        <ul id="seatsPreviewList" style="margin-bottom: 20px; list-style-type: none; padding: 0; width: 50vw;"></ul>
+        <ul id="officialsPreviewList" style="margin-bottom: 20px; list-style-type: none; padding: 0; width: 50vw;"></ul>
+
+        <div id="archiveModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--primary-color); border: 2px solid var(--accent-color); padding: 20px; z-index: 2000; flex-direction: column; gap: 10px; border-radius: 8px;">
+            <h4 style="margin-top:0; color: var(--black-text-color); text-align: center;">Archive Official</h4>
+            <label style="color: var(--black-text-color); font-family: sans-serif; font-size: 14px;">Date Left Office:</label>
+            <input type="date" id="dateLeftInput" class="form-input" style="color: var(--black-text-color);">
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="button" id="confirmArchiveBtn" class="action-button js-hands-off" style="flex: 1; color: var(--black-text-color);">Confirm</button>
+                <button type="button" id="cancelArchiveBtn" class="action-button js-hands-off" style="flex: 1; background-color: #c62828; color: var(--black-text-color); border: none;">Cancel</button>
+            </div>
+        </div>
     `;
 
-    document.getElementById('backToLocationsLink').addEventListener('click', (e) => {
+    document.getElementById('backToStepOneLink').addEventListener('click', (e) => {
         e.preventDefault();
-        navigateTo(2);
+        navigateTo(1);
     });
 
-    const seatsPreviewList = document.getElementById('seatsPreviewList');
+    document.getElementById('toggleArchivedAdminBtn').addEventListener('click', () => {
+        showArchivedAdmin = !showArchivedAdmin;
+        document.getElementById('toggleArchivedAdminBtn').textContent = showArchivedAdmin ? 'View Active Officials' : 'View Archived Officials';
+        document.getElementById('manageOfficialsHeading').textContent = showArchivedAdmin ? 'Manage Archived Officials' : 'Manage Active Officials';
+        document.getElementById('showAddOfficialButton').textContent = showArchivedAdmin ? '+ Add Archived Official' : '+ Add Official';
+        document.getElementById('dateLeftFormInput').style.display = showArchivedAdmin ? 'inline-block' : 'none';
+        loadOfficials();
+    });
+
+    const officialsPreviewList = document.getElementById('officialsPreviewList');
     const scopeSelector = document.getElementById('scopeSelector');
     const districtTypeInput = document.getElementById('districtTypeInput');
+    const absInput = document.getElementById('absentPercentageInput');
 
-    const loadSeats = async () => {
-        seatsPreviewList.innerHTML = '<li style="font-family: sans-serif; font-size: 14px; color: var(--black-text-color);">Loading seats...</li>';
+    const toggleAbsInput = () => {
+        if (scopeSelector.value === 'general') {
+            absInput.style.display = 'block';
+        } else {
+            if (districtTypeInput.value === 'City' || districtTypeInput.value === 'ISD') {
+                absInput.style.display = 'none';
+            } else {
+                absInput.style.display = 'block';
+            }
+        }
+    };
+
+    scopeSelector.addEventListener('change', toggleAbsInput);
+    districtTypeInput.addEventListener('change', toggleAbsInput);
+    toggleAbsInput();
+
+    let officialToArchive = null;
+
+    document.getElementById('cancelArchiveBtn').addEventListener('click', () => {
+        document.getElementById('archiveModal').style.display = 'none';
+        officialToArchive = null;
+        document.getElementById('dateLeftInput').value = '';
+    });
+
+    document.getElementById('confirmArchiveBtn').addEventListener('click', async () => {
+        if (!officialToArchive) return;
+        const dateLeft = document.getElementById('dateLeftInput').value;
+        if (!dateLeft) {
+            alert("Please enter a date.");
+            return;
+        }
         try {
-            const response = await fetch(`${API_BASE}/api/seats`, { cache: 'no-store' });
-            if (!response.ok) throw new Error("Failed to load seats");
-            const allSeats = await response.json();
+            const token = await getToken();
+            await fetch(`${API_BASE}/api/officials/${officialToArchive}`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify({ is_archived: 1, date_left: dateLeft })
+            });
+            document.getElementById('archiveModal').style.display = 'none';
+            officialToArchive = null;
+            document.getElementById('dateLeftInput').value = '';
+            await loadOfficials();
+        } catch (err) {}
+    });
+
+    const loadOfficials = async () => {
+        officialsPreviewList.innerHTML = '<li style="font-family: sans-serif; font-size: 14px; color: var(--black-text-color);">Loading officials...</li>';
+        try {
+            const response = await fetch(`${API_BASE}/api/officials`, { cache: 'no-store' });
+            if (!response.ok) throw new Error("Failed to load officials");
+            const allOfficials = await response.json();
             
             const currentScope = scopeSelector.value;
 
-            const seats = allSeats.filter(s => {
-                if (s.election_id !== electionId) return false;
-                if (s.scope !== currentScope) return false;
+            const officials = allOfficials.filter(o => {
+                const isArchivedOfficial = (o.is_archived === 1 || o.is_archived === true);
+                if (showArchivedAdmin && !isArchivedOfficial) return false;
+                if (!showArchivedAdmin && isArchivedOfficial) return false;
+
+                if (o.scope !== currentScope) return false;
                 if (currentScope === 'local') {
-                    return checkSeatMatch(s.city);
+                    return checkJurisdictionMatch(o.jurisdiction);
                 }
                 return true;
             });
 
-            if (seats && seats.length > 0) {
-                seatsPreviewList.innerHTML = '';
-                seats.forEach(seat => {
+            if (officials && officials.length > 0) {
+                officialsPreviewList.innerHTML = '';
+                officials.forEach(official => {
                     const li = document.createElement('li');
                     li.style.padding = "8px";
                     li.style.borderBottom = "1px solid var(--secondary-color)";
@@ -784,81 +587,127 @@ const renderSeats = async () => {
                     li.style.fontSize = "14px";
                     li.style.color = "var(--black-text-color)";
                     
-                    let districtDisplay = seat.scope === 'general' ? 'County' : seat.city;
-                    if (seat.scope === 'local' && seat.city && seat.city.includes('_')) {
-                        const firstIdx = seat.city.indexOf('_');
-                        const dType = seat.city.substring(0, firstIdx);
-                        const dVal = seat.city.substring(firstIdx + 1);
+                    let districtDisplay = official.scope === 'general' ? 'County' : official.jurisdiction;
+                    if (official.scope === 'local' && official.jurisdiction && official.jurisdiction.includes('_')) {
+                        const firstIdx = official.jurisdiction.indexOf('_');
+                        const dType = official.jurisdiction.substring(0, firstIdx);
+                        const dVal = official.jurisdiction.substring(firstIdx + 1);
                         districtDisplay = `${dType} (${dVal})`;
+                    }
+
+                    let dispAbsent = official.absent_percentage;
+                    if (dispAbsent === null || dispAbsent === undefined || dispAbsent === "") {
+                        dispAbsent = "0%";
+                    } else if (!isNaN(dispAbsent)) {
+                        dispAbsent = dispAbsent + "%";
+                    }
+
+                    let archiveOrRestoreBtn = '';
+                    if (showArchivedAdmin) {
+                        archiveOrRestoreBtn = `<button type="button" class="restore-official-btn js-hands-off" data-id="${official.id}" style="background-color: var(--secondary-color); padding: 4px 8px; font-size: 12px; border: inset 2px var(--accent-color); border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-top: 10px; margin-left: 5px;">Restore (Unarchive)</button>`;
+                    } else {
+                        archiveOrRestoreBtn = `<button type="button" class="archive-official-btn js-hands-off" data-id="${official.id}" style="background-color: var(--secondary-color); padding: 4px 8px; font-size: 12px; border: inset 2px var(--accent-color); border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-top: 10px; margin-left: 5px;">Archive</button>`;
                     }
 
                     li.innerHTML = `
                         <div class="highlightable">
                         <strong>District: ${districtDisplay}</strong><br/>
-                        <strong>${seat.seat_name}</strong> (${seat.party}) | Incumbent: ${seat.incumbent || 'No'} | Challenger: ${seat.name || 'None'} | Website: ${seat.website || 'None'} | Wikipedia: ${seat.wikipedia || 'None'} | Interview: ${seat.interviewed || 'None'}
+                        <strong>${official.position}</strong> (${official.party}) | Name: ${official.name || 'None'} | Entered: ${official.date_entered || 'Unknown'} ${showArchivedAdmin ? `| Left: ${official.date_left || 'Unknown'}` : ''} | Website: ${official.website || 'None'} | Wikipedia: ${official.wikipedia || 'None'} | Email: ${official.email || 'None'} | Photo: ${official.photo ? 'Added' : 'None'} | Absent: ${dispAbsent}
                         </div>
-                        <button type="button" class="edit-seat-btn js-hands-off" data-id="${seat.id}" style="background-color: var(--secondary-color); padding: 4px 8px; font-size: 12px; border: inset 2px var(--accent-color); border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-top: 10px;">Edit</button>
-                        <button type="button" class="delete-seat-btn js-hands-off" data-id="${seat.id}" style="background-color: var(--primary-color); padding: 4px 8px; font-size: 12px; border: none; border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-top: 10px; margin-left: 5px;">Delete</button>
+                        <button type="button" class="edit-official-btn js-hands-off" data-id="${official.id}" style="background-color: var(--secondary-color); padding: 4px 8px; font-size: 12px; border: inset 2px var(--accent-color); border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-top: 10px;">Edit</button>
+                        ${archiveOrRestoreBtn}
+                        <button type="button" class="delete-official-btn js-hands-off" data-id="${official.id}" style="background-color: var(--primary-color); padding: 4px 8px; font-size: 12px; border: none; border-radius: 4px; color: var(--black-text-color); cursor: pointer; margin-top: 10px; margin-left: 5px;">Delete</button>
                     `;
-                    seatsPreviewList.appendChild(li);
+                    officialsPreviewList.appendChild(li);
                 });
 
-                document.querySelectorAll('.edit-seat-btn').forEach(btn => {
+                document.querySelectorAll('.edit-official-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
                         e.preventDefault();
                         const id = parseInt(btn.getAttribute('data-id'));
-                        const seatToEdit = seats.find(s => s.id === id);
-                        if (seatToEdit) {
-                            document.getElementById('addSeatFormContainer').style.display = 'block';
-                            document.getElementById('showAddSeatButton').style.display = 'none';
+                        const officialToEdit = officials.find(o => o.id === id);
+                        if (officialToEdit) {
+                            document.getElementById('addOfficialFormContainer').style.display = 'block';
+                            document.getElementById('showAddOfficialButton').style.display = 'none';
                             
-                            document.getElementById('seatNameInput').value = seatToEdit.seat_name || '';
-                            document.getElementById('challengerNameInput').value = seatToEdit.name || '';
-                            document.getElementById('candidateWebsiteInput').value = seatToEdit.website || '';
-                            document.getElementById('candidateWikipediaInput').value = seatToEdit.wikipedia || '';
-                            document.getElementById('interviewedInput').value = seatToEdit.interviewed || '';
-                            document.getElementById('incumbentInput').checked = (seatToEdit.incumbent === 'Yes');
-                            document.getElementById('partyInput').value = seatToEdit.party || '';
+                            document.getElementById('positionInput').value = officialToEdit.position || '';
+                            document.getElementById('nameInput').value = officialToEdit.name || '';
+                            document.getElementById('websiteInput').value = officialToEdit.website || '';
+                            document.getElementById('wikipediaInput').value = officialToEdit.wikipedia || '';
+                            document.getElementById('emailInput').value = officialToEdit.email || '';
+                            document.getElementById('photoInput').value = officialToEdit.photo || '';
+                            document.getElementById('absentPercentageInput').value = officialToEdit.absent_percentage || '';
+                            document.getElementById('dateEnteredInput').value = officialToEdit.date_entered || '';
+                            document.getElementById('dateLeftFormInput').value = officialToEdit.date_left || '';
+                            document.getElementById('partyInput').value = officialToEdit.party || '';
                             
-                            document.getElementById('scopeSelector').value = seatToEdit.scope || 'local';
-                            if (seatToEdit.scope === 'general') {
+                            document.getElementById('scopeSelector').value = officialToEdit.scope || 'local';
+                            if (officialToEdit.scope === 'general') {
                                 document.getElementById('districtTypeInput').style.display = 'none';
                             } else {
                                 document.getElementById('districtTypeInput').style.display = 'inline-block';
-                                document.getElementById('districtTypeInput').value = seatToEdit.district_type || 'City';
+                                document.getElementById('districtTypeInput').value = officialToEdit.district_type || 'City';
                             }
+                            toggleAbsInput();
                             
-                            const token = await getToken();
-                            await fetch(`${API_BASE}/api/seats/${id}`, {
-                                method: 'DELETE',
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            await loadSeats();
+                            try {
+                                const token = await getToken();
+                                await fetch(`${API_BASE}/api/officials/${id}`, {
+                                    method: 'DELETE',
+                                    headers: { 'Authorization': `Bearer ${token}` }
+                                });
+                                await loadOfficials();
+                            } catch (err) {}
                         }
                     });
                 });
 
-                document.querySelectorAll('.delete-seat-btn').forEach(btn => {
+                document.querySelectorAll('.archive-official-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        officialToArchive = btn.getAttribute('data-id');
+                        document.getElementById('archiveModal').style.display = 'flex';
+                    });
+                });
+                
+                document.querySelectorAll('.restore-official-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
                         e.preventDefault();
-                        const token = await getToken();
                         const id = btn.getAttribute('data-id');
                         try {
-                            const res = await fetch(`${API_BASE}/api/seats/${id}`, {
+                            const token = await getToken();
+                            await fetch(`${API_BASE}/api/officials/${id}`, {
+                                method: 'PUT',
+                                headers: { 
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}` 
+                                },
+                                body: JSON.stringify({ is_archived: 0, date_left: null })
+                            });
+                            await loadOfficials();
+                        } catch (err) {}
+                    });
+                });
+
+                document.querySelectorAll('.delete-official-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const id = btn.getAttribute('data-id');
+                        try {
+                            const token = await getToken();
+                            await fetch(`${API_BASE}/api/officials/${id}`, {
                                 method: 'DELETE',
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
-                            if (res.ok) {
-                                await loadSeats();
-                            }
+                            await loadOfficials();
                         } catch (err) {}
                     });
                 });
             } else {
-                seatsPreviewList.innerHTML = `<li style="font-family: sans-serif; font-size: 14px; color: var(--black-text-color);">No seats found for scope '${currentScope}'.</li>`;
+                officialsPreviewList.innerHTML = `<li style="font-family: sans-serif; font-size: 14px; color: var(--black-text-color);">No officials found for scope '${currentScope}'.</li>`;
             }
         } catch (err) {
-            seatsPreviewList.innerHTML = '<li style="font-family: sans-serif; font-size: 14px; color: #c62828;">Error loading seats from API.</li>';
+            officialsPreviewList.innerHTML = '<li style="font-family: sans-serif; font-size: 14px; color: #c62828;">Error loading officials from API.</li>';
         }
     };
 
@@ -868,44 +717,52 @@ const renderSeats = async () => {
         } else {
             districtTypeInput.style.display = 'inline-block';
         }
-        loadSeats();
+        loadOfficials();
     });
 
     if (scopeSelector.value === 'general') {
         districtTypeInput.style.display = 'none';
     }
 
-    await loadSeats();
+    await loadOfficials();
 
-    document.getElementById('showAddSeatButton').addEventListener('click', () => {
-        document.getElementById('addSeatFormContainer').style.display = 'block';
-        document.getElementById('showAddSeatButton').style.display = 'none';
+    document.getElementById('showAddOfficialButton').addEventListener('click', () => {
+        document.getElementById('addOfficialFormContainer').style.display = 'block';
+        document.getElementById('showAddOfficialButton').style.display = 'none';
     });
 
-    document.getElementById('cancelAddSeatButton').addEventListener('click', () => {
-        document.getElementById('addSeatFormContainer').style.display = 'none';
-        document.getElementById('showAddSeatButton').style.display = 'inline-block';
-        document.getElementById('seatNameInput').value = '';
-        document.getElementById('challengerNameInput').value = '';
-        document.getElementById('candidateWebsiteInput').value = '';
-        document.getElementById('candidateWikipediaInput').value = '';
-        document.getElementById('interviewedInput').value = '';
-        document.getElementById('incumbentInput').checked = false;
+    document.getElementById('cancelAddOfficialButton').addEventListener('click', () => {
+        document.getElementById('addOfficialFormContainer').style.display = 'none';
+        document.getElementById('showAddOfficialButton').style.display = 'inline-block';
+        document.getElementById('positionInput').value = '';
+        document.getElementById('nameInput').value = '';
+        document.getElementById('websiteInput').value = '';
+        document.getElementById('wikipediaInput').value = '';
+        document.getElementById('emailInput').value = '';
+        document.getElementById('photoInput').value = '';
+        document.getElementById('absentPercentageInput').value = '';
+        document.getElementById('dateEnteredInput').value = '';
+        document.getElementById('dateLeftFormInput').value = '';
         document.getElementById('partyInput').value = '';
     });
 
-    document.getElementById('saveNewSeatButton').addEventListener('click', async () => {
-        const seatName = document.getElementById('seatNameInput').value;
-        const challengerName = document.getElementById('challengerNameInput').value;
-        const candidateWebsite = document.getElementById('candidateWebsiteInput').value;
-        const candidateWikipedia = document.getElementById('candidateWikipediaInput').value;
-        const interviewed = document.getElementById('interviewedInput').value;
-        const isIncumbent = document.getElementById('incumbentInput').checked;
+    document.getElementById('saveNewOfficialButton').addEventListener('click', async () => {
+        const position = document.getElementById('positionInput').value;
+        const officialName = document.getElementById('nameInput').value;
+        const website = document.getElementById('websiteInput').value;
+        const wikipedia = document.getElementById('wikipediaInput').value;
+        const email = document.getElementById('emailInput').value;
+        const photo = document.getElementById('photoInput').value;
+        const dateEntered = document.getElementById('dateEnteredInput').value;
+        const isArchived = showArchivedAdmin ? 1 : 0;
+        const dateLeft = showArchivedAdmin ? document.getElementById('dateLeftFormInput').value : null;
         const party = document.getElementById('partyInput').value || 'Unknown';
         const scope = document.getElementById('scopeSelector').value;
         const districtType = scope === 'general' ? 'General' : districtTypeInput.value;
         
-        if (!seatName) return;
+        let finalAbsentPercentage = document.getElementById('absentPercentageInput').value;
+        
+        if (!position || !officialName) return;
 
         const mapTypeToSession = {
             "City": city,
@@ -922,76 +779,87 @@ const renderSeats = async () => {
             "Navigation": navigation
         };
 
-        const actualDistrictValue = scope === 'general' ? 'County' : `${districtType}_${mapTypeToSession[districtType]}`;
+        const plainJurisdictionName = mapTypeToSession[districtType];
+        const actualDistrictValue = scope === 'general' ? 'County' : `${districtType}_${plainJurisdictionName}`;
 
-        const safeCity = actualDistrictValue.replace(/[^a-zA-Z0-9]/g, "");
-        const safeSeatName = seatName.replace(/[^a-zA-Z0-9]/g, "");
-        const generatedSeatId = `${safeCity}_${safeSeatName}`;
-        const incumbentStr = isIncumbent ? 'Yes' : 'No';
-
-        const token = await getToken();
-
-        const resCheck = await fetch(`${API_BASE}/api/seats`, { cache: 'no-store' });
-        if (resCheck.ok) {
-            const allExistingSeats = await resCheck.json();
-            
-            const existing = allExistingSeats.find(s => {
-                const matchesCore = (s.seat_name || '') === (seatName || '') &&
-                                    (s.name || '') === (challengerName || '') &&
-                                    (s.website || '') === (candidateWebsite || '') &&
-                                    (s.wikipedia || '') === (candidateWikipedia || '') &&
-                                    (s.interviewed || '') === (interviewed || '') &&
-                                    (s.party || '') === (party || '') &&
-                                    (s.scope || '') === (scope || '') &&
-                                    (s.incumbent || 'No') === incumbentStr;
-                                    
-                if (!matchesCore) return false;
-                
-                return true;
-            });
-            
-            if (existing) {
-                if (existing.election_id !== electionId) {
-                    const confirmed = confirm(`Warning: this seat is already scheduled for ${existing.election_id}. Only continue if you are scheduling a special election.`);
-                    if (!confirmed) return; 
+        if (scope !== 'general' && (districtType === 'City' || districtType === 'ISD')) {
+            try {
+                const summariesRes = await fetch(`${API_BASE}/api/summaries`);
+                if (summariesRes.ok) {
+                    const summaries = await summariesRes.json();
+                    const relevantSummaries = summaries.filter(s => s.city === plainJurisdictionName);
+                    
+                    if (relevantSummaries.length === 0) {
+                        finalAbsentPercentage = "Insufficient data to calculate";
+                    } else {
+                        let absCount = 0;
+                        relevantSummaries.forEach(s => {
+                            let absList = [];
+                            try {
+                                absList = JSON.parse(s.absentees || '[]');
+                            } catch (e) {
+                                absList = String(s.absentees || '');
+                            }
+                            
+                            if (Array.isArray(absList)) {
+                                if (absList.some(a => a.includes(officialName))) absCount++;
+                            } else {
+                                if (absList.includes(officialName)) absCount++;
+                            }
+                        });
+                        finalAbsentPercentage = ((absCount / relevantSummaries.length) * 100).toFixed(1);
+                    }
+                } else {
+                    finalAbsentPercentage = "Insufficient data to calculate";
                 }
-                await fetch(`${API_BASE}/api/seats/${existing.id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+            } catch (err) {
+                finalAbsentPercentage = "Insufficient data to calculate";
             }
+        } else {
+            finalAbsentPercentage = finalAbsentPercentage ? finalAbsentPercentage : 0;
         }
 
-        await fetch(`${API_BASE}/api/seats`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({
-                election_id: electionId, 
-                seat_id: generatedSeatId, 
-                seat_name: seatName, 
-                incumbent: incumbentStr, 
-                name: challengerName, 
-                party: party, 
-                scope: scope, 
-                city: actualDistrictValue, 
-                website: candidateWebsite, 
-                wikipedia: candidateWikipedia,
-                interviewed: interviewed,
-                district_type: districtType
-            })
-        });
+        try {
+            const token = await getToken();
+            await fetch(`${API_BASE}/api/officials`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    position: position,
+                    party: party,
+                    jurisdiction: actualDistrictValue,
+                    scope: scope,
+                    name: officialName,
+                    website: website,
+                    wikipedia: wikipedia,
+                    email: email,
+                    photo: photo,
+                    district_type: districtType,
+                    absent_percentage: finalAbsentPercentage,
+                    is_archived: isArchived,
+                    date_entered: dateEntered,
+                    date_left: dateLeft
+                })
+            });
 
-        document.getElementById('seatNameInput').value = '';
-        document.getElementById('challengerNameInput').value = '';
-        document.getElementById('candidateWebsiteInput').value = '';
-        document.getElementById('candidateWikipediaInput').value = '';
-        document.getElementById('interviewedInput').value = '';
-        document.getElementById('incumbentInput').checked = false;
-        document.getElementById('partyInput').value = '';
-        document.getElementById('addSeatFormContainer').style.display = 'none';
-        document.getElementById('showAddSeatButton').style.display = 'inline-block';
-        
-        loadSeats();
+            document.getElementById('positionInput').value = '';
+            document.getElementById('nameInput').value = '';
+            document.getElementById('websiteInput').value = '';
+            document.getElementById('wikipediaInput').value = '';
+            document.getElementById('emailInput').value = '';
+            document.getElementById('photoInput').value = '';
+            document.getElementById('absentPercentageInput').value = '';
+            document.getElementById('dateEnteredInput').value = '';
+            document.getElementById('dateLeftFormInput').value = '';
+            document.getElementById('partyInput').value = '';
+            document.getElementById('addOfficialFormContainer').style.display = 'none';
+            document.getElementById('showAddOfficialButton').style.display = 'inline-block';
+            
+            await loadOfficials();
+        } catch (err) {}
     });
 
     document.getElementById('finalFinishButton').addEventListener('click', () => {
@@ -1008,15 +876,14 @@ const renderSeats = async () => {
         sessionStorage.removeItem('electionHospital');
         sessionStorage.removeItem('electionMud');
         sessionStorage.removeItem('electionNavigation');
-        sessionStorage.removeItem('electionDate');
-        sessionStorage.removeItem('electionId');
-        sessionStorage.removeItem('electionIsPrimary');
-        sessionStorage.removeItem('originalElectionDate');
-        meetingForm.innerHTML = `<h3 class="section-heading" style="color: #2e7d32; text-align: center; margin-top: 40px;">Successfully saved all election data!</h3>`;
+        meetingForm.innerHTML = `<h3 class="section-heading" style="color: #2e7d32; text-align: center; margin-top: 40px;">Successfully saved all official data!</h3>`;
         setTimeout(() => { window.location.reload(); }, 2000);
     });
 };
 
 if (currentPage === 1) renderStepOne();
-else if (currentPage === 2) renderLocations();
-else if (currentPage === 3) renderSeats();
+else if (currentPage === 2) renderOfficials();
+else {
+    currentPage = 1;
+    renderStepOne();
+}

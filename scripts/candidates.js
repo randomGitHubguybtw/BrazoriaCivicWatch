@@ -47,6 +47,15 @@ function applySearch() {
     if (!searchInput) return;
     
     const searchTerm = searchInput.value.toLowerCase();
+    
+    const url = new URL(window.location);
+    if (searchInput.value) {
+        url.searchParams.set('search', searchInput.value);
+    } else {
+        url.searchParams.delete('search');
+    }
+    window.history.replaceState({}, '', url);
+
     const cards = document.querySelectorAll('.seat-card');
     
     cards.forEach(card => card.style.minHeight = '');
@@ -77,6 +86,12 @@ function initializeSearch() {
         searchInput.placeholder = 'Search candidates, parties, or seats...';
         searchInput.classList.add('candidate-search-input');
         
+        const urlParams = new URLSearchParams(window.location.search);
+        const savedSearch = urlParams.get('search');
+        if (savedSearch) {
+            searchInput.value = savedSearch;
+        }
+
         searchContainer.appendChild(searchInput);
 
         searchInput.addEventListener('input', applySearch);
@@ -131,19 +146,25 @@ const loadCandidates = async () => {
 
         const isAllCities = userCity === 'All' || userCity === 'All Cities' || userCity.startsWith('All ');
 
-        const [electionsResponse, seatsResponse, locationsResponse, addressesResponse] = await Promise.all([
+        const [electionsResponse, seatsResponse, locationsResponse, addressesResponse, officialsResponse] = await Promise.all([
             fetch(`${API_BASE}/api/elections`),
             fetch(`${API_BASE}/api/seats`),
             fetch(`${API_BASE}/api/polling_locations`),
-            fetch(`${API_BASE}/api/polling_addresses`)
+            fetch(`${API_BASE}/api/polling_addresses`),
+            fetch(`${API_BASE}/api/officials`)
         ]);
 
-        if (!electionsResponse.ok || !seatsResponse.ok || !locationsResponse.ok || !addressesResponse.ok) throw new Error();
+        if (!electionsResponse.ok || !seatsResponse.ok || !locationsResponse.ok || !addressesResponse.ok || !officialsResponse.ok) throw new Error();
         
         const allElections = await electionsResponse.json();
         const allSeats = await seatsResponse.json();
         const allLocations = await locationsResponse.json();
         const allAddresses = await addressesResponse.json();
+        const allOfficials = await officialsResponse.json();
+
+        const activeOfficials = new Set(
+            allOfficials.filter(off => off.is_archived !== 1 && off.name).map(off => off.name.toLowerCase().trim())
+        );
 
         const relevantSeats = allSeats.filter(seat => {
             if (seat.scope === 'general' || seat.scope === 'state' || seat.scope === 'major') return true;
@@ -282,7 +303,13 @@ const loadCandidates = async () => {
 
             for (const [seatGroupName, candidatesList] of sortedSeats) {
                 let candidatesHTML = candidatesList.map(c => {
-                    const isIncumbent = (c.incumbent && (c.incumbent.toLowerCase() === 'y' || c.incumbent.toLowerCase() === 'yes')) ? 'Yes' : 'No';
+                    const isIncumbentBool = c.incumbent && (c.incumbent.toString().toLowerCase() === 'y' || c.incumbent.toString().toLowerCase() === 'yes' || c.incumbent.toString() === '1' || c.incumbent.toString().toLowerCase() === 'true');
+                    const isIncumbent = isIncumbentBool ? 'Yes' : 'No';
+
+                    let candidateDisplayName = c.name || 'Unknown';
+                    if (isIncumbentBool && c.name && activeOfficials.has(c.name.toLowerCase().trim())) {
+                        candidateDisplayName = `<a class="highlightable" href="webpages/current-officials.html?search=${encodeURIComponent(c.name.trim())}" style="color: inherit; text-decoration: underline;">${candidateDisplayName}</a>`;
+                    }
 
                     const wikiLink = c.wikipedia ? `<a class="highlightable candidate-link" href="${c.wikipedia}" target="_blank">Wikipedia Article</a>` : '<span class="highlightable candidate-no-link">No wikipedia article available</span>';
                     
@@ -301,7 +328,11 @@ const loadCandidates = async () => {
                     } else if (interviewData === 'Refused to comment' || interviewData === 'Refused') {
                         interviewHtmlScreen = '<span class="highlightable candidate-no-link">This candidate has refused an interview</span>';
                         interviewHtmlPaper = '<span class="highlightable candidate-no-link">This candidate has refused an interview</span>';
-                    } else {
+                    } else if (interviewData === 'Requested') {
+                        interviewHtmlScreen = '<span class="highlightable candidate-no-link">This candidate has an interview request pending</span>';
+                        interviewHtmlPaper = '<span class="highlightable candidate-no-link">This candidate has an interview request pending</span>';
+                    }
+                    else {
                         interviewHtmlScreen = `<a class="highlightable candidate-link" href="${interviewData}" target="_blank">Candidate Interview</a>`;
                         interviewHtmlPaper = '<span class="highlightable candidate-no-link">This candidate has agreed to an interview</span>';
                     }
@@ -318,7 +349,7 @@ const loadCandidates = async () => {
                     return `
                         <div class="candidate-info">
                             <h4 class="highlightable candidate-name-party">
-                                <span class="${partyClass}">${partyName}:</span> ${c.name || 'Unknown'}, Incumbent (${isIncumbent})
+                                <span class="${partyClass}">${partyName}:</span> ${candidateDisplayName}, Incumbent (${isIncumbent})
                             </h4>
                             <div class="candidate-links-container">
                                 <span class="screen-only-link">${webLink}</span>

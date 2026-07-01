@@ -79,7 +79,7 @@
   border: 5px solid transparent;
   border-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'><rect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='3' stroke-dasharray='10, 5' stroke-dashoffset='0' stroke-linecap='square'/></svg>") 0.5;
   width: 100%;
-  font-size: 20px;
+  font-size: clamp(15px, 10vh, 20px);
   font-family: serif;
   border-radius: 4px;
   margin-right: 6px;

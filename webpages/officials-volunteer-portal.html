@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="../../">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archive</title>
+  <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+</head>
+<body>
+
+  <div class="header js-header"></div>
+  <div class="sidebar-container js-sidebar-container"></div>
+  <a href="../index.html" class="back-link default-link">← Back to Homepage</a>
+  <h2 class="section-heading">Add a Sitting Official</h2>
+  
+  <form class="meeting-form js-meeting-form" onsubmit="event.preventDefault();" style="position: relative; min-height: 300px;">
+  </form>
+
+  <div class="footer js-footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="../scripts/officialInput.js"></script>
+  <script src="importedJS/turf.min.js" defer></script>
+  <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+  <script type="module" src="scripts/globalButtons.js"></script>
+  <script type="module" src="scripts/globalArchive.js"></script>
+
+</body>
+</html>

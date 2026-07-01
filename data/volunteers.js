@@ -1,7 +1,7 @@
 export const masterVolunteers = [
   {
     email: "andrew.cobb009@gmail.com",
-    role: "summarizer election_seeker"
+    role: "summarizer election_seeker seat_tracker"
   }, {
     email: "one@gmail.com",
     role: "summarizer"

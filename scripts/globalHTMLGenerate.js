@@ -16,6 +16,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/voter-info.css">
   <link rel="stylesheet" href="styles/location-choose.css">
   <link rel="stylesheet" href="styles/contact-us.css">
+  <link rel="stylesheet" href="styles/officials.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -147,7 +148,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <button data-target="webpages/meeting-selection-screen.html" class="sidebar-button">Most Recent Meeting</button>
         <button class="sidebar-button js-sidebar-button">Run For Office</button>
         <button data-target="webpages/candidates.html" class="sidebar-button js-sidebar-button">Candidate Interviews</button>
-        <button class="sidebar-button js-sidebar-button">Current Officials</button>
+        <button data-target="webpages/current-officials.html" class="sidebar-button js-sidebar-button">Current Officials</button>
         <button data-target="webpages/archive.html" class="sidebar-button js-sidebar-button">Archive</button>
         <button class="sidebar-button js-sidebar-button">Meeting Information</button>
         <button class="sidebar-button js-sidebar-button">Government Websites</button>

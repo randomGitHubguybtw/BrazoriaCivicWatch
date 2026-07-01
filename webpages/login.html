@@ -46,15 +46,20 @@
             if (error) {
                 alert("Error logging in: " + error.message);
             } else {
+                let data = '?'
+
                 masterVolunteers.forEach( volunteer => {
                     if (volunteer.email === email) {
-                        if (volunteer.role === 'summarizer') {
-                            window.location.href = "webpages/volunteer-portal.html"; 
-                        } else if (volunteer.role === 'election_seeker') {
-                            window.location.href = "webpages/election-volunteer-portal.html"; 
-                        } else if (volunteer.role === 'summarizer election_seeker') {
-                            window.location.href = "webpages/choose.html"; 
+                        if (volunteer.role.includes('summarizer')) {
+                            data += 'summarizer=true&';
+                        } 
+                        if (volunteer.role.includes('election_seeker')) {
+                            data += 'election_seeker=true&';
                         }
+                        if (volunteer.role.includes('seat_tracker')) {
+                            data += 'seat_tracker=true&';
+                        }
+                        window.location.href = "webpages/choose.html" + data;
                     }
                 })
             }

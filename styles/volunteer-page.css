@@ -42,7 +42,7 @@
 
 .action-button {
   width: clamp(30px, 28vw, 300px);
-  height: clamp(50px, 5hw, 100px);
+  height: clamp(25px, 5vh, 100px);
   font-size: clamp(10px, 2vw, 40px);
   background-color: var(--secondary-color);
   border: inset 3px var(--accent-color);
@@ -116,4 +116,30 @@
 .highlightable {
   -webkit-user-select: text;
   user-select: text;
+}
+
+.volunteer-buttons {
+  display: grid;
+  justify-content: center;
+  margin-top: 10vh;
+}
+
+.volunteer-button {
+  margin-top: 20px;
+  width: clamp(30px, 35vw, 300px);
+  height: clamp(30px, 10vh, 300px);
+  font-size: clamp(10px, 3vw, 32px);
+  transition: border-style 0.2s;
+  transition: border-radius 0.2s;
+  transition: opacity 0.2s;
+}
+
+.volunteer-button:hover {
+  border-style: dashed;
+  border-radius: 5px;
+  opacity: 70%;
+}
+
+.volunteer-button:active {
+  opacity: 50%;
 }
