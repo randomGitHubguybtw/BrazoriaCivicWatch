@@ -18,6 +18,60 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/contact-us.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    @keyframes spin-loader {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes pulse-text {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(42, 38, 35);
+      z-index: 99999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: rgb(252, 246, 238);
+      font-family: sans-serif;
+    }
+    .spinner {
+      border: 6px solid rgb(78, 89, 73);
+      border-top: 6px solid rgb(158, 129, 79);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin-loader 1s linear infinite;
+      margin-bottom: 24px;
+    }
+    .loading-title {
+      font-size: 24px;
+      margin: 0 0 12px 0;
+      animation: pulse-text 1.5s ease-in-out infinite;
+    }
+    .loading-subtitle {
+      font-size: 16px;
+      margin: 0;
+      color: rgb(158, 129, 79);
+      text-align: center;
+    }
+  </style>
+`);
+
+document.body.insertAdjacentHTML('afterbegin', `
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <h2 class="loading-title">Figuring out your location...</h2>
+    <p class="loading-subtitle">Cross-referencing maps.<br>Please allow location access when prompted.</p>
+  </div>
 `);
 
 export function generateHTML(startCity, startIsd, activeButton) {
@@ -88,7 +142,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
             <li class="js-dropdown-item">All ISD</li>
           </ul>
         </div>
-        <button data-target="webpages/location-choose.html" style="background-color: var(--inverted-secondary); color: var(--black-text-color);" class="sidebar-button js-sidebar-button">Change Precise Location</button>
+        <button data-target="webpages/location-choose.html" style="background-color: rgb(109, 130, 99); color: rgb(252, 246, 238);" class="sidebar-button js-sidebar-button">Change Precise Location</button>
         <button data-target="index.html" class="sidebar-button js-sidebar-button"><strong>Home</strong></button>
         <button data-target="webpages/meeting-selection-screen.html" class="sidebar-button">Most Recent Meeting</button>
         <button class="sidebar-button js-sidebar-button">Run For Office</button>
@@ -99,8 +153,8 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <button class="sidebar-button js-sidebar-button">Government Websites</button>
         <button class="sidebar-button js-sidebar-button">Register to Vote</button>
         <button class="sidebar-button js-sidebar-button">Public Places</button>
-        <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: var(--inverted-secondary);">Volunteer Portal Login</button>
-        <button data-target="https://forms.gle/4sEn3ooneF7AyH4C7" class="sidebar-button js-sidebar-button" style="background-color: var(--accent-color);">Report a Concern</button>
+        <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: rgb(109, 130, 99);">Volunteer Portal Login</button>
+        <button data-target="https://forms.gle/4sEn3ooneF7AyH4C7" class="sidebar-button js-sidebar-button" style="background-color: rgb(158, 129, 79);">Report a Concern</button>
       </div>`;
 
     if (activeButton) {
@@ -158,5 +212,10 @@ locationDataReady.then(({ city, isd }) => {
   if (preciseLocationBtn) {
     preciseLocationBtn.disabled = false;
     preciseLocationBtn.textContent = "Change Precise Location";
+  }
+}).finally(() => {
+  const overlay = document.getElementById('loading-overlay');
+  if (overlay) {
+    overlay.style.display = 'none';
   }
 });
