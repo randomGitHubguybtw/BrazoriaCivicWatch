@@ -30,13 +30,10 @@ export function generateHTML(startCity, startIsd, activeButton) {
       </div>
     </div>
     <div class="middle">
-        <a href="index.html"><p class="mission"> Keeping Brazoria accessible since 2026!</p></a>
+        <a href="index.html"><p class="mission"> Keeping Brazoria County accessible since 2026!</p></a>
     </div>
     <div class="right">
-      <button class="search-button js-search-button">
-        <img class="search-icon" src="icons/Brazoria Civic Watch Logo Black.png">
-      </button>
-      <input class="search-bar" type="text" placeholder="Search Any Query...">
+      <button class="donate-button">Donate to our cause!</button>
     </div>`;
 
   const sidebarContainer = document.querySelector('.js-sidebar-container');
