@@ -3,6 +3,7 @@ import { fixDate } from './utils/fixDate.js';
 const API_BASE = 'https://api.brazoriacivicwatch.org';
 const officialsContainer = document.querySelector('.js-candidates');
 let showArchived = false;
+let currentDistrictFilter = new URLSearchParams(window.location.search).get('district') || 'All';
 
 function equalizeRowHeights() {
     const cards = Array.from(document.querySelectorAll('.seat-card')).filter(card => card.style.display !== 'none');
@@ -92,6 +93,51 @@ function initializeSearch() {
         if (savedSearch) {
             searchInput.value = savedSearch;
         }
+
+        const filterDropdown = document.createElement('select');
+        filterDropdown.id = 'districtFilterDropdown';
+        filterDropdown.classList.add('candidate-search-input');
+        filterDropdown.style.width = 'auto';
+        filterDropdown.style.cursor = 'pointer';
+
+        const options = [
+            { val: 'All', text: 'All Districts' },
+            { val: 'County-wide', text: 'County-wide' },
+            { val: 'City', text: 'City' },
+            { val: 'ISD', text: 'ISD' },
+            { val: 'Board of Education', text: 'Board of Education' },
+            { val: 'Congressional', text: 'Congressional' },
+            { val: 'Justice of the Peace', text: 'Precinct' },
+            { val: 'State Representative', text: 'State Representative' },
+            { val: 'State Senate', text: 'State Senate' },
+            { val: 'College', text: 'College' },
+            { val: 'Drainage', text: 'Drainage' },
+            { val: 'Hospital', text: 'Hospital' },
+            { val: 'MUD', text: 'MUD' },
+            { val: 'Navigation', text: 'Navigation' }
+        ];
+
+        options.forEach(opt => {
+            const el = document.createElement('option');
+            el.value = opt.val;
+            el.textContent = opt.text;
+            if (opt.val === currentDistrictFilter) {
+                el.selected = true;
+            }
+            filterDropdown.appendChild(el);
+        });
+
+        filterDropdown.addEventListener('change', (e) => {
+            currentDistrictFilter = e.target.value;
+            const url = new URL(window.location);
+            if (currentDistrictFilter !== 'All') {
+                url.searchParams.set('district', currentDistrictFilter);
+            } else {
+                url.searchParams.delete('district');
+            }
+            window.history.replaceState({}, '', url);
+            loadOfficials();
+        });
         
         const toggleBtn = document.createElement('button');
         toggleBtn.id = 'toggleArchiveBtn';
@@ -105,6 +151,7 @@ function initializeSearch() {
         });
 
         searchContainer.appendChild(searchInput);
+        searchContainer.appendChild(filterDropdown);
         searchContainer.appendChild(toggleBtn);
 
         searchInput.addEventListener('input', applySearch);
@@ -168,15 +215,17 @@ const loadOfficials = async () => {
             return;
         }
 
-        const [officialsResponse, seatsResponse] = await Promise.all([
+        const [officialsResponse, seatsResponse, summariesResponse] = await Promise.all([
             fetch(`${API_BASE}/api/officials`),
-            fetch(`${API_BASE}/api/seats`)
+            fetch(`${API_BASE}/api/seats`),
+            fetch(`${API_BASE}/api/summaries`)
         ]);
         
-        if (!officialsResponse.ok || !seatsResponse.ok) throw new Error();
+        if (!officialsResponse.ok || !seatsResponse.ok || !summariesResponse.ok) throw new Error();
         
         const allOfficials = await officialsResponse.json();
         const allSeats = await seatsResponse.json();
+        const allSummaries = await summariesResponse.json();
 
         const runningIncumbents = new Set(
             allSeats
@@ -189,6 +238,14 @@ const loadOfficials = async () => {
             
             if (showArchived && !isArchivedOfficial) return false;
             if (!showArchived && isArchivedOfficial) return false;
+
+            if (currentDistrictFilter !== 'All') {
+                if (currentDistrictFilter === 'County-wide') {
+                    if (off.scope !== 'general') return false;
+                } else {
+                    if (off.district_type !== currentDistrictFilter) return false;
+                }
+            }
             
             if (off.scope === 'general' || off.scope === 'state' || off.scope === 'major') return true;
             if (off.scope === 'local') {
@@ -241,7 +298,50 @@ const loadOfficials = async () => {
                     else if (partyLower.includes('green')) partyClass = 'party-green';
                     else if (partyLower.includes('libertarian')) partyClass = 'party-libertarian';
 
-                    const absenteeism = (off.absent_percentage !== null && off.absent_percentage !== undefined) ? `${off.absent_percentage}%` : 'Insufficient data to calculate';
+                    let absenteeism = off.absent_percentage;
+                    const posLower = (off.position || '').toLowerCase();
+                    
+                    let trackCity = null;
+                    if (posLower.includes('county')) {
+                        trackCity = 'Brazoria County';
+                    } else if (off.jurisdiction && (off.jurisdiction.startsWith('City_') || off.jurisdiction.startsWith('ISD_'))) {
+                        trackCity = off.jurisdiction.substring(off.jurisdiction.indexOf('_') + 1).trim();
+                    }
+
+                    if (trackCity) {
+                        const relevantSummaries = allSummaries.filter(s => s.city === trackCity);
+                        if (relevantSummaries.length === 0) {
+                            absenteeism = 'Unknown';
+                        } else {
+                            let absCount = 0;
+                            relevantSummaries.forEach(s => {
+                                let absList = [];
+                                try {
+                                    absList = JSON.parse(s.absentees || '[]');
+                                } catch (e) {
+                                    absList = String(s.absentees || '');
+                                }
+                                
+                                if (Array.isArray(absList)) {
+                                    if (absList.some(a => a.includes(off.name))) absCount++;
+                                } else {
+                                    if (absList.includes(off.name)) absCount++;
+                                }
+                            });
+                            absenteeism = ((absCount / relevantSummaries.length) * 100).toFixed(1);
+                        }
+                    }
+
+                    if (absenteeism === null || absenteeism === undefined || String(absenteeism).trim() === '' || String(absenteeism).toLowerCase() === 'insufficient data to calculate' || String(absenteeism).toLowerCase() === 'unknown') {
+                        absenteeism = 'Unknown';
+                    } else {
+                        let numCheck = String(absenteeism).replace('%', '').trim();
+                        if (!isNaN(numCheck) && numCheck !== '') {
+                            absenteeism = numCheck + '%';
+                        } else {
+                            absenteeism = String(absenteeism).trim();
+                        }
+                    }
                     
                     let dateEntered = 'Unknown';
                     if (off.date_entered) {

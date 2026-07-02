@@ -23,6 +23,17 @@
   font-size: clamp(14px, 2vw, 20px);
 }
 
+#districtFilterDropdown {
+  font-size: clamp(14px, 3vw, 20px);
+  padding: 8px 12px;
+  max-width: 90vw;
+  height: 50px;
+}
+
+#districtFilterDropdown option {
+  font-size: 18px;
+}
+
 .candidate-search-input::placeholder {
   color: var(--white-text-color);
   opacity: 40%;
@@ -84,13 +95,13 @@
   flex-wrap: wrap;
   gap: 20px;
   flex-grow: 1;
-  align-items: flex-start; /* Aligns the image to the top when on the side */
+  align-items: flex-start;
 }
 
 .candidate-text-content {
   display: flex;
   flex-direction: column;
-  flex: 1 1 250px; /* Allows text to grow, taking up empty space, requires min 250px */
+  flex: 1 1 250px;
 }
 
 .candidate-name-party {
@@ -138,21 +149,21 @@
 }
 
 .candidate-photo {
-  flex: 0 0 auto; /* Forces image container to only take the space it strictly needs */
+  flex: 0 0 auto;
   display: flex;
   justify-content: center;
   width: 100%;
-  max-width: 250px; /* Caps how wide the photo can get on the side */
-  margin: 0 auto; /* Centers the image dynamically if it is forced to wrap to the bottom */
+  max-width: 250px;
+  margin: 0 auto;
 }
 
 .candidate-photo img {
   max-width: 100%;
-  max-height: 250px; /* Caps how tall the image can get */
+  max-height: 250px;
   object-fit: contain;
   border: inset 3px var(--accent-color);
   border-radius: 8px;
-  box-sizing: border-box; /* Ensures the border perfectly wraps the image pixels */
+  box-sizing: border-box;
 }
 
 .candidate-link {

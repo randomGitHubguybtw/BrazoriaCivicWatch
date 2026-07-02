@@ -457,7 +457,7 @@ const renderOfficials = async () => {
                 <input type="text" id="wikipediaInput" class="form-input" placeholder="Wikipedia Article" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
                 <input type="email" id="emailInput" class="form-input" placeholder="Email Address" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
                 <input type="text" id="photoInput" class="form-input" placeholder="Photo URL" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
-                <input type="text" id="absentPercentageInput" class="form-input" placeholder="Absent Percentage (e.g. 5.5)" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
+                <input type="text" id="absentPercentageInput" class="form-input" placeholder="Absent Percentage (e.g. 5.5 or blank)" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
                 <input type="date" id="dateEnteredInput" class="form-input" placeholder="Date Entered Office" style="flex: 1; min-width: 150px; color: var(--black-text-color);">
                 <input type="date" id="dateLeftFormInput" class="form-input" placeholder="Date Left Office" style="flex: 1; min-width: 150px; color: var(--black-text-color); display: none;">
                 
@@ -596,8 +596,8 @@ const renderOfficials = async () => {
                     }
 
                     let dispAbsent = official.absent_percentage;
-                    if (dispAbsent === null || dispAbsent === undefined || dispAbsent === "") {
-                        dispAbsent = "0%";
+                    if (dispAbsent === null || dispAbsent === undefined || dispAbsent === "" || String(dispAbsent).toLowerCase() === 'insufficient data to calculate' || String(dispAbsent).toLowerCase() === 'unknown') {
+                        dispAbsent = "Unknown";
                     } else if (!isNaN(dispAbsent)) {
                         dispAbsent = dispAbsent + "%";
                     }
@@ -636,7 +636,13 @@ const renderOfficials = async () => {
                             document.getElementById('wikipediaInput').value = officialToEdit.wikipedia || '';
                             document.getElementById('emailInput').value = officialToEdit.email || '';
                             document.getElementById('photoInput').value = officialToEdit.photo || '';
-                            document.getElementById('absentPercentageInput').value = officialToEdit.absent_percentage || '';
+                            
+                            let populateAbsent = officialToEdit.absent_percentage || '';
+                            if (String(populateAbsent).toLowerCase() === 'unknown' || String(populateAbsent).toLowerCase() === 'insufficient data to calculate') {
+                                populateAbsent = '';
+                            }
+                            document.getElementById('absentPercentageInput').value = populateAbsent;
+
                             document.getElementById('dateEnteredInput').value = officialToEdit.date_entered || '';
                             document.getElementById('dateLeftFormInput').value = officialToEdit.date_left || '';
                             document.getElementById('partyInput').value = officialToEdit.party || '';
@@ -760,7 +766,7 @@ const renderOfficials = async () => {
         const scope = document.getElementById('scopeSelector').value;
         const districtType = scope === 'general' ? 'General' : districtTypeInput.value;
         
-        let finalAbsentPercentage = document.getElementById('absentPercentageInput').value;
+        let finalAbsentPercentage = document.getElementById('absentPercentageInput').value.trim();
         
         if (!position || !officialName) return;
 
@@ -781,16 +787,18 @@ const renderOfficials = async () => {
 
         const plainJurisdictionName = mapTypeToSession[districtType];
         const actualDistrictValue = scope === 'general' ? 'County' : `${districtType}_${plainJurisdictionName}`;
+        
+        const isCounty = position.toLowerCase().includes('county');
 
-        if (scope !== 'general' && (districtType === 'City' || districtType === 'ISD')) {
+        if (isCounty) {
             try {
                 const summariesRes = await fetch(`${API_BASE}/api/summaries`);
                 if (summariesRes.ok) {
                     const summaries = await summariesRes.json();
-                    const relevantSummaries = summaries.filter(s => s.city === plainJurisdictionName);
+                    const relevantSummaries = summaries.filter(s => s.city === 'Brazoria County');
                     
                     if (relevantSummaries.length === 0) {
-                        finalAbsentPercentage = "Insufficient data to calculate";
+                        finalAbsentPercentage = "Unknown";
                     } else {
                         let absCount = 0;
                         relevantSummaries.forEach(s => {
@@ -810,13 +818,46 @@ const renderOfficials = async () => {
                         finalAbsentPercentage = ((absCount / relevantSummaries.length) * 100).toFixed(1);
                     }
                 } else {
-                    finalAbsentPercentage = "Insufficient data to calculate";
+                    finalAbsentPercentage = "Unknown";
                 }
             } catch (err) {
-                finalAbsentPercentage = "Insufficient data to calculate";
+                finalAbsentPercentage = "Unknown";
+            }
+        } else if (scope !== 'general' && (districtType === 'City' || districtType === 'ISD')) {
+            try {
+                const summariesRes = await fetch(`${API_BASE}/api/summaries`);
+                if (summariesRes.ok) {
+                    const summaries = await summariesRes.json();
+                    const relevantSummaries = summaries.filter(s => s.city === plainJurisdictionName);
+                    
+                    if (relevantSummaries.length === 0) {
+                        finalAbsentPercentage = "Unknown";
+                    } else {
+                        let absCount = 0;
+                        relevantSummaries.forEach(s => {
+                            let absList = [];
+                            try {
+                                absList = JSON.parse(s.absentees || '[]');
+                            } catch (e) {
+                                absList = String(s.absentees || '');
+                            }
+                            
+                            if (Array.isArray(absList)) {
+                                if (absList.some(a => a.includes(officialName))) absCount++;
+                            } else {
+                                if (absList.includes(officialName)) absCount++;
+                            }
+                        });
+                        finalAbsentPercentage = ((absCount / relevantSummaries.length) * 100).toFixed(1);
+                    }
+                } else {
+                    finalAbsentPercentage = "Unknown";
+                }
+            } catch (err) {
+                finalAbsentPercentage = "Unknown";
             }
         } else {
-            finalAbsentPercentage = finalAbsentPercentage ? finalAbsentPercentage : 0;
+            finalAbsentPercentage = finalAbsentPercentage ? finalAbsentPercentage : "Unknown";
         }
 
         try {
