@@ -203,7 +203,24 @@
 }
 
 @media print {
-    body, .candidates-grid-layout, .seat-card, .candidate-info, .seat-candidates-wrapper {
+    @page {
+        padding: 25px;
+    }
+
+    body {
+        background: #fff !important;
+        background-color: #fff !important;
+        color: #000 !important;
+        margin: 0px !important;
+        padding: 0px !important;
+        width: auto !important;
+        line-height: 1 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-sizing: border-box !important;
+    }
+
+    .candidates-grid, .seat-card, .candidate-info, .seat-candidates-wrapper {
         background: #fff !important;
         background-color: #fff !important;
         color: #000 !important;
@@ -211,6 +228,8 @@
         padding: 0 !important;
         width: 100% !important;
         line-height: 1 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     .header, .js-header, .sidebar-container, .js-sidebar-container, .title, .candidate-search-wrapper, .candidate-search, #candidateSearchInput, .footer, .js-footer, img, iframe, button {
@@ -240,6 +259,8 @@
         padding: 0 !important;
         color: var(--primary-color) !important;
         font-weight: bold !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     .print-only-seats {
@@ -320,14 +341,15 @@
         margin: 0 !important;
         padding: 0 !important;
         font-size: 10pt !important;
+        color: var(--secondary-color) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     .candidates-grid-layout {
-        display: block !important;
-        column-count: 2 !important;
-        -webkit-column-count: 2 !important;
-        column-gap: 0 !important;
-        -webkit-column-gap: 0 !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0px !important;
         width: 100% !important;
         max-width: 100% !important;
     }
@@ -340,7 +362,7 @@
         -webkit-column-break-inside: avoid !important;
         border: 1px solid #000 !important;
         border-radius: 0 !important;
-        margin: 0 0 0 0 !important;
+        margin: 0 !important;
         padding: 4px !important;
         min-height: 0 !important;
         box-shadow: none !important;
