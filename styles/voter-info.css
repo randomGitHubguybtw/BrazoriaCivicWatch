@@ -238,7 +238,7 @@
         font-size: 20pt !important;
         margin: 0 0 4px 0 !important;
         padding: 0 !important;
-        color: #000 !important;
+        color: var(--primary-color) !important;
         font-weight: bold !important;
     }
 
