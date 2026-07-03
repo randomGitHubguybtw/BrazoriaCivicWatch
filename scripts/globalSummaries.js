@@ -26,8 +26,112 @@ function initSummary() {
     `;
   }
 
+  setupCollapsers();
+
   locationDataReady.then(() => {
     runSummary(targetDate, targetMeeting);
+  });
+}
+
+function setupCollapsers() {
+  const summaryBtn = document.querySelector('.js-summary-btn');
+  const summaryCollapse = document.querySelector('.js-summary-collapse');
+  
+  if (summaryBtn && summaryCollapse) {
+    initCollapser(summaryBtn, summaryCollapse);
+  }
+
+  const transcriptionBtn = document.querySelector('.js-transcription-btn');
+  const transcriptionCollapse = document.querySelector('.js-transcription-collapse');
+  
+  if (transcriptionBtn && transcriptionCollapse) {
+    initCollapser(transcriptionBtn, transcriptionCollapse);
+  }
+}
+
+function initCollapser(btn, container) {
+  container.dataset.step = 0;
+  
+  btn.addEventListener('click', () => {
+    let step = parseInt(container.dataset.step || '0', 10);
+    const isFullyExpanded = container.classList.contains('fully-expanded');
+
+    if (isFullyExpanded) {
+      container.dataset.step = 0;
+      container.classList.remove('step-1', 'step-2', 'step-3', 'fully-expanded');
+      btn.classList.remove('expanded-btn');
+      
+      const fontSize = parseFloat(getComputedStyle(container).fontSize) || 16;
+      const nextMaxHeightPx = 480 * fontSize;
+      if (container.scrollHeight <= nextMaxHeightPx + 5) {
+         btn.innerHTML = 'Read All <i class="arrow"></i>';
+      } else {
+         btn.innerHTML = 'Read More <i class="arrow"></i>';
+      }
+      return;
+    }
+
+    step++;
+    container.dataset.step = step;
+    
+    if (step >= 4) {
+      container.classList.add('fully-expanded');
+      btn.classList.add('expanded-btn');
+      btn.innerHTML = 'Read Less <i class="arrow"></i>';
+    } else {
+      container.classList.add(`step-${step}`);
+      
+      const fontSize = parseFloat(getComputedStyle(container).fontSize) || 16;
+      const maxHeights = { 1: 480, 2: 912, 3: 1344 };
+      const currentMaxHeightPx = maxHeights[step] * fontSize;
+      
+      if (container.scrollHeight <= currentMaxHeightPx + 5) {
+        container.classList.add('fully-expanded');
+        btn.classList.add('expanded-btn');
+        btn.innerHTML = 'Read Less <i class="arrow"></i>';
+      } else {
+        const nextStep = step + 1;
+        if (nextStep >= 4) {
+          btn.innerHTML = 'Read All <i class="arrow"></i>';
+        } else {
+          const nextMaxHeightPx = maxHeights[nextStep] * fontSize;
+          if (container.scrollHeight <= nextMaxHeightPx + 5) {
+            btn.innerHTML = 'Read All <i class="arrow"></i>';
+          } else {
+            btn.innerHTML = 'Read More <i class="arrow"></i>';
+          }
+        }
+      }
+    }
+  });
+}
+
+function checkCollapserVisibility() {
+  const collapsers = [
+    { btn: document.querySelector('.js-summary-btn'), container: document.querySelector('.js-summary-collapse') },
+    { btn: document.querySelector('.js-transcription-btn'), container: document.querySelector('.js-transcription-collapse') }
+  ];
+  
+  collapsers.forEach(({btn, container}) => {
+    if (!btn || !container) return;
+    
+    container.classList.remove('fully-expanded');
+    
+    const fontSize = parseFloat(getComputedStyle(container).fontSize) || 16;
+    const initialMaxHeightPx = 16 * fontSize;
+    
+    if (container.scrollHeight <= initialMaxHeightPx + 5) {
+       btn.style.display = 'none'; 
+       container.classList.add('fully-expanded'); 
+    } else {
+       btn.style.display = 'flex';
+       const nextMaxHeightPx = 480 * fontSize;
+       if (container.scrollHeight <= nextMaxHeightPx + 5) {
+           btn.innerHTML = 'Read All <i class="arrow"></i>';
+       } else {
+           btn.innerHTML = 'Read More <i class="arrow"></i>';
+       }
+    }
   });
 }
 
@@ -84,7 +188,11 @@ export function runSummary(targetDate, targetMeeting) {
       const selectedArea = targetMeeting === 'isd' ? currentIsd : currentCity;
       townTitle.innerHTML = (selectedArea === 'All Cities' || selectedArea === 'All ISD') ? 'No meetings!' : selectedArea;
     }
-    console.error("No summaries found.");
+    
+    setTimeout(() => {
+      checkCollapserVisibility();
+    }, 10);
+    
     return; 
   }
 
@@ -105,12 +213,22 @@ export function runSummary(targetDate, targetMeeting) {
     if (townTitle) {
       townTitle.innerHTML = targetSummary.city;
     }
-    summaryContainer.innerHTML = targetSummary.summary;
+    
+    const formatForHTML = (text) => text ? text.replace(/\r?\n/g, '<br>') : '';
+    
+    summaryContainer.innerHTML = formatForHTML(targetSummary.summary);
+    summaryContainer.classList.add('highlightable');
+    
     dateTitle.innerHTML = fixDate(targetSummary.date);
-    transcription.innerHTML = targetSummary.transcription;
-    transcriptionLink.innerHTML = targetSummary.transcriptionLink;
+    
+    transcription.innerHTML = formatForHTML(targetSummary.transcription);
+    transcription.classList.add('highlightable');
+    
+    transcriptionLink.innerHTML = `<a class="default-link" href="${targetSummary.transcriptionLink}" target="_blank" >${targetSummary.transcriptionLink}</a>`;
     absentees.innerHTML = targetSummary.absentees;
-  } else {
-    console.error("Could not find the .js-summary container on the page.");
+
+    setTimeout(() => {
+      checkCollapserVisibility();
+    }, 10);
   }
 }

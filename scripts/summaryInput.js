@@ -16,18 +16,6 @@ const allowedCities = [
   "Sweeny ISD"
 ];
 
-document.addEventListener('DOMContentLoaded', () => {
-  const cityInput = document.getElementById('cityInput');
-  if (cityInput && cityInput.tagName.toLowerCase() === 'input') {
-    const select = document.createElement('select');
-    select.id = 'cityInput';
-    select.className = cityInput.className;
-    select.innerHTML = '<option value="" disabled selected>Select a city...</option>' + 
-      allowedCities.map(c => `<option value="${c}">${c}</option>`).join('');
-    cityInput.parentNode.replaceChild(select, cityInput);
-  }
-});
-
 async function getToken() {
   const { data: { session } } = await supabase.auth.getSession();
   return session?.access_token;
@@ -42,25 +30,30 @@ async function loadMySubmissions() {
   const token = await getToken();
   if (!token) return;
 
-  const oneMonthAgo = new Date();
-  oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
-  const dateLimit = oneMonthAgo.toISOString().split('T')[0];
+  const oldDateLimit = '1900-01-01';
 
-  const response = await fetch(`${API_BASE}/api/summaries/me?dateLimit=${dateLimit}`, {
+  const response = await fetch(`${API_BASE}/api/summaries/me?dateLimit=${oldDateLimit}`, {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   
   if (!response.ok) return;
   const data = await response.json();
 
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+
+  const recentSubmissions = data.filter(m => new Date(m.created_at) >= oneMonthAgo);
+
   const container = document.getElementById('mySubmissions');
-  container.innerHTML = data.map(m => `
-    <div style="margin-bottom:10px;">
-      <strong class="meeting-date">${m.city} (${m.date})</strong>
-      <button class="js-hands-off edit-button" onclick="window.editMeeting('${m.id}')">Edit</button>
-      <button class="js-hands-off edit-button" onclick="window.deleteMeeting('${m.id}')">Delete</button>
-    </div>
-  `).join('');
+  if (container) {
+    container.innerHTML = recentSubmissions.map(m => `
+      <div style="margin-bottom:10px;">
+        <strong class="meeting-date">${m.city} (${m.date})</strong>
+        <button class="js-hands-off edit-button" onclick="window.editMeeting('${m.id}')">Edit</button>
+        <button class="js-hands-off edit-button" onclick="window.deleteMeeting('${m.id}')">Delete</button>
+      </div>
+    `).join('');
+  }
 }
 
 window.deleteMeeting = async (id) => {
@@ -92,7 +85,9 @@ window.editMeeting = async (id) => {
   document.getElementById('transcriptionInput').value = data.transcription;
   document.getElementById('summaryInput').value = data.summary;
   document.getElementById('saveButton').innerText = 'Update Meeting';
-  document.getElementById('cancelButton').style.display = 'inline';
+  
+  const cancelButton = document.getElementById('cancelButton');
+  if (cancelButton) cancelButton.style.display = 'inline';
 };
 
 async function saveMeeting() {
@@ -150,17 +145,46 @@ async function saveMeeting() {
   document.getElementById('summaryInput').value = '';
   document.getElementById('editId').value = '';
   document.getElementById('saveButton').innerText = 'Save to Archive';
-  document.getElementById('cancelButton').style.display = 'none';
+  
+  const cancelButton = document.getElementById('cancelButton');
+  if (cancelButton) cancelButton.style.display = 'none';
+  
   sessionStorage.removeItem('civicWatchSummaries');
   loadMySubmissions();
 }
 
-document.getElementById('cancelButton').onclick = () => {
-  document.getElementById('editId').value = '';
-  document.getElementById('saveButton').innerText = 'Save to Archive';
-  document.getElementById('cancelButton').style.display = 'none';
-};
+function initVolunteerPortal() {
+  const cityInput = document.getElementById('cityInput');
+  if (cityInput && cityInput.tagName.toLowerCase() === 'input') {
+    const select = document.createElement('select');
+    select.id = 'cityInput';
+    select.className = cityInput.className;
+    select.innerHTML = '<option value="" disabled selected>Select a city...</option>' + 
+      allowedCities.map(c => `<option value="${c}">${c}</option>`).join('');
+    cityInput.parentNode.replaceChild(select, cityInput);
+  }
+
+  loadMySubmissions();
+  
+  const saveButton = document.getElementById('saveButton');
+  if (saveButton) {
+    saveButton.addEventListener('click', saveMeeting);
+  }
+
+  const cancelButton = document.getElementById('cancelButton');
+  if (cancelButton) {
+    cancelButton.onclick = () => {
+      document.getElementById('editId').value = '';
+      document.getElementById('saveButton').innerText = 'Save to Archive';
+      cancelButton.style.display = 'none';
+    };
+  }
+}
 
 checkAccess();
-loadMySubmissions();
-document.getElementById('saveButton').addEventListener('click', saveMeeting);
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVolunteerPortal);
+} else {
+  initVolunteerPortal();
+}

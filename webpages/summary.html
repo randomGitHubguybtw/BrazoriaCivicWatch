@@ -13,14 +13,13 @@
 
   </head>
 
-</head>
 <body>
 
     <div class="header js-header"></div>
 
     <div class="sidebar-container js-sidebar-container"></div>
 
-    <div class="title">
+    <div class="title" style="text-align: center;">
       <picture>
           <source srcset="icons/SummaryCivicWatchTitleDarkMode.png" media="(prefers-color-scheme: dark)">
           <img style="object-position: 45% 55%; height: 225px; margin-top: 10px;" class="title-graphic" src="icons/SummaryCivicWatchTitle.png" alt="Brazoria Civic Watch Logo">
@@ -28,41 +27,59 @@
     </div>
     
     <div class="summary">
-      <div class="summary-title js-summary-title"><p class="js-town">Meeting</p><p class="js-title-date">YY-MM-DD</p></div>
+      <div class="summary-title js-summary-title">
+        <p class="js-town">Meeting</p>
+        <p class="js-title-date">YY-MM-DD</p>
+      </div>
+      
       <div class="separator-container">
-          <div class="seperator">
-            
-          </div>
-        </div>
-      <div class="summary-text summary js-summary">There doesn't seem to be any summary here... yet! <a class="default-link">Volunteer to Help!</a></div>
+          <div class="seperator"></div>
+      </div>
+      
+      <div class="collapsible-container js-summary-collapse">
+        <div class="summary-text js-summary">There doesn't seem to be any summary here... yet! <a class="default-link">Volunteer to Help!</a></div>
+      </div>
+      <button class="collapse-btn js-summary-btn js-hands-off">Read More <i class="arrow"></i></button>
+
       <div class="separator-container">
-          <div class="seperator">
-            
-          </div>
+          <div class="seperator"></div>
+      </div>
+      
+      <div>
+        <p style="text-align: left; font-weight: bold; padding-left: 10px;">Transcription:</p>
+        <div style="text-align: left;">&bdquo;</div>
+        
+        <div class="collapsible-container js-transcription-collapse">
+          <p class="summary-text transcription js-transcription">-Missing Transcription-</p>
         </div>
-      <div><p>Transcription:</p>&bdquo;<p class="summary-text transcription js-transcription" >-Missing Transcription-</p>&bdquo;</div>
-      <div class="summary-text transcription-link js-transcription-link"><a class="default-link">transcriptionsource.org</a></div>
+        
+        <div style="text-align: right;">&bdquo;</div>
+        <button class="collapse-btn js-transcription-btn js-hands-off">Read More <i class="arrow"></i></button>
+      </div>
+
+      <div class="transcription-link js-transcription-link">
+        <a class="default-link">transcriptionsource.org</a>
+      </div>
+      
       <div class="separator-container">
-          <div class="seperator">
-            
-          </div>
-        </div>
+          <div class="seperator"></div>
+      </div>
+      
       <div class="extra-info js-extra-info">
-        <div class="summary-text absent-list js-absent-list">Absentees: <p class="js-absentees absentees">None</p> </div>
+        <div class="summary-text absent-list js-absent-list">
+          Absentees: <p class="js-absentees absentees">None</p> 
+        </div>
       </div>
     </div>
 
   <div class="footer js-footer"></div>
 
-  <!--External Libraries-->
   <script src="importedJS/turf.min.js" defer></script>
 
-  <!--Data-->
   <script type="module" src="scripts/utils/fixNoun.js"></script>
   <script type="module" src="scripts/utils/fixDate.js"></script>
   <script type="module" src="scripts/locationStore.js"></script>
 
-  <!--Globals-->
   <script type="module" src="scripts/globalHTMLGenerate.js"></script>
   <script type="module" src="scripts/globalButtons.js"></script>
   <script type="module" src="scripts/globalArchive.js"></script>

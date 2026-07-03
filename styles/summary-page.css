@@ -1,35 +1,109 @@
 .summary {
   text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
 .summary-title {
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   font-size: 32px;
-  padding-top: -10px;
+  margin: 10px 0;
 }
 
 .summary-text {
-  padding-top: 10px;
+  padding: 15px 0;
+  line-height: 1.6;
 }
 
 .default-link {
-  color: var(--accent-color)
+  color: var(--accent-color);
+  cursor: pointer;
+  text-decoration: underline;
+
+}
+
+.transcription-link {
+  display: inline
 }
 
 .default-link:hover {
-  text-decoration: underline;
-}
-
-.summary-text {
-  padding-top: 15px;
+  text-decoration: none;
 }
 
 .extra-info {
   text-align: left;
-  padding-left: 30px;
-  padding-top: 20px;
+  padding: 20px 0 20px 30px;
 }
 
 .absent-list, .absentees {
   display: inline-block;
+  margin: 0;
+}
+
+.collapsible-container {
+  position: relative;
+  max-height: 16em;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 60px), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 60px), transparent 100%);
+  margin: 0 20px 0 60px;
+  text-align: left;
+}
+
+.collapsible-container.step-1 { 
+  max-height: 480em; 
+}
+
+.collapsible-container.step-2 { 
+  max-height: 912em; 
+}
+
+.collapsible-container.step-3 { 
+  max-height: 1344em; 
+}
+
+.collapsible-container.fully-expanded {
+  max-height: 2000000px;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.collapse-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.8;
+  margin: 5px 0 15px 0;
+  border-radius: 6px;
+}
+
+.collapse-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  opacity: 1;
+}
+
+.arrow {
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 4px;
+  margin-left: 8px;
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+}
+
+.expanded-btn .arrow {
+  transform: rotate(-135deg);
+  margin-top: 5px;
 }
