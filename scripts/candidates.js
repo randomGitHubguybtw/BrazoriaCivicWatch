@@ -44,9 +44,11 @@ window.addEventListener('resize', equalizeRowHeights);
 
 function applySearch() {
     const searchInput = document.getElementById('candidateSearchInput');
+    const interviewBtn = document.getElementById('interviewFilterBtn');
     if (!searchInput) return;
     
     const searchTerm = searchInput.value.toLowerCase();
+    const requireInterview = interviewBtn ? interviewBtn.dataset.filtered === 'true' : false;
     
     const url = new URL(window.location);
     if (searchInput.value) {
@@ -62,7 +64,15 @@ function applySearch() {
 
     cards.forEach(card => {
         const cardText = card.textContent.toLowerCase();
-        if (cardText.includes(searchTerm)) {
+        const textMatch = cardText.includes(searchTerm);
+        let interviewMatch = true;
+
+        if (requireInterview) {
+            interviewMatch = Array.from(card.querySelectorAll('.candidate-link'))
+                .some(link => link.textContent.includes('Candidate Interview'));
+        }
+
+        if (textMatch && interviewMatch) {
             card.style.display = '';
         } else {
             card.style.display = 'none';
@@ -92,7 +102,27 @@ function initializeSearch() {
             searchInput.value = savedSearch;
         }
 
+        const filterBtn = document.createElement('button');
+        filterBtn.id = 'interviewFilterBtn';
+        filterBtn.classList.add('interview-filter-btn', 'js-hands-off');
+        filterBtn.dataset.filtered = 'false';
+        filterBtn.textContent = 'Show Only Candidates With Interviews';
+
+        filterBtn.addEventListener('click', () => {
+            if (filterBtn.dataset.filtered === 'false') {
+                filterBtn.dataset.filtered = 'true';
+                filterBtn.textContent = 'Showing Only Interviews (Click to Show All)';
+                filterBtn.classList.add('active');
+            } else {
+                filterBtn.dataset.filtered = 'false';
+                filterBtn.textContent = 'Show Only Candidates With Interviews';
+                filterBtn.classList.remove('active');
+            }
+            applySearch();
+        });
+
         searchContainer.appendChild(searchInput);
+        searchContainer.appendChild(filterBtn);
 
         searchInput.addEventListener('input', applySearch);
     }
@@ -131,6 +161,61 @@ function checkCandidateMatch(seatCity) {
 
     if (userVal.startsWith('All ') || userVal === 'All') return true;
     return userVal === valPart;
+}
+
+function getSeatPriority(seat) {
+    const name = (seat.seat_name || '').toLowerCase();
+    
+    // 1. Federal Offices
+    if (name.includes('president')) return 10;
+    if (name.includes('united states senator') || name.includes('u.s. senator')) return 11;
+    if (name.includes('united states representative') || name.includes('u.s. representative') || name.includes('congress')) return 12;
+
+    // 2. Statewide State Offices
+    if (name === 'governor') return 20;
+    if (name === 'lieutenant governor') return 21;
+    if (name === 'attorney general') return 22;
+    if (name.includes('comptroller of public accounts')) return 23;
+    if (name.includes('commissioner of the general land office')) return 24;
+    if (name.includes('commissioner of agriculture')) return 25;
+    if (name.includes('railroad commissioner')) return 26;
+    if (name.includes('chief justice, supreme court')) return 27;
+    if (name.includes('justice, supreme court')) return 28;
+    if (name.includes('presiding judge, court of criminal appeals')) return 29;
+    if (name.includes('judge, court of criminal appeals')) return 30;
+
+    // 3. District State Offices
+    if (name.includes('state board of education')) return 40;
+    if (name.includes('state senator') || name.includes('state senate')) return 41;
+    if (name.includes('state representative')) return 42;
+    if (name.includes('chief justice') && name.includes('court of appeals')) return 43;
+    if (name.includes('justice') && name.includes('court of appeals')) return 44;
+    if (name.includes('district judge')) return 45;
+    if (name.includes('district attorney')) return 46;
+
+    // 4. County Offices
+    if (name === 'county judge') return 50;
+    if (name.includes('county court at law') || name.includes('probate court')) return 51;
+    if (name === 'county attorney') return 52;
+    if (name === 'district clerk') return 53;
+    if (name === 'county clerk') return 54;
+    if (name === 'sheriff') return 55;
+    if (name.includes('tax assessor')) return 56;
+    if (name.includes('county treasurer')) return 57;
+
+    // 5. Precinct Offices
+    if (name.includes('county commissioner')) return 60;
+    if (name.includes('justice of the peace')) return 61;
+    if (name.includes('constable')) return 62;
+
+    // Fallbacks
+    const scope = (seat.scope || '').toLowerCase();
+    if (scope === 'federal') return 70;
+    if (scope === 'state' || scope === 'general' || scope === 'major') return 80;
+    if (scope === 'county') return 90;
+    if (scope === 'local') return 100;
+
+    return 999;
 }
 
 const loadCandidates = async () => {
@@ -295,7 +380,16 @@ const loadCandidates = async () => {
             seatsGrouped[groupKey].push(cand);
         });
 
-        const sortedSeats = Object.entries(seatsGrouped).sort((a, b) => b[1].length - a[1].length);
+        const sortedSeats = Object.entries(seatsGrouped).sort((a, b) => {
+            const priorityA = getSeatPriority(a[1][0]);
+            const priorityB = getSeatPriority(b[1][0]);
+            
+            if (priorityA !== priorityB) {
+                return priorityA - priorityB;
+            }
+            
+            return a[0].localeCompare(b[0]);
+        });
 
         if (candidatesContainer) {
             candidatesContainer.classList.add('candidates-grid-layout');
