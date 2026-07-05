@@ -383,6 +383,24 @@ export const locationDataReady = (async function initLocation() {
     };
   }
 
+  const defaultCity = localStorage.getItem('city');
+  if (defaultCity) {
+    return saveCityAndIsd(
+      localStorage.getItem('city') || "All Cities",
+      localStorage.getItem('isd') || "All ISDs",
+      localStorage.getItem('boardOfEd') || "All State Board of Education Districts",
+      localStorage.getItem('congressDist') || "All Congressional Districts",
+      localStorage.getItem('precinct') || "All Justice of the Peace Precincts",
+      localStorage.getItem('stateRep') || "All State Representative Districts",
+      localStorage.getItem('stateSen') || "All State Senate Districts",
+      localStorage.getItem('college') || "All College Districts",
+      localStorage.getItem('drainage') || "All Drainage Districts",
+      localStorage.getItem('hospital') || "All Hospital Districts",
+      localStorage.getItem('mud') || "All MUDs",
+      localStorage.getItem('navigation') || "All Navigation Precincts"
+    );
+  }
+
   try {
     const { lat, long } = await getCoordinates();
     return await processLocation(lat, long);

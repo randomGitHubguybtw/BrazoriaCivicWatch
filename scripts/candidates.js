@@ -68,8 +68,10 @@ function applySearch() {
         let interviewMatch = true;
 
         if (requireInterview) {
-            interviewMatch = Array.from(card.querySelectorAll('.candidate-link'))
-                .some(link => link.textContent.includes('Candidate Interview'));
+            const interviewStatuses = Array.from(card.querySelectorAll('.screen-only-link:nth-child(3)'));
+            interviewMatch = interviewStatuses.some(statusNode => 
+                !statusNode.textContent.includes('This candidate does not have an interview scheduled')
+            );
         }
 
         if (textMatch && interviewMatch) {

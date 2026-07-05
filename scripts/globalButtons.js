@@ -487,7 +487,7 @@ if (dropdownsListContainer) {
     </div>
 
     <div class="js-dropdown-box" style="margin-bottom: 12px; width: 60vw; max-width: 400px;">
-      <label class="form-label" style="display: block; text-align: center; color: var(--black-text-color); font-weight: bold;">Justice of the Peace Precinct</label>
+      <label class="form-label" style="display: block; text-align: center; color: var(--black-text-color); font-weight: bold;">Precinct (Justice of the Peace and Commissioner)</label>
       <div class="dropdown-wrapper">
         <input type="text" placeholder="Select Precinct..." class="location-dropdown js-precinct-search js-dropdown-input" style="border: inset 3px var(--accent-color); color: var(--black-text-color); cursor: pointer;"></input>
         <ul class="dropdown-search js-dropdown-list" style="color: var(--black-text-color);">
@@ -662,6 +662,11 @@ if (dropdownsListContainer) {
         </ul>
       </div>
     </div>
+    
+    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; width: 100%; flex-wrap: wrap;">
+      <button class="js-no-route location-button" id="set-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Set default location</button>
+      <button class="js-no-route location-button" id="reset-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Reset default location</button>
+    </div>
   `;
 
   document.getElementById('recalc-btn').addEventListener('click', async () => {
@@ -691,6 +696,40 @@ if (dropdownsListContainer) {
       document.getElementById('lat-input').value = lat;
       document.getElementById('long-input').value = long;
     }
+  });
+
+  document.getElementById('set-default-btn').addEventListener('click', () => {
+    const keys = [
+      { id: '.js-city-search', key: 'city' },
+      { id: '.js-isd-search', key: 'isd' },
+      { id: '.js-board-search', key: 'boardOfEd' },
+      { id: '.js-congress-search', key: 'congressDist' },
+      { id: '.js-precinct-search', key: 'precinct' },
+      { id: '.js-staterep-search', key: 'stateRep' },
+      { id: '.js-statesen-search', key: 'stateSen' },
+      { id: '.js-college-search', key: 'college' },
+      { id: '.js-drainage-search', key: 'drainage' },
+      { id: '.js-hospital-search', key: 'hospital' },
+      { id: '.js-mud-search', key: 'mud' },
+      { id: '.js-navigation-search', key: 'navigation' }
+    ];
+    keys.forEach(k => {
+      const input = document.querySelector(k.id);
+      if (input && input.value) {
+        localStorage.setItem(k.key, input.value);
+      }
+    });
+    alert('Default location set!');
+  });
+
+  document.getElementById('reset-default-btn').addEventListener('click', () => {
+    const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
+    keys.forEach(k => {
+      localStorage.removeItem(k);
+      sessionStorage.removeItem(k);
+    });
+    alert('Default location reset!');
+    window.location.reload();
   });
 
   loadDynamicDistricts();
