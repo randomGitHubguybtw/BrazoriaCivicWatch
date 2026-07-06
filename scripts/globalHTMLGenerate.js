@@ -1,5 +1,9 @@
 import { locationDataReady } from './locationStore.js';
 
+const stripeScript = document.createElement('script');
+stripeScript.src = "https://js.stripe.com/v3/";
+document.head.appendChild(stripeScript);
+
 document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/card-wheel.css">
   <link rel="stylesheet" href="styles/content.css">
@@ -17,6 +21,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/location-choose.css">
   <link rel="stylesheet" href="styles/contact-us.css">
   <link rel="stylesheet" href="styles/officials.css">
+  <link rel="stylesheet" href="styles/donations.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -73,14 +78,212 @@ document.body.insertAdjacentHTML('afterbegin', `
     <h2 class="loading-title">Figuring out your location...</h2>
     <p class="loading-subtitle">Cross-referencing maps.<br>Please allow location access when prompted.</p>
   </div>
+  <div id="donate-overlay" class="donate-overlay js-hands-off" style="display: none;">
+    <div class="donate-modal js-hands-off">
+      <button class="close-donate js-hands-off" id="close-donate-btn">&times;</button>
+      
+      <div id="donate-main-content" class="donate-main-content js-hands-off">
+        <h2 class="donate-title">Support Our Cause</h2>
+        <div class="donate-options">
+          <button class="donate-amt js-hands-off">$1</button>
+          <button class="donate-amt js-hands-off">$5</button>
+          <button class="donate-amt js-hands-off">$10</button>
+          <button class="donate-amt js-hands-off selected">$25</button>
+          <button class="donate-amt js-hands-off">$50</button>
+          <button class="donate-amt js-hands-off">$100</button>
+        </div>
+        <div class="custom-amount-container js-hands-off">
+          <span class="currency-symbol js-hands-off">$</span>
+          <input type="number" id="custom-donate-input" class="custom-donate-input js-hands-off" placeholder="Custom Amount" min="1" step="1" value="25">
+        </div>
+        <div class="donate-type">
+          <label class="payment-periodic-check"><input type="radio" name="freq" value="one-time" checked> One-time</label>
+          <label class="payment-periodic-check"><input type="radio" name="freq" value="monthly"> Monthly</label>
+        </div>
+        <button class="submit-donation js-hands-off">Proceed to Donate</button>
+      </div>
+
+      <div id="donate-thanks-content" class="donate-thanks-content js-hands-off" style="display: none;">
+        <h2 class="donate-title">Thank You!</h2>
+        <p class="thanks-message">Thank you for your generous support. Your transaction is opening securely in a new tab via Stripe.</p>
+      </div>
+    </div>
+  </div>
 `);
 
-export function generateHTML(startCity, startIsd, activeButton) {
-  console.log('Generating HTML for:', startCity, startIsd);
+const overlayElement = document.getElementById('donate-overlay');
+const closeBtnElement = document.getElementById('close-donate-btn');
+const amountBtns = document.querySelectorAll('.donate-amt');
+const submitDonationBtn = document.querySelector('.submit-donation');
+const customAmountInput = document.getElementById('custom-donate-input');
+const mainContent = document.getElementById('donate-main-content');
+const thanksContent = document.getElementById('donate-thanks-content');
 
+function closeDonateModal() {
+  overlayElement.classList.add('closing');
+  setTimeout(() => {
+    overlayElement.style.display = 'none';
+    overlayElement.classList.remove('closing');
+    if (mainContent && thanksContent) {
+      mainContent.style.display = 'flex';
+      thanksContent.style.display = 'none';
+    }
+  }, 150);
+}
+
+closeBtnElement.addEventListener('click', closeDonateModal);
+
+overlayElement.addEventListener('click', (event) => {
+  if (event.target === overlayElement) {
+    closeDonateModal();
+  }
+});
+
+amountBtns.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    amountBtns.forEach(b => b.classList.remove('selected'));
+    e.target.classList.add('selected');
+    if (customAmountInput) {
+      customAmountInput.value = e.target.textContent.replace('$', '');
+    }
+  });
+});
+
+if (customAmountInput) {
+  customAmountInput.addEventListener('input', () => {
+    const val = customAmountInput.value;
+    amountBtns.forEach(b => {
+      if (b.textContent.replace('$', '') === val) {
+        b.classList.add('selected');
+      } else {
+        b.classList.remove('selected');
+      }
+    });
+  });
+}
+
+submitDonationBtn.addEventListener('click', async () => {
+  if (typeof Stripe === 'undefined') {
+    return;
+  }
+
+  const amount = customAmountInput ? parseInt(customAmountInput.value, 10) : 0;
+
+  if (isNaN(amount) || amount <= 0) {
+    return;
+  }
+
+  const newTab = window.open('', '_blank');
+  if (newTab) {
+    newTab.document.write('<html><head><title>Loading Checkout...</title><style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background-color:#2a2623;color:#fcf6ee;margin:0;}</style></head><body><h2>Connecting to secure checkout...</h2></body></html>');
+    newTab.document.close();
+  }
+
+  if (mainContent && thanksContent) {
+    mainContent.style.display = 'none';
+    thanksContent.style.display = 'flex';
+  }
+
+  const freqElement = document.querySelector('input[name="freq"]:checked');
+  const frequency = freqElement ? freqElement.value : 'one-time';
+
+  const API_BASE_URL = 'https://api.brazoriacivicwatch.org';
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/create-checkout-session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: amount, frequency: frequency })
+    });
+    
+    const session = await response.json();
+    
+    if (session.error || (!session.url && !session.id)) {
+      if (newTab) newTab.close();
+      if (mainContent && thanksContent) {
+        mainContent.style.display = 'flex';
+        thanksContent.style.display = 'none';
+      }
+      return;
+    }
+
+    const monitorStripeTab = () => {
+      if (!newTab) return;
+      let wentToStripe = false;
+      
+      const tabMonitor = setInterval(() => {
+        if (newTab.closed) {
+          clearInterval(tabMonitor);
+          return;
+        }
+        
+        try {
+          const currentUrl = newTab.location.href;
+          if (wentToStripe) {
+            newTab.close();
+            clearInterval(tabMonitor);
+          }
+        } catch (e) {
+          wentToStripe = true;
+        }
+      }, 500);
+    };
+
+    if (session.url) {
+      if (newTab) {
+        newTab.location.href = session.url;
+        monitorStripeTab();
+      }
+    } else if (session.id) {
+      if (newTab) {
+        newTab.document.open();
+        newTab.document.write(`
+          <html>
+            <head>
+              <title>Redirecting to Stripe...</title>
+              <script src="https://js.stripe.com/v3/"></script>
+              <style>
+                body {
+                  font-family: sans-serif;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+                  background-color: #2a2623;
+                  color: #fcf6ee;
+                  margin: 0;
+                }
+              </style>
+            </head>
+            <body>
+              <h2>Redirecting to secure payment page...</h2>
+              <script>
+                const stripe = Stripe('pk_test_51Tps5ZRPtrIU6wyIGQLjBoir8i0oeKUUpgQf39WJXub4hakSEvRv7tinkY0Amxap2EEs5EQsDOj5PbcDES1btrpF00fwMQaSVu');
+                stripe.redirectToCheckout({ sessionId: '${session.id}' }).catch(function(err) {
+                  console.error(err);
+                  document.body.innerHTML = '<h2>Failed to load checkout page. Please close this tab and try again.</h2>';
+                });
+              </script>
+            </body>
+          </html>
+        `);
+        newTab.document.close();
+        monitorStripeTab();
+      }
+    }
+  } catch (error) {
+    if (newTab) newTab.close();
+    if (mainContent && thanksContent) {
+      mainContent.style.display = 'flex';
+      thanksContent.style.display = 'none';
+    }
+  }
+});
+
+export function generateHTML(startCity, startIsd, activeButton) {
   document.querySelector('.js-header').innerHTML = `
     <div class="left">
-      <div class="drop-down-burger">
+      <div class="drop-down-burger js-hands-off">
         <img class="burger js-burger" src="icons/hamburger-menu.svg">
       </div>
     </div>
@@ -88,8 +291,19 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <a href="index.html"><p class="mission"> Keeping Brazoria County accessible since 2026!</p></a>
     </div>
     <div class="right">
-      <button class="donate-button">Donate to our cause!</button>
+      <button class="donate-button js-donate-button js-hands-off">Donate to our cause!</button>
     </div>`;
+
+  const donateBtn = document.querySelector('.js-donate-button');
+  if (donateBtn) {
+    donateBtn.addEventListener('click', () => {
+      const overlay = document.getElementById('donate-overlay');
+      if (overlay) {
+        overlay.classList.remove('closing');
+        overlay.style.display = 'flex';
+      }
+    });
+  }
 
   const sidebarContainer = document.querySelector('.js-sidebar-container');
 
@@ -145,7 +359,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         </div>
         <button data-target="webpages/location-choose.html" style="background-color: rgb(109, 130, 99); color: rgb(252, 246, 238);" class="sidebar-button js-sidebar-button">Change Precise Location</button>
         <button data-target="index.html" class="sidebar-button js-sidebar-button"><strong>Home</strong></button>
-        <button data-target="webpages/meeting-selection-screen.html" class="sidebar-button">Most Recent Meeting</button>
+        <button data-target="webpages/meeting-selection-screen.html" class="sidebar-button js-sidebar-button">Most Recent Meeting</button>
         <button class="sidebar-button js-sidebar-button">Run For Office</button>
         <button data-target="webpages/candidates.html" class="sidebar-button js-sidebar-button">Candidate Interviews</button>
         <button data-target="webpages/current-officials.html" class="sidebar-button js-sidebar-button">Current Officials</button>
@@ -209,7 +423,6 @@ locationDataReady.then(({ city, isd }) => {
     preciseLocationBtn.textContent = "Change Precise Location";
   }
 }).catch(error => {
-  console.error("Location failed:", error);
   if (preciseLocationBtn) {
     preciseLocationBtn.disabled = false;
     preciseLocationBtn.textContent = "Change Precise Location";
