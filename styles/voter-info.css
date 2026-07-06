@@ -228,6 +228,16 @@
     display: none;
 }
 
+.disclaimer-text {
+  color: var(--black-text-color);
+  margin: 5px 50px;
+  border: 3px;
+  border-color: var(--accent-color);
+  border-style: inset;
+  padding: 10px;
+  border-radius: 10px;
+}
+
 @media print {
     @page {
         padding: 25px;
@@ -258,7 +268,7 @@
         print-color-adjust: exact !important;
     }
 
-    .header, .js-header, .sidebar-container, .js-sidebar-container, .title, .candidate-search-wrapper, .candidate-search, #candidateSearchInput, .footer, .js-footer, img, iframe, button {
+    .header, .disclaimer-text, .js-header, .sidebar-container, .js-sidebar-container, .title, .candidate-search-wrapper, .candidate-search, #candidateSearchInput, .footer, .js-footer, img, iframe, button {
         display: none !important;
     }
 

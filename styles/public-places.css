@@ -1,0 +1,145 @@
+.places-container {
+  margin: 20px;
+}
+
+.place-search-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.place-search-input {
+  width: 75vw;
+  height: 4vh;
+  min-height: 45px;
+  background-color: var(--primary-color);
+  border: 3px solid var(--secondary-color);
+  padding-left: 15px;
+  color: var(--black-text-color);
+  margin: 15px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.place-search-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.place-search-input::placeholder {
+  color: var(--black-text-color);
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.place-section {
+  margin-bottom: 50px;
+}
+
+.places-section-title {
+  grid-column: 1 / -1;
+  margin: 0 20px 20px 20px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--white-text-color);
+  border-bottom: 4px solid var(--accent-color);
+  padding-bottom: 10px;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 0 20px;
+  align-items: stretch;
+}
+
+.place-card {
+  border: 2px solid var(--secondary-color);
+  border-bottom: 6px solid var(--accent-color);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px var(--card-black-gradient, rgba(0, 0, 0, 0.15));
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 16px;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.place-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px var(--card-black-gradient, rgba(0, 0, 0, 0.25));
+  border-bottom-color: var(--primary-color);
+}
+
+.place-card-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--black-text-color);
+  line-height: 1.2;
+}
+
+.place-card-address {
+  margin: 0;
+  color: var(--black-text-color);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  font-weight: 500;
+  flex-grow: 1;
+  opacity: 0.9;
+}
+
+.place-card-btn {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  background-color: var(--primary-color);
+  color: var(--white-text-color);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid var(--secondary-color);
+  box-shadow: 4px 4px 0px var(--accent-color);
+  margin-top: auto;
+  box-sizing: border-box;
+  min-height: 45px;
+  transition: all 0.15s ease;
+}
+
+.place-card-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--accent-color);
+  background-color: var(--accent-color);
+  border-color: var(--primary-color);
+}
+
+.place-card-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px var(--accent-color);
+}
+
+.default-location-text {
+  display: grid;
+  text-align: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-top: 40px;
+}
