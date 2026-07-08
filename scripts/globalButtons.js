@@ -665,25 +665,48 @@ if (dropdownsListContainer) {
     
     <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; width: 100%; flex-wrap: wrap;">
       <button class="js-no-route location-button" id="set-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Set default location</button>
+      <button class="js-no-route location-button" id="reset-to-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Reset to defaults</button>
       <button class="js-no-route location-button" id="reset-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Reset default location</button>
     </div>
   `;
 
-  document.getElementById('recalc-btn').addEventListener('click', async () => {
-    const data = await forceRecalculate();
-    updateInputsFromData(data);
-    triggerSave('city');
+  document.getElementById('recalc-btn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const btn = e.target;
+    const originalText = btn.textContent;
+    let dots = 1;
+    btn.textContent = "Recalculating.";
+    
+    const interval = setInterval(() => {
+      dots = (dots % 3) + 1;
+      btn.textContent = "Recalculating" + ".".repeat(dots);
+    }, 400);
+
+    try {
+      const data = await forceRecalculate();
+      if (data) {
+        updateInputsFromData(data);
+        triggerSave('city');
+      }
+    } catch (error) {
+    } finally {
+      clearInterval(interval);
+      btn.textContent = originalText;
+    }
   });
 
-  document.getElementById('run-coords-btn').addEventListener('click', async () => {
+  document.getElementById('run-coords-btn').addEventListener('click', async (e) => {
+    e.preventDefault();
     const latStr = document.getElementById('lat-input').value;
     const longStr = document.getElementById('long-input').value;
     const lat = parseCoordString(latStr);
     const long = parseCoordString(longStr);
     if (!isNaN(lat) && !isNaN(long)) {
       const data = await runCoords(lat, long);
-      updateInputsFromData(data);
-      triggerSave('city');
+      if (data) {
+        updateInputsFromData(data);
+        triggerSave('city');
+      }
     } else {
       alert("Please enter valid coordinates.");
     }
@@ -698,7 +721,8 @@ if (dropdownsListContainer) {
     }
   });
 
-  document.getElementById('set-default-btn').addEventListener('click', () => {
+  document.getElementById('set-default-btn').addEventListener('click', (e) => {
+    e.preventDefault();
     const keys = [
       { id: '.js-city-search', key: 'city' },
       { id: '.js-isd-search', key: 'isd' },
@@ -722,13 +746,39 @@ if (dropdownsListContainer) {
     alert('Default location set!');
   });
 
-  document.getElementById('reset-default-btn').addEventListener('click', () => {
+  document.getElementById('reset-to-default-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    const defaultCity = localStorage.getItem('city');
+    if (!defaultCity) {
+      alert("No defaults are set.");
+      return;
+    }
+    const data = saveCityAndIsd(
+      localStorage.getItem('city') || "All Cities",
+      localStorage.getItem('isd') || "All ISDs",
+      localStorage.getItem('boardOfEd') || "All State Board of Education Districts",
+      localStorage.getItem('congressDist') || "All Congressional Districts",
+      localStorage.getItem('precinct') || "All Justice of the Peace Precincts",
+      localStorage.getItem('stateRep') || "All State Representative Districts",
+      localStorage.getItem('stateSen') || "All State Senate Districts",
+      localStorage.getItem('college') || "All College Districts",
+      localStorage.getItem('drainage') || "All Drainage Districts",
+      localStorage.getItem('hospital') || "All Hospital Districts",
+      localStorage.getItem('mud') || "All MUDs",
+      localStorage.getItem('navigation') || "All Navigation Precincts"
+    );
+    updateInputsFromData(data);
+    triggerSave('city');
+  });
+
+  document.getElementById('reset-default-btn').addEventListener('click', (e) => {
+    e.preventDefault();
     const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
     keys.forEach(k => {
       localStorage.removeItem(k);
       sessionStorage.removeItem(k);
     });
-    alert('Default location reset!');
+    alert('Default location cleared!');
     window.location.reload();
   });
 

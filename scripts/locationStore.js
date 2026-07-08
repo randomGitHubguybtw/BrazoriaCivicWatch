@@ -3,11 +3,12 @@ import { fixNoun } from "./utils/fixNoun.js";
 function getCoordinates() {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
-      reject("Geolocation not supported");
+      reject(new Error("Geolocation not supported"));
     } else {
       navigator.geolocation.getCurrentPosition(
         pos => resolve({ lat: pos.coords.latitude, long: pos.coords.longitude }),
-        err => reject(err)
+        err => reject(err),
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     }
   });
@@ -118,7 +119,7 @@ async function processLocation(lat, long) {
     navigationDistricts
   } = await fetchMaps();
 
-  const userLocation = turf.point([long, lat]);
+  const userLocation = window.turf.point([long, lat]);
  
   let finalCity = "All Cities";
   let finalIsd = "All ISDs";
@@ -209,7 +210,7 @@ async function processLocation(lat, long) {
   let matchedAny = false;
 
   for (const section of schoolDistricts.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalIsd = section.properties.Name;
       matchedAny = true;
       break;
@@ -217,7 +218,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of cityLimits.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalCity = section.properties.Name;
       matchedAny = true;
       break;
@@ -225,7 +226,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of boardOfEducation.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalBoardOfEd = `District ${section.properties.District}`;
       matchedAny = true;
       break;
@@ -233,7 +234,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of congressDistricts.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalCongressDist = `District ${section.properties.District}`;
       matchedAny = true;
       break;
@@ -241,7 +242,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of precincts.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalPrecinct = `Precinct ${section.properties.DISTRICT}`;
       matchedAny = true;
       break;
@@ -249,7 +250,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of stateRepDistricts.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalStateRep = `District ${section.properties.District}`;
       matchedAny = true;
       break;
@@ -257,7 +258,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of stateSenDistricts.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalStateSen = `District ${section.properties.District}`;
       matchedAny = true;
       break;
@@ -265,7 +266,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of college.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalCollege = section.properties.Name;
       matchedAny = true;
       break;
@@ -273,7 +274,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of drainageDistricts.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalDrainage = section.properties.Name;
       matchedAny = true;
       break;
@@ -281,7 +282,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of hospital.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalHospital = section.properties.Name;
       matchedAny = true;
       break;
@@ -289,7 +290,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of mud.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       const rawMudName = section.properties.Name;
       matchedAny = true;
       if (mudNameDictionary[rawMudName]) {
@@ -311,7 +312,7 @@ async function processLocation(lat, long) {
   }
 
   for (const section of navigationDistricts.features) {
-    if (turf.booleanPointInPolygon(userLocation, section)) {
+    if (window.turf.booleanPointInPolygon(userLocation, section)) {
       finalNavigation = section.properties.Name;
       matchedAny = true;
       break;
@@ -328,7 +329,16 @@ export async function forceRecalculate() {
     const { lat, long } = await getCoordinates();
     return await processLocation(lat, long);
   } catch (error) {
-    return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "All College Districts", "All Drainage Districts", "All Hospital Districts", "All MUDs", "All Navigation Precincts");
+    if (error && error.code === 1) {
+      alert("Permission denied. Please enable location services in your browser for this site.");
+    } else if (error && error.code === 2) {
+      alert("Position unavailable. Make sure your device has location services enabled.");
+    } else if (error && error.code === 3) {
+      alert("Location request timed out. Please try again.");
+    } else {
+      alert("Could not retrieve location. Error: " + (error.message || error));
+    }
+    throw error;
   }
 }
 
