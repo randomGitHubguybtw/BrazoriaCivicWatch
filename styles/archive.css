@@ -4,18 +4,31 @@
 }
 
 .archive-search {
-  width: 75vw;
+   width: 75vw;
   height: 4vh;
-  margin-top: -10px;
+  min-height: 45px;
   background-color: var(--primary-color);
-  border: solid var(--secondary-color);
-  padding-left: 5px;
+  border: 3px solid var(--secondary-color);
+  padding-left: 15px;
   color: var(--black-text-color);
+  margin: 15px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.archive-search:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .archive-search::placeholder {
   color: var(--black-text-color);
-  opacity: 60%;
+  opacity: 0.6;
+  font-weight: 500;
 }
 
 .search-results {
