@@ -30,46 +30,76 @@
 }
 
 .polling-card {
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--secondary-color);
+  border-bottom: 6px solid var(--accent-color);
   padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px var(--card-black-gradient);
+  border-radius: 12px;
+  box-shadow: 0 8px 16px var(--card-black-gradient, rgba(0, 0, 0, 0.15));
   background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   gap: 16px;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.polling-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px var(--card-black-gradient, rgba(0, 0, 0, 0.25));
+  border-bottom-color: var(--primary-color);
 }
 
 .polling-card-title {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
+  font-weight: 800;
   color: var(--black-text-color);
+  line-height: 1.2;
 }
 
 .polling-card-address {
   margin: 0;
   color: var(--black-text-color);
-  font-size: 1rem;
-  line-height: 1.4;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  font-weight: 500;
   flex-grow: 1;
+  opacity: 0.9;
 }
 
 .polling-card-btn {
   display: inline-flex;
   align-self: flex-start;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   text-decoration: none;
   background-color: var(--primary-color);
   color: var(--white-text-color);
-  padding: 10px 24px;
-  border-radius: 6px;
+  padding: 12px 24px;
+  border-radius: 8px;
   font-size: 0.95rem;
-  font-weight: bold;
-  border: 1px solid var(--sickly-primary);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid var(--secondary-color);
+  box-shadow: 4px 4px 0px var(--accent-color);
   margin-top: auto;
   box-sizing: border-box;
-  height: 6vh;
+  min-height: 45px;
+  transition: all 0.15s ease;
+}
+
+.polling-card-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--accent-color);
+  background-color: var(--accent-color);
+  border-color: var(--primary-color);
+}
+
+.polling-card-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px var(--accent-color);
 }
 
 .candidate-message {

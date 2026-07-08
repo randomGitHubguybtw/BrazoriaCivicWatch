@@ -21,6 +21,7 @@ Park
 Public Parking
 Public Beach
 Public Boat Ramp
+Public Pool
 */
 
 export const masterAddresses = [
@@ -93,6 +94,34 @@ export const masterAddresses = [
   {
     city: 'Alvin',
     ISD: 'Alvin ISD',
+    Name: 'Newman Park',
+    Type: 'Park',
+    Address: '1314 E South St, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Alvin City Pool',
+    Type: 'Public Pool',
+    Address: '3201 S Texas 35, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Alvin Public Parking Lot',
+    Type: 'Public Parking',
+    Address: '110 S Gordon St, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Alvin Citizens Drop-Off Center',
+    Type: 'Waste Drop-off',
+    Address: '802 S Avenue K, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
     Name: 'Alvin High School',
     Type: 'School',
     Address: '802 S Johnson St, Alvin, TX 77511'
@@ -103,6 +132,48 @@ export const masterAddresses = [
     Name: 'Alvin Junior High',
     Type: 'School',
     Address: '2300 W South St, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Harby Junior High',
+    Type: 'School',
+    Address: '1500 Heights Rd, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Fairview Junior High',
+    Type: 'School',
+    Address: '2600 County Rd 190, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Alvin Elementary',
+    Type: 'School',
+    Address: '1910 Rosharon Rd, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Walt Disney Elementary',
+    Type: 'School',
+    Address: '5000 Mustang Rd, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Mark Twain Elementary',
+    Type: 'School',
+    Address: '345 Kendall Lakes Blvd, Alvin, TX 77511'
+  },
+  {
+    city: 'Alvin',
+    ISD: 'Alvin ISD',
+    Name: 'Melba Passmore Elementary',
+    Type: 'School',
+    Address: '600 W Blum St, Alvin, TX 77511'
   },
   {
     city: 'Alvin',
@@ -174,9 +245,23 @@ export const masterAddresses = [
   {
     city: 'Angleton',
     ISD: 'Angleton ISD',
+    Name: 'Angleton Recreation Center (Pool)',
+    Type: 'Public Pool',
+    Address: '1601 N Valderas St, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
     Name: 'Seabreeze Environmental Landfill',
     Type: 'Landfill',
-    Address: '10310 FM-523, Angleton, TX 77515' /* */
+    Address: '10310 FM-523, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
+    Name: 'Angleton Recycling Center',
+    Type: 'Recycling Drop-off',
+    Address: '901 S Velasco St, Angleton, TX 77515'
   },
   {
     city: 'Angleton',
@@ -184,6 +269,20 @@ export const masterAddresses = [
     Name: 'Bates Park',
     Type: 'Park',
     Address: '700 Bates Park Rd, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
+    Name: 'Freedom Park',
+    Type: 'Park',
+    Address: '3105 N Downing St, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
+    Name: 'BG Peck Soccer Complex',
+    Type: 'Park',
+    Address: '709 E Hospital Dr, Angleton, TX 77515'
   },
   {
     city: 'Angleton',
@@ -198,6 +297,34 @@ export const masterAddresses = [
     Name: 'Angleton Junior High',
     Type: 'School',
     Address: '1201 E Henderson Rd, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
+    Name: 'Central Elementary',
+    Type: 'School',
+    Address: '324 N Arcola St, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
+    Name: 'Southside Elementary',
+    Type: 'School',
+    Address: '1200 E Cemetery Rd, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
+    Name: 'Westside Elementary',
+    Type: 'School',
+    Address: '1000 W Wilkins St, Angleton, TX 77515'
+  },
+  {
+    city: 'Angleton',
+    ISD: 'Angleton ISD',
+    Name: 'Frontier Elementary',
+    Type: 'School',
+    Address: '1001 E Henderson Rd, Angleton, TX 77515'
   },
 
   // ==========================================
@@ -270,9 +397,23 @@ export const masterAddresses = [
   {
     city: 'Brazoria',
     ISD: 'Columbia-Brazoria ISD',
+    Name: 'Pauline Stewart Park',
+    Type: 'Park',
+    Address: '109 E Plum St, Brazoria, TX 77422'
+  },
+  {
+    city: 'Brazoria',
+    ISD: 'Columbia-Brazoria ISD',
     Name: 'Barrow Elementary',
     Type: 'School',
     Address: '124 County Road 446, Brazoria, TX 77422'
+  },
+  {
+    city: 'Brazoria',
+    ISD: 'Columbia-Brazoria ISD',
+    Name: 'Wild Peach Elementary',
+    Type: 'School',
+    Address: '601 County Road 353, Brazoria, TX 77422'
   },
 
   // ==========================================
@@ -283,126 +424,126 @@ export const masterAddresses = [
     ISD: 'Brazosport ISD',
     Name: 'Surfside Jetty County Park',
     Type: 'Park',
-    Address: '101 Parkview Road, Surfside, TX 77541' /* */
+    Address: '101 Parkview Road, Surfside, TX 77541'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'San Luis Pass County Park',
     Type: 'Park',
-    Address: '14001 CR 257, Freeport, TX 77541' /* */
+    Address: '14001 CR 257, Freeport, TX 77541'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'San Luis Pass Boat Ramp (Inside Park)',
     Type: 'Public Boat Ramp',
-    Address: '14001 CR 257, Freeport, TX 77541' /* */
+    Address: '14001 CR 257, Freeport, TX 77541'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Village of Surfside Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'Thunder Road, Surfside, TX 77541' /* */
+    Address: 'Thunder Road, Surfside, TX 77541'
   },
   {
     city: 'Brazoria County',
     ISD: 'Columbia-Brazoria ISD',
     Name: 'Hanson Riverside County Park Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'SH 35 (Inside Park), Brazoria County, TX' /* */
+    Address: 'SH 35 (Inside Park), Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'End of FM 2918 Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'End of FM 2918, Brazoria County, TX' /* */
+    Address: 'End of FM 2918, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Sweeny ISD',
     Name: 'Churchill/Sportsman\'s Span Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'Under FM 2611 Overpass, Brazoria County, TX' /* */
+    Address: 'Under FM 2611 Overpass, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Angleton ISD',
     Name: 'McNeil Bridge Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'Under FM 521 Overpass, Brazoria County, TX' /* */
+    Address: 'Under FM 521 Overpass, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Levee Road Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'End of Levee Road CR 242A, Brazoria County, TX' /* */
+    Address: 'End of Levee Road CR 242A, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Columbia-Brazoria ISD',
     Name: 'Sonny Travis Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'Hwy 36 Bridge, Brazoria County, TX' /* */
+    Address: 'Hwy 36 Bridge, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'CR 849 Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'End of CR 849 southeast of Brazoria, TX' /* */
+    Address: 'End of CR 849 southeast of Brazoria, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Stratton Ridge Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'CR 226, Brazoria County, TX' /* */
+    Address: 'CR 226, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Parker\'s Cut Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'Levee Road CR 891, Brazoria County, TX' /* */
+    Address: 'Levee Road CR 891, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Swan Lake Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'CR 257-J, Brazoria County, TX' /* */
+    Address: 'CR 257-J, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Drum Bay Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'San Luis Beach Subdivision, Brazoria County, TX' /* */
+    Address: 'San Luis Beach Subdivision, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Seidler\'s Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'CR 257-S, Brazoria County, TX' /* */
+    Address: 'CR 257-S, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'Demi-John Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'End of CR 227, Brazoria County, TX' /* */
+    Address: 'End of CR 227, Brazoria County, TX'
   },
   {
     city: 'Brazoria County',
     ISD: 'Brazosport ISD',
     Name: 'FM 2004 Bridge Boat Ramp',
     Type: 'Public Boat Ramp',
-    Address: 'North side of FM 2004 Bridge, Brazoria County, TX' /* */
+    Address: 'North side of FM 2004 Bridge, Brazoria County, TX'
   },
 
   // ==========================================
@@ -471,6 +612,13 @@ export const masterAddresses = [
   {
     city: 'Clute',
     ISD: 'Brazosport ISD',
+    Name: 'Clute Municipal Pool',
+    Type: 'Public Pool',
+    Address: '100 Parkview Dr, Clute, TX 77531'
+  },
+  {
+    city: 'Clute',
+    ISD: 'Brazosport ISD',
     Name: 'Brazoswood High School',
     Type: 'School',
     Address: '302 W Brazoswood Dr, Clute, TX 77531'
@@ -481,6 +629,13 @@ export const masterAddresses = [
     Name: 'Clute Intermediate School',
     Type: 'School',
     Address: '421 E Main St, Clute, TX 77531'
+  },
+  {
+    city: 'Clute',
+    ISD: 'Brazosport ISD',
+    Name: 'Madge Griffith Elementary',
+    Type: 'School',
+    Address: '500 N Holly St, Clute, TX 77531'
   },
 
   // ==========================================
@@ -520,6 +675,13 @@ export const masterAddresses = [
     Name: 'Danbury High School',
     Type: 'School',
     Address: '5611 Panther Dr, Danbury, TX 77534'
+  },
+  {
+    city: 'Danbury',
+    ISD: 'Danbury ISD',
+    Name: 'Danbury Elementary',
+    Type: 'School',
+    Address: '6021 5th St, Danbury, TX 77534'
   },
 
   // ==========================================
@@ -563,9 +725,30 @@ export const masterAddresses = [
   {
     city: 'Freeport',
     ISD: 'Brazosport ISD',
+    Name: 'Freeport Historical Museum',
+    Type: 'Museum',
+    Address: '311 E Park Ave, Freeport, TX 77541'
+  },
+  {
+    city: 'Freeport',
+    ISD: 'Brazosport ISD',
     Name: 'Freeport Municipal Park',
     Type: 'Park',
     Address: '421 N Brazosport Blvd, Freeport, TX 77541'
+  },
+  {
+    city: 'Freeport',
+    ISD: 'Brazosport ISD',
+    Name: 'Freeport River Place',
+    Type: 'Public Event Center',
+    Address: '733 Mystery Harbor Ln, Freeport, TX 77541'
+  },
+  {
+    city: 'Freeport',
+    ISD: 'Brazosport ISD',
+    Name: 'Freeport Municipal Pool',
+    Type: 'Public Pool',
+    Address: '803 N Front St, Freeport, TX 77541'
   },
   {
     city: 'Freeport',
@@ -579,7 +762,14 @@ export const masterAddresses = [
     ISD: 'Brazosport ISD',
     Name: 'Quintana Boat Ramp (Freeport Side)',
     Type: 'Public Boat Ramp',
-    Address: 'Under 1495 Bridge, Freeport, TX 77541' /* */
+    Address: 'Under 1495 Bridge, Freeport, TX 77541'
+  },
+  {
+    city: 'Freeport',
+    ISD: 'Brazosport ISD',
+    Name: 'Freeport Transfer Station',
+    Type: 'Waste Drop-off',
+    Address: '425 N Brazosport Blvd, Freeport, TX 77541'
   },
   {
     city: 'Freeport',
@@ -587,6 +777,20 @@ export const masterAddresses = [
     Name: 'Freeport Intermediate School',
     Type: 'School',
     Address: '1815 W 4th St, Freeport, TX 77541'
+  },
+  {
+    city: 'Freeport',
+    ISD: 'Brazosport ISD',
+    Name: 'Velasco Elementary',
+    Type: 'School',
+    Address: '401 N Gulf Blvd, Freeport, TX 77541'
+  },
+  {
+    city: 'Freeport',
+    ISD: 'Brazosport ISD',
+    Name: 'O.A. Fleming Elementary',
+    Type: 'School',
+    Address: '431 W 4th St, Freeport, TX 77541'
   },
 
   // ==========================================
@@ -695,7 +899,7 @@ export const masterAddresses = [
   {
     city: 'Lake Jackson',
     ISD: 'Brazosport ISD',
-    Name: 'Lake Jackson Civic Center',
+    Name: 'Doris Williams Civic Center',
     Type: 'Civic Center',
     Address: '333 Hwy 332 East, Lake Jackson, TX 77566'
   },
@@ -730,9 +934,23 @@ export const masterAddresses = [
   {
     city: 'Lake Jackson',
     ISD: 'Brazosport ISD',
+    Name: 'Gulf Coast Transit District Hub',
+    Type: 'Public Transportation Hub',
+    Address: '103 Huckleberry St, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
     Name: 'Lake Jackson Historical Museum',
     Type: 'Museum',
     Address: '249 Circle Way St, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Alden B. Dow Office Museum',
+    Type: 'Museum',
+    Address: '101 S Parking Place, Lake Jackson, TX 77566'
   },
   {
     city: 'Lake Jackson',
@@ -744,9 +962,86 @@ export const masterAddresses = [
   {
     city: 'Lake Jackson',
     ISD: 'Brazosport ISD',
+    Name: 'Shy Pond Park',
+    Type: 'Park',
+    Address: '100 Any Way, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Dunbar Park',
+    Type: 'Park',
+    Address: '200 FM 2004, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Lake Jackson Recreation Center (Pool)',
+    Type: 'Public Pool',
+    Address: '91 Lake Rd, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Citizen Collection Center',
+    Type: 'Waste Drop-off',
+    Address: '203 C Oak Dr, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Lake Jackson Recycling Center',
+    Type: 'Recycling Drop-off',
+    Address: '203 C Oak Dr, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
     Name: 'Brazosport High School',
     Type: 'School',
-    Address: '1800 W 2nd St, Freeport, TX 77541' // Attached jurisdictionally
+    Address: '1800 W 2nd St, Freeport, TX 77541'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'A.P. Beutel Elementary',
+    Type: 'School',
+    Address: '101 Oakhaven Dr, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Bess Brannen Elementary',
+    Type: 'School',
+    Address: '105 Circle Way, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'T.W. Ogg Elementary',
+    Type: 'School',
+    Address: '200 Lazy Ln, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'O.M. Roberts Elementary',
+    Type: 'School',
+    Address: '110 S Yaupon St, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Grady Rasco Middle School',
+    Type: 'School',
+    Address: '92 Lake Rd, Lake Jackson, TX 77566'
+  },
+  {
+    city: 'Lake Jackson',
+    ISD: 'Brazosport ISD',
+    Name: 'Lake Jackson Intermediate',
+    Type: 'School',
+    Address: '100 Oyster Creek Dr, Lake Jackson, TX 77566'
   },
 
   // ==========================================
@@ -811,6 +1106,20 @@ export const masterAddresses = [
     Name: 'Manvel High School',
     Type: 'School',
     Address: '19601 Hwy 6, Manvel, TX 77578'
+  },
+  {
+    city: 'Manvel',
+    ISD: 'Alvin ISD',
+    Name: 'Manvel Junior High',
+    Type: 'School',
+    Address: '7302 McCoy Rd, Manvel, TX 77578'
+  },
+  {
+    city: 'Manvel',
+    ISD: 'Alvin ISD',
+    Name: 'E.C. Mason Elementary',
+    Type: 'School',
+    Address: '7400 Lewis Ln, Manvel, TX 77578'
   },
 
   // ==========================================
@@ -888,7 +1197,7 @@ export const masterAddresses = [
     ISD: 'Pearland ISD',
     Name: 'Stella Roberts Recycling Center',
     Type: 'Recycling Drop-off',
-    Address: '5800 Magnolia Pkwy, Pearland, TX 77584' /* */
+    Address: '5800 Magnolia Pkwy, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
@@ -911,167 +1220,196 @@ export const masterAddresses = [
     Type: 'Park',
     Address: '3219 McLean Rd, Pearland, TX 77584'
   },
-  // Pearland ISD Schools (Explicit Mapping)
+  {
+    city: 'Pearland',
+    ISD: 'Pearland ISD',
+    Name: 'Southdown Park',
+    Type: 'Park',
+    Address: '2150 Smith Ranch Rd, Pearland, TX 77584'
+  },
+  {
+    city: 'Pearland',
+    ISD: 'Pearland ISD',
+    Name: 'Tom Reid Park',
+    Type: 'Park',
+    Address: '3522 Liberty Dr, Pearland, TX 77581'
+  },
+  {
+    city: 'Pearland',
+    ISD: 'Pearland ISD',
+    Name: 'Pearland Recreation Center & Natatorium',
+    Type: 'Public Pool',
+    Address: '4141 Bailey Rd, Pearland, TX 77584'
+  },
+  
+  // Pearland Area Schools (Pearland ISD & Alvin ISD limits)
+  {
+    city: 'Pearland',
+    ISD: 'Alvin ISD',
+    Name: 'Shadow Creek High School',
+    Type: 'School',
+    Address: '11850 Broadway St, Pearland, TX 77584'
+  },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Barbara Cockrell Elementary',
     Type: 'School',
-    Address: '3500 McHard Rd, Pearland, TX 77581' /* */
+    Address: '3500 McHard Rd, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Challenger Elementary',
     Type: 'School',
-    Address: '9434 Hughes Ranch Rd, Pearland, TX 77584' /* */
+    Address: '9434 Hughes Ranch Rd, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'C.J. Harris Elementary',
     Type: 'School',
-    Address: '2314 Schleider Dr, Pearland, TX 77581' /* */
+    Address: '2314 Schleider Dr, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'E.A. Lawhon Elementary',
     Type: 'School',
-    Address: '5810 Brookside Rd, Pearland, TX 77581' /* */
+    Address: '5810 Brookside Rd, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'H.C. Carleston Elementary',
     Type: 'School',
-    Address: '3010 Harkey Rd, Pearland, TX 77584' /* */
+    Address: '3010 Harkey Rd, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Magnolia Elementary',
     Type: 'School',
-    Address: '5350 Magnolia St, Pearland, TX 77584' /* */
+    Address: '5350 Magnolia St, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Massey Ranch Elementary',
     Type: 'School',
-    Address: '3900 Manvel Rd, Pearland, TX 77584' /* */
+    Address: '3900 Manvel Rd, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Rustic Oak Elementary',
     Type: 'School',
-    Address: '1302 Rustic Ln, Pearland, TX 77581' /* */
+    Address: '1302 Rustic Ln, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Shadycrest Elementary',
     Type: 'School',
-    Address: '2405 Shadybend Dr, Pearland, TX 77581' /* */
+    Address: '2405 Shadybend Dr, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Silvercrest Elementary',
     Type: 'School',
-    Address: '3003 Southwyck Pkwy, Pearland, TX 77584' /* */
+    Address: '3003 Southwyck Pkwy, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Silverlake Elementary',
     Type: 'School',
-    Address: '2550 County Rd 90, Pearland, TX 77584' /* */
+    Address: '2550 County Rd 90, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Alexander Middle School',
     Type: 'School',
-    Address: '3001 Old Alvin Rd, Pearland, TX 77581' /* */
+    Address: '3001 Old Alvin Rd, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Leon Sablatura Middle School',
     Type: 'School',
-    Address: '2201 N Galveston Ave, Pearland, TX 77581' /* */
+    Address: '2201 N Galveston Ave, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Rogers Middle School',
     Type: 'School',
-    Address: '3121 Manvel Rd, Pearland, TX 77584' /* */
+    Address: '3121 Manvel Rd, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Sam Jamison Middle School',
     Type: 'School',
-    Address: '2506 Woody Rd, Pearland, TX 77581' /* */
+    Address: '2506 Woody Rd, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Berry Miller Junior High',
     Type: 'School',
-    Address: '3301 Manvel Rd, Pearland, TX 77584' /* */
+    Address: '3301 Manvel Rd, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Pearland Junior High East',
     Type: 'School',
-    Address: '2315 Old Alvin Rd, Pearland, TX 77581' /* */
+    Address: '2315 Old Alvin Rd, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Pearland Junior High South',
     Type: 'School',
-    Address: '4719 Bailey Rd, Pearland, TX 77584' /* */
+    Address: '4719 Bailey Rd, Pearland, TX 77584'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Pearland Junior High West',
     Type: 'School',
-    Address: '2337 N Galveston Ave, Pearland, TX 77581' /* */
+    Address: '2337 N Galveston Ave, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Glenda Dawson High School',
     Type: 'School',
-    Address: '2050 Cullen Blvd, Pearland, TX 77581' /* */
+    Address: '2050 Cullen Blvd, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'PACE Center',
     Type: 'School',
-    Address: '2314 Old Alvin Rd, Pearland, TX 77581' /* */
+    Address: '2314 Old Alvin Rd, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Pearland High School',
     Type: 'School',
-    Address: '3775 South Main St, Pearland, TX 77581' /* */
+    Address: '3775 South Main St, Pearland, TX 77581'
   },
   {
     city: 'Pearland',
     ISD: 'Pearland ISD',
     Name: 'Robert Turner College & Career High School',
     Type: 'School',
-    Address: '4717 Bailey Rd, Pearland, TX 77584' /* */
+    Address: '4717 Bailey Rd, Pearland, TX 77584'
   },
 
   // ==========================================
@@ -1096,6 +1434,13 @@ export const masterAddresses = [
     ISD: 'Brazosport ISD',
     Name: 'Quintana Public Beach',
     Type: 'Public Beach',
+    Address: '330 5th St, Quintana, TX 77541'
+  },
+  {
+    city: 'Quintana',
+    ISD: 'Brazosport ISD',
+    Name: 'Quintana Public Parking Lot',
+    Type: 'Public Parking',
     Address: '330 5th St, Quintana, TX 77541'
   },
 
@@ -1173,6 +1518,13 @@ export const masterAddresses = [
     Type: 'Public Beach',
     Address: 'Monument Dr & Hwy 257, Surfside Beach, TX 77541'
   },
+  {
+    city: 'Surfside',
+    ISD: 'Brazosport ISD',
+    Name: 'Surfside Beach Public Parking',
+    Type: 'Public Parking',
+    Address: 'Monument Dr, Surfside Beach, TX 77541'
+  },
 
   // ==========================================
   // --- SWEENY ---
@@ -1183,6 +1535,13 @@ export const masterAddresses = [
     Name: 'Sweeny City Hall',
     Type: 'City Hall',
     Address: '102 W Ashley Wilson Rd, Sweeny, TX 77480'
+  },
+  {
+    city: 'Sweeny',
+    ISD: 'Sweeny ISD',
+    Name: 'Sweeny Community Center',
+    Type: 'Civic Center',
+    Address: '205 W Ashley Wilson Rd, Sweeny, TX 77480'
   },
   {
     city: 'Sweeny',
@@ -1218,6 +1577,20 @@ export const masterAddresses = [
     Name: 'Sweeny High School',
     Type: 'School',
     Address: '1310 N Elm St, Sweeny, TX 77480'
+  },
+  {
+    city: 'Sweeny',
+    ISD: 'Sweeny ISD',
+    Name: 'Sweeny Junior High',
+    Type: 'School',
+    Address: '800 Elm St, Sweeny, TX 77480'
+  },
+  {
+    city: 'Sweeny',
+    ISD: 'Sweeny ISD',
+    Name: 'Sweeny Elementary',
+    Type: 'School',
+    Address: '705 Sycamore St, Sweeny, TX 77480'
   },
 
   // ==========================================
@@ -1271,5 +1644,19 @@ export const masterAddresses = [
     Name: 'Columbia High School',
     Type: 'School',
     Address: '520 S 16th St, West Columbia, TX 77486'
+  },
+  {
+    city: 'West Columbia',
+    ISD: 'Columbia-Brazoria ISD',
+    Name: 'Columbia Junior High',
+    Type: 'School',
+    Address: '710 S 16th St, West Columbia, TX 77486'
+  },
+  {
+    city: 'West Columbia',
+    ISD: 'Columbia-Brazoria ISD',
+    Name: 'West Columbia Elementary',
+    Type: 'School',
+    Address: '711 Gray St, West Columbia, TX 77486'
   }
 ];

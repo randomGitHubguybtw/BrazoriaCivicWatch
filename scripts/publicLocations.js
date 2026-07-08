@@ -1,5 +1,6 @@
 import { locationDataReady } from "./locationStore.js";
 import { masterAddresses } from "../data/publicPlaces.js";
+import { fixDate } from './utils/fixDate.js';
 
 function pluralize(word) {
   if (!word) return "Places";
@@ -12,6 +13,30 @@ function pluralize(word) {
     return word + 'es';
   }
   return word + 's';
+}
+
+function getSearchQuery(place) {
+  const address = place.Address || "";
+  const name = place.Name || "";
+  
+  const isStandardAddress = /^\d+/.test(address.trim());
+
+  if (isStandardAddress) {
+    return address;
+  } else {
+    const cityContext = place.city ? `, ${place.city}, TX` : "";
+    return name + cityContext;
+  }
+}
+
+function normalizeForMatch(str) {
+  if (!str) return "";
+  return str.toLowerCase().replace(/[.,#'-]/g, '').replace(/\s+/g, '').trim();
+}
+
+function getStreetBase(addr) {
+  if (!addr) return "";
+  return normalizeForMatch(addr.split(',')[0]);
 }
 
 function applySearchFilter() {
@@ -31,7 +56,10 @@ function applySearchFilter() {
       const name = card.querySelector(".place-card-title").textContent.toLowerCase();
       const address = card.querySelector(".place-card-address").textContent.toLowerCase();
       
-      if (name.includes(term) || address.includes(term) || sectionType.includes(term) || pluralType.includes(term)) {
+      const badgeNode = card.querySelector(".voting-badge");
+      const badgeText = badgeNode ? badgeNode.textContent.toLowerCase() : "";
+      
+      if (name.includes(term) || address.includes(term) || sectionType.includes(term) || pluralType.includes(term) || badgeText.includes(term)) {
         card.style.display = "flex";
         hasVisibleCard = true;
       } else {
@@ -51,7 +79,6 @@ async function initializePublicPlaces() {
   const locationData = await locationDataReady;
   
   const city = sessionStorage.getItem('city') || locationData.city;
-  const isd = sessionStorage.getItem('isd') || locationData.isd;
   
   let filteredPlaces = [];
   const invalidCities = ["none", "all cities", "brazoria county"];
@@ -63,6 +90,41 @@ async function initializePublicPlaces() {
   } else {
     filteredPlaces = masterAddresses.filter(place => place.city && place.city.toLowerCase() === currentCityLower);
   }
+
+  const API_BASE = 'https://api.brazoriacivicwatch.org';
+  let pollingAddresses = [];
+  let pollingLocations = [];
+  let allElections = [];
+  let targetElectionId = sessionStorage.getItem('nextElection') || sessionStorage.getItem('targetElection');
+
+  try {
+    const [addressesRes, locationsRes, electionsRes] = await Promise.all([
+      fetch(`${API_BASE}/api/polling_addresses`),
+      fetch(`${API_BASE}/api/polling_locations`),
+      fetch(`${API_BASE}/api/elections`)
+    ]);
+    
+    if (addressesRes.ok) pollingAddresses = await addressesRes.json();
+    if (locationsRes.ok) pollingLocations = await locationsRes.json();
+    if (electionsRes.ok) allElections = await electionsRes.json();
+
+    if (!targetElectionId && allElections.length > 0) {
+      const now = new Date();
+      const upcoming = allElections.filter(el => {
+        const [y, m, d] = el.date.split('-');
+        const electionDate = new Date(y, m - 1, d);
+        return electionDate >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      }).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      if (upcoming.length > 0) {
+        targetElectionId = upcoming[0].election_id;
+      }
+    }
+  } catch (err) {}
+
+  const validLocations = pollingLocations.filter(loc => loc.election_id === targetElectionId);
+  const validLocationIds = new Set(validLocations.map(loc => loc.locations_id));
+  const activePollingAddresses = pollingAddresses.filter(addr => validLocationIds.has(addr.locations_id));
 
   const groupedPlaces = {};
   filteredPlaces.forEach(place => {
@@ -98,6 +160,43 @@ async function initializePublicPlaces() {
       const card = document.createElement("div");
       card.className = "place-card";
       
+      const pStreet = getStreetBase(place.Address);
+      const pName = normalizeForMatch(place.Name);
+      
+      const isVotingMatch = activePollingAddresses.find(pa => {
+        const paStreet = getStreetBase(pa.address);
+        const paName = normalizeForMatch(pa.name);
+        
+        const streetMatches = pStreet && paStreet && (pStreet === paStreet || pStreet.includes(paStreet) || paStreet.includes(pStreet));
+        const nameMatches = pName && paName && (pName === paName || pName.includes(paName) || paName.includes(pName));
+        
+        return streetMatches || nameMatches;
+      });
+
+      if (isVotingMatch && targetElectionId) {
+        const formattedDate = fixDate(targetElectionId);
+        
+        const votingBadge = document.createElement("div");
+        votingBadge.className = "voting-badge";
+        votingBadge.textContent = `Polling Location for ${formattedDate} Election`;
+        
+        votingBadge.style.backgroundColor = "var(--accent-color)";
+        votingBadge.style.color = "var(--black-text-color)";
+        votingBadge.style.padding = "8px 12px";
+        votingBadge.style.borderRadius = "6px";
+        votingBadge.style.fontWeight = "800";
+        votingBadge.style.fontSize = "1rem";
+        votingBadge.style.textAlign = "center";
+        votingBadge.style.border = "2px solid var(--secondary-color)";
+        votingBadge.style.boxShadow = "2px 2px 0px var(--primary-color)";
+        votingBadge.style.marginBottom = "10px";
+        
+        card.style.borderColor = "var(--accent-color)";
+        card.style.borderWidth = "3px";
+        
+        card.appendChild(votingBadge);
+      }
+
       const name = document.createElement("h3");
       name.className = "place-card-title";
       name.textContent = place.Name;
@@ -109,7 +208,10 @@ async function initializePublicPlaces() {
       const btn = document.createElement("a");
       btn.className = "place-card-btn";
       btn.textContent = "Get Directions";
-      btn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.Name + ' ' + place.Address)}`;
+      
+      const searchQuery = getSearchQuery(place);
+      
+      btn.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(searchQuery)}`;
       btn.target = "_blank";
       
       card.appendChild(name);
@@ -138,11 +240,11 @@ document.addEventListener("click", (e) => {
   if (e.target.closest('#placeSearchInput') || e.target.closest('a')) {
     return;
   }
-  initializePublicPlaces();
+  setTimeout(initializePublicPlaces, 50);
 });
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-    initializePublicPlaces();
+    setTimeout(initializePublicPlaces, 50);
   }
 });
