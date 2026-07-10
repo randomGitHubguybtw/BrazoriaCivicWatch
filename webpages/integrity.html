@@ -12,7 +12,6 @@
 
   </head>
 
-</head>
 <body>
 
     <div class="header js-header"></div>
@@ -38,21 +37,23 @@
       <button class="js-donate-button js-hands-off voter-button finance-button integrity-button integrity-button-donate">Donate!</button>
     </div>
     
+    <div class="donation-chart-container">
+      <h2 class="donation-chart-title">Donation Breakdown</h2>
+      <div class="bar-chart" id="donationBarChart"></div>
+    </div>
 
   <div class="footer js-footer"></div>
 
-  <!--External Libraries-->
   <script src="importedJS/turf.min.js" defer></script>
 
-  <!--Data-->
   <script type="module" src="scripts/utils/fixNoun.js"></script>
   <script type="module" src="scripts/utils/fixDate.js"></script>
   <script type="module" src="scripts/locationStore.js"></script>
 
-  <!--Globals-->
   <script type="module" src="scripts/globalHTMLGenerate.js"></script>
   <script type="module" src="scripts/globalButtons.js"></script>
   <script type="module" src="scripts/globalArchive.js"></script>
+  <script type="module" src="scripts/donations.js"></script>
 
 </body>
 
