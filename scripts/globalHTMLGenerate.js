@@ -5,6 +5,7 @@ stripeScript.src = "https://js.stripe.com/v3/";
 document.head.appendChild(stripeScript);
 
 document.head.insertAdjacentHTML('beforeend', `
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
