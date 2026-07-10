@@ -5,6 +5,11 @@ stripeScript.src = "https://js.stripe.com/v3/";
 document.head.appendChild(stripeScript);
 
 document.head.insertAdjacentHTML('beforeend', `
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Arimo:ital,wght@0,400..700;1,400..700&family=Geomini:wght@200..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles/card-wheel.css">
   <link rel="stylesheet" href="styles/content.css">
   <link rel="stylesheet" href="styles/general.css">
@@ -23,6 +28,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/officials.css">
   <link rel="stylesheet" href="styles/donations.css">
   <link rel="stylesheet" href="styles/public-places.css">
+  <link rel="stylesheet" href="styles/integrity.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -259,7 +265,7 @@ submitDonationBtn.addEventListener('click', async () => {
             <body>
               <h2>Redirecting to secure payment page...</h2>
               <script>
-                const stripe = Stripe('pk_test_51Tps5ZRPtrIU6wyIGQLjBoir8i0oeKUUpgQf39WJXub4hakSEvRv7tinkY0Amxap2EEs5EQsDOj5PbcDES1btrpF00fwMQaSVu');
+                const stripe = Stripe('pk_live_51Tps5MIiFEnwqLna0Yz6EEK2EABTiehJHtlwFUHDVqPiMrluq80IHkZRlIC9rXbHOl6gEGkW6KYzEJQFNuDWkbJq00kKLd0eRN');
                 stripe.redirectToCheckout({ sessionId: '${session.id}' }).catch(function(err) {
                   console.error(err);
                   document.body.innerHTML = '<h2>Failed to load checkout page. Please close this tab and try again.</h2>';
@@ -295,16 +301,16 @@ export function generateHTML(startCity, startIsd, activeButton) {
       <button class="donate-button js-donate-button js-hands-off">Donate to our cause!</button>
     </div>`;
 
-  const donateBtn = document.querySelector('.js-donate-button');
-  if (donateBtn) {
-    donateBtn.addEventListener('click', () => {
+  const donateBtns = document.querySelectorAll('.js-donate-button');
+  donateBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
       const overlay = document.getElementById('donate-overlay');
       if (overlay) {
         overlay.classList.remove('closing');
         overlay.style.display = 'flex';
       }
     });
-  }
+  });
 
   const sidebarContainer = document.querySelector('.js-sidebar-container');
 

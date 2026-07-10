@@ -1,0 +1,165 @@
+.finance-button {
+  color: var(--black-text-color);
+  width: 50vw;
+  text-align: center;
+  margin: 5px 0;
+  margin-top: -5px;
+  height: 65px;
+  transition: width 0.3s, background-color 0.3s, height 0.3s, border 0.3s;
+}
+
+.finance-button:hover {
+  width: 85vw;
+  height: 75px;
+  background-color: var(--accent-color);
+}
+
+.pledge {
+  text-align: center;
+  margin: 10px 20px;
+  line-height: 1.6;
+}
+
+.integrity-button {
+  width: 75vw;
+  margin: 10px 0;
+  height: 60px;
+}
+
+.integrity-button-wall-of-shame:hover {
+  height: 60px;
+  width: 95vw;
+  background-color: var(--secondary-color);
+}
+
+.integrity-button-pledge:hover {
+  height: 60px;
+  width: 95vw;
+  border: dashed 3px var(--primary-color);
+  background-color: var(--accent-color);
+}
+
+.integrity-button-donate {
+  background-color: var(--secondary-color);
+  border-color: var(--inverted-secondary);
+}
+
+.integrity-button-donate:hover {
+  height: 60px;
+  width: 95vw;
+  border: dashed 3px var(--secondary-color);
+  background-color: var(--inverted-secondary);
+}
+
+.notifier-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: -7000px;
+    padding: 60px 20px 0 20px;
+    margin-top: -80px;
+    margin-bottom: 0px;
+}
+
+.criminal-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+    justify-content: center;
+    align-items: center;
+    gap: 90px 50px;
+    padding: 100px 20px;
+}
+
+.polaroid-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    will-change: transform;
+    width: 100%;
+}
+
+.polaroid-sway {
+    position: relative;
+    transform-origin: 50% 15px;
+    will-change: transform;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.polaroid {
+    background: #ffffff;
+    padding: 15px 15px 65px 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.1) inset;
+    border-radius: 2px;
+    width: 100%;
+    max-width: 280px;
+    box-sizing: border-box;
+}
+
+.polaroid img {
+    width: 100%;
+    height: auto;
+    display: block;
+    background-color: #eee; 
+}
+
+.notifier-paper {
+    width: 160%; 
+    max-width: 680px; 
+    display: flex;
+    justify-content: center;
+}
+
+.notifier-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    background-color: transparent;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.4));
+}
+
+.pin {
+    position: absolute;
+    width: 40px;
+    z-index: 10;
+}
+
+.pin.unflipped {
+    left: 50%;
+    bottom: calc(100% - 15px);
+}
+
+.pin.flipped {
+    right: 50%;
+    bottom: calc(100% - 15px);
+    transform: scaleX(-1);
+}
+
+.polaroid-wrapper[data-is-notifier="true"] .pin {
+    bottom: auto;
+}
+
+.polaroid-wrapper[data-is-notifier="true"] .pin.unflipped {
+    top: var(--pin-y, 5%);
+    transform: translateY(-100%) translateY(8px); 
+}
+
+.polaroid-wrapper[data-is-notifier="true"] .pin.flipped {
+    top: var(--pin-y, 5%);
+    transform: scaleX(-1) translateY(-100%) translateY(8px);
+}
+
+@keyframes swayAnimation {
+    0% { transform: rotate(0deg); }
+    15% { transform: rotate(var(--sway-1, 3deg)); }
+    35% { transform: rotate(var(--sway-2, -2deg)); }
+    55% { transform: rotate(var(--sway-3, 1deg)); }
+    75% { transform: rotate(var(--sway-4, -0.5deg)); }
+    90% { transform: rotate(var(--sway-5, 0.2deg)); }
+    100% { transform: rotate(0deg); }
+}
+
+.animating {
+    animation: swayAnimation var(--sway-duration, 0.6s) ease-in-out forwards;
+}

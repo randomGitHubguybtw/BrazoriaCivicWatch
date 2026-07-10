@@ -6,7 +6,7 @@ html {
 
 body {
   position: relative;
-  font-family: arial;
+  font-family: var(--global-font);
   color: var(--black-text-color);
   background-color: var(--background-color);
   margin-top: 0px;
@@ -25,6 +25,7 @@ body {
 
 p {
   margin: 0;
+  font-family: var(--global-font);
   color: var(--black-text-color);
 }
 
@@ -36,6 +37,11 @@ a {
   font-size: inherit;
   color: inherit;
   text-decoration: none;
+  font-family: var(--global-font);
+}
+
+button {
+  font-family: var(--global-font);
 }
 
 :root {
@@ -48,6 +54,7 @@ a {
   --black-text-color: rgb(45, 35, 28);
   --white-text-color: rgb(255, 255, 255);
   --card-black-gradient: rgba(0, 0, 0, 0.2);
+  --global-font: archivo black;
 }
 
 @media (prefers-color-scheme: dark) {

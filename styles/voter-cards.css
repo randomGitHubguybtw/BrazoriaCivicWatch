@@ -4,7 +4,7 @@
   flex-direction: column;
 }
 
-.ballot-button-container {
+.ballot-button-container, .finance-button-container {
   display: flex;
   justify-content: center;
 }
@@ -31,11 +31,13 @@
   border: dashed 3px var(--accent-color);
   transition: width 0.2s, opacity 0.15s;
   font-size: clamp(12px, 3vw, 35px);
+  transition: width 0.3s, background-color 0.3s;
 }
 
 .voter-button:hover {
   width: 33vw;
   cursor: pointer;
+  background-color: var(--accent-color);
 }
 
 .voter-button:active {
@@ -53,11 +55,13 @@
   width: 60vw;
   text-align: center;
   margin-bottom: 3vh;
-  height: 50px;
+  height: 60px;
+  transition: width 0.3s, background-color 0.3s;
 }
 
 .ballot-button:hover {
   width: 85vw;
+  background-color: var(--accent-color);
 }
 
 .last-voter-card {
