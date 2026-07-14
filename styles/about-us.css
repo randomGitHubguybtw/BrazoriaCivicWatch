@@ -1,0 +1,15 @@
+.text-section {
+  margin: 10px 20px;
+  text-align: center;
+}
+
+.content-column {
+  display: grid;
+  grid-template-columns: 3fr 4fr;
+  width: 100%;
+  gap: 15px;
+}
+
+.content-column > div {
+  text-align: center;
+}

@@ -30,6 +30,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/donations.css">
   <link rel="stylesheet" href="styles/public-places.css">
   <link rel="stylesheet" href="styles/integrity.css">
+  <link rel="stylesheet" href="styles/about-us.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
