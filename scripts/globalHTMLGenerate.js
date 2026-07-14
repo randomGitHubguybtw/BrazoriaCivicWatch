@@ -392,7 +392,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
   document.querySelector('.js-footer').innerHTML = `
     <div class="horizontal-container">
         <div class="vertical-container">
-            <p class="footer-text js-footer-text">About Us</p>
+            <p data-target="webpages/about-us.html" class="footer-text js-footer-text">About Us</p>
             <p class="footer-text js-footer-text">Change Your City</p>
             <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
         </div>

@@ -324,29 +324,67 @@ async function processLocation(lat, long) {
   return result;
 }
 
+function getFallbackData() {
+  const defaultCity = localStorage.getItem('city');
+  if (defaultCity) {
+    return saveCityAndIsd(
+      localStorage.getItem('city') || "All Cities",
+      localStorage.getItem('isd') || "All ISDs",
+      localStorage.getItem('boardOfEd') || "All State Board of Education Districts",
+      localStorage.getItem('congressDist') || "All Congressional Districts",
+      localStorage.getItem('precinct') || "All Justice of the Peace Precincts",
+      localStorage.getItem('stateRep') || "All State Representative Districts",
+      localStorage.getItem('stateSen') || "All State Senate Districts",
+      localStorage.getItem('college') || "All College Districts",
+      localStorage.getItem('drainage') || "All Drainage Districts",
+      localStorage.getItem('hospital') || "All Hospital Districts",
+      localStorage.getItem('mud') || "All MUDs",
+      localStorage.getItem('navigation') || "All Navigation Precincts"
+    );
+  }
+  return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "All College Districts", "All Drainage Districts", "All Hospital Districts", "All MUDs", "All Navigation Precincts");
+}
+
 export async function forceRecalculate() {
   try {
     const { lat, long } = await getCoordinates();
-    return await processLocation(lat, long);
+    const data = await processLocation(lat, long);
+    sessionStorage.setItem('locationCheckedThisSession', 'true');
+    if (!data.isOutside) {
+      const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
+      keys.forEach(k => localStorage.setItem(k, data[k]));
+      return data;
+    } else {
+      alert("Location is outside the county. Reverting to last saved location or defaults.");
+      return getFallbackData();
+    }
   } catch (error) {
     if (error && error.code === 1) {
-      alert("Permission denied. Please enable location services in your browser for this site.");
+      alert("Permission denied. Reverting to defaults.");
     } else if (error && error.code === 2) {
-      alert("Position unavailable. Make sure your device has location services enabled.");
+      alert("Position unavailable. Reverting to defaults.");
     } else if (error && error.code === 3) {
-      alert("Location request timed out. Please try again.");
+      alert("Location request timed out. Reverting to defaults.");
     } else {
       alert("Could not retrieve location. Error: " + (error.message || error));
     }
-    throw error;
+    return getFallbackData();
   }
 }
 
 export async function runCoords(lat, long) {
   try {
-    return await processLocation(lat, long);
+    const data = await processLocation(lat, long);
+    sessionStorage.setItem('locationCheckedThisSession', 'true');
+    if (!data.isOutside) {
+      return data;
+    } else {
+      alert("Coordinates are outside the county. Reverting to last saved location or defaults.");
+      return getFallbackData();
+    }
   } catch (error) {
     console.error(error);
+    return getFallbackData();
   }
 }
 
@@ -361,6 +399,38 @@ export async function testCoords(lat, long) {
 }
 
 window.testCoords = testCoords;
+
+export async function checkAndUpdateLocationBackground() {
+  if (sessionStorage.getItem('locationCheckedThisSession')) {
+    return null;
+  }
+  sessionStorage.setItem('locationCheckedThisSession', 'true');
+  
+  try {
+    const { lat, long } = await getCoordinates();
+    const newData = await processLocation(lat, long);
+    
+    if (newData.isOutside) return null;
+    
+    const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
+    let isDifferent = false;
+    
+    for (let k of keys) {
+      if (newData[k] !== localStorage.getItem(k)) {
+        isDifferent = true;
+        break;
+      }
+    }
+    
+    if (isDifferent) {
+      keys.forEach(k => localStorage.setItem(k, newData[k]));
+      return newData;
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
 
 export const locationDataReady = (async function initLocation() {
   const cachedCity = sessionStorage.getItem('city');
@@ -393,28 +463,19 @@ export const locationDataReady = (async function initLocation() {
     };
   }
 
-  const defaultCity = localStorage.getItem('city');
-  if (defaultCity) {
-    return saveCityAndIsd(
-      localStorage.getItem('city') || "All Cities",
-      localStorage.getItem('isd') || "All ISDs",
-      localStorage.getItem('boardOfEd') || "All State Board of Education Districts",
-      localStorage.getItem('congressDist') || "All Congressional Districts",
-      localStorage.getItem('precinct') || "All Justice of the Peace Precincts",
-      localStorage.getItem('stateRep') || "All State Representative Districts",
-      localStorage.getItem('stateSen') || "All State Senate Districts",
-      localStorage.getItem('college') || "All College Districts",
-      localStorage.getItem('drainage') || "All Drainage Districts",
-      localStorage.getItem('hospital') || "All Hospital Districts",
-      localStorage.getItem('mud') || "All MUDs",
-      localStorage.getItem('navigation') || "All Navigation Precincts"
-    );
-  }
-
   try {
     const { lat, long } = await getCoordinates();
-    return await processLocation(lat, long);
+    const data = await processLocation(lat, long);
+    sessionStorage.setItem('locationCheckedThisSession', 'true');
+    if (!data.isOutside) {
+      const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
+      keys.forEach(k => localStorage.setItem(k, data[k]));
+      return data;
+    } else {
+      return getFallbackData();
+    }
   } catch (error) {
-    return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "All College Districts", "All Drainage Districts", "All Hospital Districts", "All MUDs", "All Navigation Precincts");
+    sessionStorage.setItem('locationCheckedThisSession', 'true');
+    return getFallbackData();
   }
 })();

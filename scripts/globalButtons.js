@@ -1,4 +1,4 @@
-import { saveCityAndIsd, locationDataReady, forceRecalculate, runCoords } from './locationStore.js';
+import { saveCityAndIsd, locationDataReady, forceRecalculate, runCoords, checkAndUpdateLocationBackground } from './locationStore.js';
 import { generateHTML } from './globalHTMLGenerate.js';
 import { runSummary } from './globalSummaries.js';
 import { renderSearch } from './globalArchive.js';
@@ -228,10 +228,6 @@ function updateInputsFromData(data) {
   updateInput('.js-hospital-search', data.hospital);
   updateInput('.js-mud-search', data.mud);
   updateInput('.js-navigation-search', data.navigation);
-
-  if (data.isOutside) {
-    alert("This is outside the county!");
-  }
 }
 
 function triggerSave(meetingType = 'city') {
@@ -662,11 +658,10 @@ if (dropdownsListContainer) {
         </ul>
       </div>
     </div>
-    
+
     <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; width: 100%; flex-wrap: wrap;">
-      <button class="js-no-route location-button" id="set-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Set default location</button>
-      <button class="js-no-route location-button" id="reset-to-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Reset to defaults</button>
-      <button class="js-no-route location-button" id="reset-default-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Reset default location</button>
+      <button class="js-no-route location-button" id="set-all-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Set All</button>
+      <button class="js-no-route location-button" id="set-none-btn" style="width: auto; height: auto; padding: 10px 20px; font-size: 16px; border-radius: 4px; color: var(--black-text-color);">Set None</button>
     </div>
   `;
 
@@ -676,7 +671,7 @@ if (dropdownsListContainer) {
     const originalText = btn.textContent;
     let dots = 1;
     btn.textContent = "Recalculating.";
-    
+   
     const interval = setInterval(() => {
       dots = (dots % 3) + 1;
       btn.textContent = "Recalculating" + ".".repeat(dots);
@@ -721,70 +716,46 @@ if (dropdownsListContainer) {
     }
   });
 
-  document.getElementById('set-default-btn').addEventListener('click', (e) => {
+  document.getElementById('set-all-btn').addEventListener('click', (e) => {
     e.preventDefault();
-    const keys = [
-      { id: '.js-city-search', key: 'city' },
-      { id: '.js-isd-search', key: 'isd' },
-      { id: '.js-board-search', key: 'boardOfEd' },
-      { id: '.js-congress-search', key: 'congressDist' },
-      { id: '.js-precinct-search', key: 'precinct' },
-      { id: '.js-staterep-search', key: 'stateRep' },
-      { id: '.js-statesen-search', key: 'stateSen' },
-      { id: '.js-college-search', key: 'college' },
-      { id: '.js-drainage-search', key: 'drainage' },
-      { id: '.js-hospital-search', key: 'hospital' },
-      { id: '.js-mud-search', key: 'mud' },
-      { id: '.js-navigation-search', key: 'navigation' }
-    ];
-    keys.forEach(k => {
-      const input = document.querySelector(k.id);
-      if (input && input.value) {
-        localStorage.setItem(k.key, input.value);
-      }
-    });
-    alert('Default location set!');
-  });
-
-  document.getElementById('reset-to-default-btn').addEventListener('click', (e) => {
-    e.preventDefault();
-    const defaultCity = localStorage.getItem('city');
-    if (!defaultCity) {
-      alert("No defaults are set.");
-      return;
+    const defaults = {
+      '.js-city-search': 'All Cities',
+      '.js-isd-search': 'All ISDs',
+      '.js-board-search': 'All State Board of Education Districts',
+      '.js-congress-search': 'All Congressional Districts',
+      '.js-precinct-search': 'All Justice of the Peace Precincts',
+      '.js-staterep-search': 'All State Representative Districts',
+      '.js-statesen-search': 'All State Senate Districts',
+      '.js-college-search': 'All College Districts',
+      '.js-drainage-search': 'All Drainage Districts',
+      '.js-hospital-search': 'All Hospital Districts',
+      '.js-mud-search': 'All MUDs',
+      '.js-navigation-search': 'All Navigation Precincts'
+    };
+    for (const [selector, value] of Object.entries(defaults)) {
+      const el = document.querySelector(selector);
+      if (el) el.value = value;
     }
-    const data = saveCityAndIsd(
-      localStorage.getItem('city') || "All Cities",
-      localStorage.getItem('isd') || "All ISDs",
-      localStorage.getItem('boardOfEd') || "All State Board of Education Districts",
-      localStorage.getItem('congressDist') || "All Congressional Districts",
-      localStorage.getItem('precinct') || "All Justice of the Peace Precincts",
-      localStorage.getItem('stateRep') || "All State Representative Districts",
-      localStorage.getItem('stateSen') || "All State Senate Districts",
-      localStorage.getItem('college') || "All College Districts",
-      localStorage.getItem('drainage') || "All Drainage Districts",
-      localStorage.getItem('hospital') || "All Hospital Districts",
-      localStorage.getItem('mud') || "All MUDs",
-      localStorage.getItem('navigation') || "All Navigation Precincts"
-    );
-    updateInputsFromData(data);
     triggerSave('city');
   });
 
-  document.getElementById('reset-default-btn').addEventListener('click', (e) => {
+  document.getElementById('set-none-btn').addEventListener('click', (e) => {
     e.preventDefault();
-    const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
-    keys.forEach(k => {
-      localStorage.removeItem(k);
-      sessionStorage.removeItem(k);
+    document.querySelectorAll('.js-dropdown-input').forEach(el => {
+      el.value = 'None';
     });
-    alert('Default location cleared!');
-    window.location.reload();
+    triggerSave('city');
   });
 
   loadDynamicDistricts();
 
   locationDataReady.then(data => {
     updateInputsFromData(data);
+    checkAndUpdateLocationBackground().then(updatedData => {
+      if (updatedData) {
+        updateInputsFromData(updatedData);
+        triggerSave('city');
+      }
+    });
   });
 }
