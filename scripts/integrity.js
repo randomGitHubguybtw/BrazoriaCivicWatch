@@ -264,7 +264,7 @@ async function initializeChart() {
 
     const disclaimer = document.createElement('p');
     disclaimer.className = 'disclaimer-text';
-    disclaimer.innerHTML = 'None of these donations were transactional; that is per the <i>Brazoria Civic Watch</i> bylaws, no action or justification was taken by the <i>Brazoria Civic Watch</i> for or in return for these donations. They are displayed for purposes of transparency and public scrutiny';
+    disclaimer.innerHTML = 'None of these donations were transactional; that is per the <i>Brazoria Civic Watch</i> bylaws, no action or justification was taken by the <i>Brazoria Civic Watch</i> for or in return for these donations. They are displayed for purposes of transparency and public scrutiny. We accept money strictly with no strings attached, from any source';
     disclaimer.style.fontSize = '0.9rem';
     disclaimer.style.textAlign = 'center';
     disclaimer.style.marginTop = '25px';
