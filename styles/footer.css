@@ -17,7 +17,6 @@
   justify-content: space-between;
   align-items: center;
   width: 300px;
-
 }
 
 .vertical-container {
@@ -36,4 +35,38 @@
 .footer-text:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.footer-social-media {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-social-media:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.logos {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.logos a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logos a:hover {
+  border-bottom: 1px solid;
+}
+
+.logo {
+  height: 15px;
+  width: auto;
+  object-fit: contain;
 }
