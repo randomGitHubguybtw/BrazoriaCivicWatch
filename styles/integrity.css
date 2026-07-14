@@ -1,3 +1,13 @@
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 .finance-button {
   color: var(--black-text-color);
   width: 50vw;
