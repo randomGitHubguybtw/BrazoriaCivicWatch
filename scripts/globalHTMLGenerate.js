@@ -81,8 +81,12 @@ document.head.insertAdjacentHTML('beforeend', `
   </style>
 `);
 
+const cachedCity = sessionStorage.getItem('city') || localStorage.getItem('city');
+const cachedIsd = sessionStorage.getItem('isd') || localStorage.getItem('isd');
+const hasCachedLocation = !!cachedCity && !!cachedIsd;
+
 document.body.insertAdjacentHTML('afterbegin', `
-  <div id="loading-overlay">
+  <div id="loading-overlay" style="${hasCachedLocation ? 'display: none;' : ''}">
     <div class="spinner"></div>
     <h2 class="loading-title">Figuring out your location...</h2>
     <p class="loading-subtitle">Cross-referencing maps.<br>Please allow location access when prompted.</p>
@@ -405,17 +409,19 @@ export function generateHTML(startCity, startIsd, activeButton) {
     </div>`;
 }
 
-generateHTML("Locating...", "Locating...");
+generateHTML(cachedCity || "Locating...", cachedIsd || "Locating...");
 
 const cityInput = document.querySelector('.js-city-search');
 const isdInput = document.querySelector('.js-isd-search');
 const preciseLocationBtn = document.querySelector('button[data-target="webpages/location-choose.html"]');
 
-if (cityInput) cityInput.classList.add('skeleton');
-if (isdInput) isdInput.classList.add('skeleton');
-if (preciseLocationBtn) {
-  preciseLocationBtn.disabled = true;
-  preciseLocationBtn.textContent = "Please wait...";
+if (!hasCachedLocation) {
+  if (cityInput) cityInput.classList.add('skeleton');
+  if (isdInput) isdInput.classList.add('skeleton');
+  if (preciseLocationBtn) {
+    preciseLocationBtn.disabled = true;
+    preciseLocationBtn.textContent = "Please wait...";
+  }
 }
 
 locationDataReady.then(({ city, isd }) => {

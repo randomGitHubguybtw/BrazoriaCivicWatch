@@ -463,6 +463,11 @@ export const locationDataReady = (async function initLocation() {
     };
   }
 
+  const defaultCity = localStorage.getItem('city');
+  if (defaultCity) {
+    return getFallbackData();
+  }
+
   try {
     const { lat, long } = await getCoordinates();
     const data = await processLocation(lat, long);
