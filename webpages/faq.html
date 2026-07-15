@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <base href="../../">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FAQ</title>
+    <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+
+  </head>
+
+</head>
+<body>
+
+    <div class="header js-header"></div>
+
+    <div class="sidebar-container js-sidebar-container"></div>
+
+    <div class="title">
+            <picture>
+                <source srcset="icons/BrazoriaCivicWatchDarkModeFinal.png" media="(prefers-color-scheme: dark)">
+                <img class="title-graphic" src="icons/Brazoria Civic Watch Final.png" alt="Brazoria Civic Watch Logo">
+            </picture>
+    </div>
+
+    <h1 style="text-align: center;">Frequently Asked Questions</h1>
+
+    <div class="questions-container">
+      <div class="question">
+        <details>
+          <summary class="q-title">Who are we?</summary>
+          <p class="q-answer">We are a nonprofit (pending 501(c)3 status) organization meant to help <i>you</i> know exactly what is going on in Brazoria County local politics!</p>
+        </details>
+      </div>
+
+      <div class="question">
+        <details>
+          <summary class="q-title">How do you get your funding?</summary>
+          <p class="q-answer">We run solely off of <a class="default-link js-donate-button js-hands-off">Donations!</a> No paywalls, no underground deals, here for you and paid by you!</p>
+        </details>
+      </div>
+
+      <div class="question">
+        <details>
+          <summary class="q-title">How do you get your meeting summaries?</summary>
+          <p class="q-answer">Our meeting summaries, just like our election data and officials data, is curated and checked by our very own <a class="default-link" href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank">volunteers!</a> We value our volunteer base, who sit through meetings as they happen and review them afterwards for detailed summaries.</p>
+        </details>
+      </div>
+
+      <div class="question">
+        <details>
+          <summary class="q-title">How do you get your election data?</summary>
+          <p class="q-answer">Our election data, just like our summaries and officials data, is curated and checked by our very own <a class="default-link" href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank">volunteers!</a> We value our volunteer base, who scour official sites and social media looking for election announcements and updates.</p>
+        </details>
+      </div>
+
+      <div class="question">
+        <details>
+          <summary class="q-title">How do you get your officials data?</summary>
+          <p class="q-answer">Our offcials data, just like our election data and summaries, is curated and checked by our very own <a class="default-link" href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank">volunteers!</a> We value our volunteer base, who watch election results, and quickly update our site.</p>
+        </details>
+      </div>
+
+      <div class="question">
+        <details>
+          <summary class="q-title">Are you nonpartisan?</summary>
+          <p class="q-answer">Nonpartisanship is not only legally required for us, as a nonprofit (pending 501(c)3 status), but also its in our bylaws! We ensure we reach out to every candidate running in an election if even only one reaches out for an interview, and we do not favor one political organization or party over any other!</p>
+        </details>
+      </div>
+
+      <div class="question">
+        <details>
+          <summary class="q-title">Do candidates know what they're going to be asked before their interview?</summary>
+          <p class="q-answer">Nope! We do not let candidates know what will be asked until the interview itself. Whats on camera is the first time the candidate is hearing the questions. We, however, do guarantee we will not ask arbitrary seemingly silly "gotcha questions." We take our journalism seriously!</p>
+        </details>
+      </div>
+
+      <div class="question">
+        <details>
+          <summary class="q-title">How can I get involved?</summary>
+          <p class="q-answer">There are plenty of ways to get involved! You can <a class="default-link" href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank">volunteer</a>, you can <a class="default-link js-donate-button js-hands-off">donate</a>, and, if you are a political candidate, you can  <a href="https://forms.gle/o428qnXnCmYhXGnN8" target="_blank" class="default-link">reach out for an interview!</a></p>
+        </details>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h2>Any other questions?</h2>
+
+      <a  class="default-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=brazoriacivicwatch@gmail.com" target="_blank" rel="noopener noreferrer">
+        Contact Us at brazoriacivicwatch@gmail.com!
+      </a>
+    </div>
+    
+    
+
+  <div class="footer js-footer"></div>
+
+  <!--External Libraries-->
+  <script src="importedJS/turf.min.js" defer></script>
+
+  <!--Data-->
+  <script type="module" src="scripts/utils/fixNoun.js"></script>
+  <script type="module" src="scripts/utils/fixDate.js"></script>
+  <script type="module" src="scripts/locationStore.js"></script>
+
+  <!--Globals-->
+  <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+  <script type="module" src="scripts/globalButtons.js"></script>
+  <script type="module" src="scripts/globalArchive.js"></script>
+
+  <script>
+  document.querySelectorAll('summary').forEach(summary => {
+    summary.addEventListener('click', (e) => {
+      const details = summary.closest('details');
+      
+      if (details.hasAttribute('open')) {
+        e.preventDefault();
+        details.classList.add('closing');
+        
+        setTimeout(() => {
+          details.removeAttribute('open');
+          details.classList.remove('closing');
+        }, 250);
+      }
+    });
+  });
+</script>
+
+</body>
+
+</html>

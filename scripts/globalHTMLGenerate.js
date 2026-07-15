@@ -31,6 +31,7 @@ document.head.insertAdjacentHTML('beforeend', `
   <link rel="stylesheet" href="styles/public-places.css">
   <link rel="stylesheet" href="styles/integrity.css">
   <link rel="stylesheet" href="styles/about-us.css">
+  <link rel="stylesheet" href="styles/faq.css">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -402,7 +403,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
     </div>
     <div class="vertical-container">
-        <p class="footer-text js-footer-text">FAQ</p>
+        <p data-target="webpages/faq.html" class="footer-text js-footer-text">FAQ</p>
         <p data-target="https://forms.gle/oTUAUNgc3TBwZozB6" class="footer-text js-footer-text">Get Involved</p>
         
         <div class="footer-text footer-social-media js-footer-text"> 

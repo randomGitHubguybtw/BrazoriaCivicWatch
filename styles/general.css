@@ -64,6 +64,7 @@ button {
   --accent-color: rgb(158, 129, 79);
   --black-text-color: rgb(252, 246, 238);
   --card-black-gradient: rgba(0, 0, 0, 0.8);
+  --global-font: archivo black;
   }
 }
 
