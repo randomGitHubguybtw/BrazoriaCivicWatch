@@ -396,26 +396,17 @@ export function generateHTML(startCity, startIsd, activeButton) {
 
   document.querySelector('.js-footer').innerHTML = `
     <div class="horizontal-container">
-    <div class="vertical-container">
-        <p data-target="webpages/about-us.html" class="footer-text js-footer-text">About Us</p>
-        <p data-target="webpages/location-choose.html" class="footer-text js-footer-text">Change Your City</p>
-        <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
-    </div>
-    <div class="vertical-container">
-        <p class="footer-text js-footer-text">FAQ</p>
-        <p data-target="https://forms.gle/oTUAUNgc3TBwZozB6" class="footer-text js-footer-text">Get Involved</p>
-        
-        <div class="footer-text footer-social-media js-footer-text"> 
-            <div class="logos">
-                <a href="https://www.facebook.com/profile.php?id=61591676666914" target="_blank"><img class="logo js-hands-off" src="icons/Facebook-Logo.png" alt="Facebook"></a>
-                <a href="https://www.instagram.com/brazoriacivicwatch" target="_blank"><img class="logo js-hands-off" src="icons/Instagram-Logo.webp" alt="Instagram"></a>
-                <a href="https://x.com/BrazoriaCWatch" target="_blank"><img class="logo js-hands-off" src="icons/X-Logo.png" alt="X"></a>
-                <a href="https://www.youtube.com/@BrazoriaCivicWatch" target="_blank"><img class="logo js-hands-off" src="icons/YouTube-Logo.png" alt="YouTube"></a>
-            </div>
+        <div class="vertical-container">
+            <p data-target="webpages/about-us.html" class="footer-text js-footer-text">About Us</p>
+            <p class="footer-text js-footer-text">Change Your City</p>
+            <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
         </div>
-        
-    </div>
-</div>`;
+        <div class="vertical-container">
+            <p class="footer-text js-footer-text">FAQ</p>
+            <p data-target="https://forms.gle/oTUAUNgc3TBwZozB6" class="footer-text js-footer-text">Get Involved</p>
+            <p class="footer-text js-footer-text">Social Media</p>
+        </div>
+    </div>`;
 }
 
 generateHTML(cachedCity || "Locating...", cachedIsd || "Locating...");
@@ -456,4 +447,14 @@ locationDataReady.then(({ city, isd }) => {
   if (overlay) {
     overlay.style.display = 'none';
   }
+});
+
+
+window.addEventListener('locationBackgroundUpdated', (e) => {
+  const { city, isd } = e.detail;
+  const cInput = document.querySelector('.js-city-search');
+  const iInput = document.querySelector('.js-isd-search');
+  
+  if (cInput) cInput.value = city;
+  if (iInput) iInput.value = isd;
 });

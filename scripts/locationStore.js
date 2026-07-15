@@ -345,6 +345,40 @@ function getFallbackData() {
   return saveCityAndIsd("All Cities", "All ISDs", "All State Board of Education Districts", "All Congressional Districts", "All Justice of the Peace Precincts", "All State Representative Districts", "All State Senate Districts", "All College Districts", "All Drainage Districts", "All Hospital Districts", "All MUDs", "All Navigation Precincts");
 }
 
+async function doBackgroundCheck() {
+  if (sessionStorage.getItem('locationCheckedThisSession')) return;
+  sessionStorage.setItem('locationCheckedThisSession', 'true');
+  
+  const oldVals = getFallbackData();
+  
+  try {
+    const { lat, long } = await getCoordinates();
+    const newData = await processLocation(lat, long); 
+    
+    if (newData.isOutside) {
+      saveCityAndIsd(oldVals.city, oldVals.isd, oldVals.boardOfEd, oldVals.congressDist, oldVals.precinct, oldVals.stateRep, oldVals.stateSen, oldVals.college, oldVals.drainage, oldVals.hospital, oldVals.mud, oldVals.navigation);
+      return;
+    }
+    
+    const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
+    let isDifferent = false;
+    
+    for (let k of keys) {
+      if (newData[k] !== localStorage.getItem(k)) {
+        isDifferent = true;
+        break;
+      }
+    }
+    
+    if (isDifferent) {
+      keys.forEach(k => localStorage.setItem(k, newData[k]));
+      window.dispatchEvent(new CustomEvent('locationBackgroundUpdated', { detail: newData }));
+    }
+  } catch (e) {
+    saveCityAndIsd(oldVals.city, oldVals.isd, oldVals.boardOfEd, oldVals.congressDist, oldVals.precinct, oldVals.stateRep, oldVals.stateSen, oldVals.college, oldVals.drainage, oldVals.hospital, oldVals.mud, oldVals.navigation);
+  }
+}
+
 export async function forceRecalculate() {
   try {
     const { lat, long } = await getCoordinates();
@@ -374,13 +408,14 @@ export async function forceRecalculate() {
 
 export async function runCoords(lat, long) {
   try {
+    const oldVals = getFallbackData();
     const data = await processLocation(lat, long);
     sessionStorage.setItem('locationCheckedThisSession', 'true');
     if (!data.isOutside) {
       return data;
     } else {
       alert("Coordinates are outside the county. Reverting to last saved location or defaults.");
-      return getFallbackData();
+      return saveCityAndIsd(oldVals.city, oldVals.isd, oldVals.boardOfEd, oldVals.congressDist, oldVals.precinct, oldVals.stateRep, oldVals.stateSen, oldVals.college, oldVals.drainage, oldVals.hospital, oldVals.mud, oldVals.navigation);
     }
   } catch (error) {
     console.error(error);
@@ -399,38 +434,6 @@ export async function testCoords(lat, long) {
 }
 
 window.testCoords = testCoords;
-
-export async function checkAndUpdateLocationBackground() {
-  if (sessionStorage.getItem('locationCheckedThisSession')) {
-    return null;
-  }
-  sessionStorage.setItem('locationCheckedThisSession', 'true');
-  
-  try {
-    const { lat, long } = await getCoordinates();
-    const newData = await processLocation(lat, long);
-    
-    if (newData.isOutside) return null;
-    
-    const keys = ['city', 'isd', 'boardOfEd', 'congressDist', 'precinct', 'stateRep', 'stateSen', 'college', 'drainage', 'hospital', 'mud', 'navigation'];
-    let isDifferent = false;
-    
-    for (let k of keys) {
-      if (newData[k] !== localStorage.getItem(k)) {
-        isDifferent = true;
-        break;
-      }
-    }
-    
-    if (isDifferent) {
-      keys.forEach(k => localStorage.setItem(k, newData[k]));
-      return newData;
-    }
-    return null;
-  } catch (e) {
-    return null;
-  }
-}
 
 export const locationDataReady = (async function initLocation() {
   const cachedCity = sessionStorage.getItem('city');
@@ -465,6 +468,7 @@ export const locationDataReady = (async function initLocation() {
 
   const defaultCity = localStorage.getItem('city');
   if (defaultCity) {
+    doBackgroundCheck();
     return getFallbackData();
   }
 

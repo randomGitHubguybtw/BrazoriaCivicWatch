@@ -1,4 +1,4 @@
-import { saveCityAndIsd, locationDataReady, forceRecalculate, runCoords, checkAndUpdateLocationBackground } from './locationStore.js';
+import { saveCityAndIsd, locationDataReady, forceRecalculate, runCoords } from './locationStore.js';
 import { generateHTML } from './globalHTMLGenerate.js';
 import { runSummary } from './globalSummaries.js';
 import { renderSearch } from './globalArchive.js';
@@ -751,11 +751,9 @@ if (dropdownsListContainer) {
 
   locationDataReady.then(data => {
     updateInputsFromData(data);
-    checkAndUpdateLocationBackground().then(updatedData => {
-      if (updatedData) {
-        updateInputsFromData(updatedData);
-        triggerSave('city');
-      }
-    });
+  });
+  
+  window.addEventListener('locationBackgroundUpdated', (e) => {
+    updateInputsFromData(e.detail);
   });
 }
