@@ -396,17 +396,47 @@ export function generateHTML(startCity, startIsd, activeButton) {
 
   document.querySelector('.js-footer').innerHTML = `
     <div class="horizontal-container">
-        <div class="vertical-container">
-            <p data-target="webpages/about-us.html" class="footer-text js-footer-text">About Us</p>
-            <p class="footer-text js-footer-text">Change Your City</p>
-            <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
-        </div>
-        <div class="vertical-container">
-            <p class="footer-text js-footer-text">FAQ</p>
-            <p data-target="https://forms.gle/oTUAUNgc3TBwZozB6" class="footer-text js-footer-text">Get Involved</p>
-            <p class="footer-text js-footer-text">Social Media</p>
-        </div>
-    </div>`;
+    <div class="vertical-container">
+        <p data-target="webpages/about-us.html" class="footer-text js-footer-text">About Us</p>
+        <p data-target="webpages/location-choose.html" class="footer-text js-footer-text">Change Your City</p>
+        <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
+    </div>
+    <div class="vertical-container">
+        <p class="footer-text js-footer-text">FAQ</p>
+        <p data-target="https://forms.gle/oTUAUNgc3TBwZozB6" class="footer-text js-footer-text">Get Involved</p>
+        
+        <div class="footer-text footer-social-media js-footer-text"> 
+    <div class="logos">
+        <a href="https://www.facebook.com/profile.php?id=61591676666914" target="_blank">
+            <svg class="logo js-hands-off" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+            </svg>
+        </a>
+        
+        <a href="https://www.instagram.com/brazoriacivicwatch" target="_blank">
+            <svg class="logo js-hands-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+        </a>
+        
+        <a href="https://x.com/BrazoriaCWatch" target="_blank">
+            <svg class="logo js-hands-off" viewBox="0 0 24 24" fill="currentColor">
+                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+        </a>
+        
+        <a href="https://www.youtube.com/@BrazoriaCivicWatch" target="_blank">
+            <svg class="logo js-hands-off" viewBox="0 0 24 24" fill="currentColor">
+                 <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29.01 29.01 0 001 11.75a29.01 29.01 0 00.46 5.33 2.78 2.78 0 001.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2c.46-1.76.46-5.33.46-5.33s0-3.57-.46-5.33zM9.75 15.02V8.48l6.5 3.27-6.5 3.27z"/>
+            </svg>
+        </a>
+    </div>
+</div>
+        
+    </div>
+</div>`;
 }
 
 generateHTML(cachedCity || "Locating...", cachedIsd || "Locating...");
@@ -448,7 +478,6 @@ locationDataReady.then(({ city, isd }) => {
     overlay.style.display = 'none';
   }
 });
-
 
 window.addEventListener('locationBackgroundUpdated', (e) => {
   const { city, isd } = e.detail;
