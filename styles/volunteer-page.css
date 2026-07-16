@@ -136,7 +136,7 @@ p {
   margin-top: 20px;
   width: clamp(30px, 35vw, 300px);
   height: clamp(30px, 10vh, 300px);
-  font-size: clamp(10px, 3vw, 32px);
+  font-size: clamp(10px, 2vw, 32px);
   transition: border-style 0.2s;
   transition: border-radius 0.2s;
   transition: opacity 0.2s;
