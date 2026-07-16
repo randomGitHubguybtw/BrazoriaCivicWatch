@@ -27,7 +27,7 @@
   font-size: 4vw;
   background-color: var(--secondary-color);
   border: inset 3px var(--accent-color);
-  color: var(--black-text-color)
+  color: var(--black-text-color);
 }
 
 .login-button:hover {

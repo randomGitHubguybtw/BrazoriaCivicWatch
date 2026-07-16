@@ -1,3 +1,11 @@
+button {
+  color: var(--black-text-color);
+}
+
+p {
+  color: var(--black-text-color);
+}
+
 .meeting-form {
   display: flex;
   flex-direction: column;
