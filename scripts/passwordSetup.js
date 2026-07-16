@@ -23,6 +23,14 @@ if (localStorage.getItem('hasVisitedSetPassword') === 'true') {
     throw new Error('Page locked.');
 }
 
+supabase.auth.onAuthStateChange((event, session) => {
+    if (session && session.user && session.user.email) {
+        emailInput.value = session.user.email;
+        emailInput.disabled = true;
+        emailInput.style.opacity = '0.7';
+    }
+});
+
 supabase.auth.getSession().then(({ data: { session } }) => {
     if (session && session.user && session.user.email) {
         emailInput.value = session.user.email;
@@ -48,6 +56,11 @@ submitBtn.addEventListener('click', async (e) => {
         return;
     }
 
+    if (password.length < 6) {
+        alert('Your password must be at least 6 characters long.');
+        return;
+    }
+
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
     if (session) {
@@ -61,6 +74,6 @@ submitBtn.addEventListener('click', async (e) => {
             window.location.replace('webpages/login.html'); 
         }
     } else {
-        alert('Invalid or expired invitation link. Please use the link sent to your email.');
+        alert('Invalid or expired invitation link. Please use the exact link sent to your email.');
     }
 });
