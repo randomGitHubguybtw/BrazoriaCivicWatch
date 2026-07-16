@@ -382,7 +382,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
         <button class="sidebar-button js-sidebar-button">Government Websites</button>
         <button class="sidebar-button js-sidebar-button">Register to Vote</button>
         <button data-target="webpages/public-places.html" class="sidebar-button js-sidebar-button">Public Places</button>
-        <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: rgb(109, 130, 99);">Volunteer Portal Login</button>
+        <button data-target="webpages/login.html" class="sidebar-button js-sidebar-button" style="background-color: rgb(109, 130, 99);">Volunteer</button>
         <button data-target="https://forms.gle/4sEn3ooneF7AyH4C7" class="sidebar-button js-sidebar-button" style="background-color: rgb(158, 129, 79);">Report a Concern</button>
       </div>`;
 
