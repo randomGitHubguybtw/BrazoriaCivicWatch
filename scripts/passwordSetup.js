@@ -6,33 +6,27 @@ const showPasswordBtn = document.getElementById('showPasswordBtn');
 const passwordInput = document.getElementById('passwordInput');
 const emailInput = document.getElementById('emailInput');
 const submitBtn = document.getElementById('submitBtn');
-const mainContainer = document.getElementById('mainContainer');
 
-if (localStorage.getItem('hasVisitedSetPassword') === 'true') {
-    emailInput.disabled = true;
-    passwordInput.disabled = true;
-    showPasswordBtn.disabled = true;
-    submitBtn.disabled = true;
-    submitBtn.innerText = 'Access Denied';
-    
-    const deniedMsg = document.createElement('h2');
-    deniedMsg.style.color = 'red';
-    deniedMsg.innerText = 'Access Denied. Password already set.';
-    mainContainer.prepend(deniedMsg);
-    
-    throw new Error('Page locked.');
-}
+let activeSession = null;
 
 supabase.auth.onAuthStateChange((event, session) => {
     if (session && session.user && session.user.email) {
+        activeSession = session;
         emailInput.value = session.user.email;
         emailInput.disabled = true;
         emailInput.style.opacity = '0.7';
+        
+        if (window.location.hash) {
+            window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+        }
+    } else {
+        activeSession = null;
     }
 });
 
 supabase.auth.getSession().then(({ data: { session } }) => {
     if (session && session.user && session.user.email) {
+        activeSession = session;
         emailInput.value = session.user.email;
         emailInput.disabled = true;
         emailInput.style.opacity = '0.7';
@@ -61,19 +55,17 @@ submitBtn.addEventListener('click', async (e) => {
         return;
     }
 
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-    if (session) {
+    if (activeSession) {
         const { error: updateError } = await supabase.auth.updateUser({ password: password });
         
         if (updateError) {
             alert('Error updating password: ' + updateError.message);
         } else {
-            localStorage.setItem('hasVisitedSetPassword', 'true');
             alert('Password set successfully!');
-            window.location.replace('webpages/login.html'); 
+            await supabase.auth.signOut();
+            window.location.replace('login.html'); 
         }
     } else {
-        alert('Invalid or expired invitation link. Please use the exact link sent to your email.');
+        alert('No active session found. Please use the exact link sent to your email.');
     }
 });
