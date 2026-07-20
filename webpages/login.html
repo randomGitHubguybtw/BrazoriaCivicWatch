@@ -55,18 +55,26 @@
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         document.getElementById('loginBtn').addEventListener('click', async () => {
-            const email = document.getElementById('emailInput').value;
+            const email = document.getElementById('emailInput').value.trim();
             const password = document.getElementById('passwordInput').value;
             
+            if (!email || !password) {
+                alert("Please enter both email and password.");
+                return;
+            }
+
             const { error } = await supabase.auth.signInWithPassword({ email, password });
             
             if (error) {
                 alert("Error logging in: " + error.message);
             } else {
-                let data = '?'
+                let data = '?';
+                let foundInDatabase = false;
 
                 masterVolunteers.forEach( volunteer => {
-                    if (volunteer.email === email) {
+                    if (volunteer.email.toLowerCase() === email.toLowerCase()) {
+                        foundInDatabase = true;
+                        
                         if (volunteer.role.includes('summarizer')) {
                             data += 'summarizer=true&';
                         } 
@@ -78,7 +86,12 @@
                         }
                         window.location.href = "webpages/choose.html" + data;
                     }
-                })
+                });
+
+                if (!foundInDatabase) {
+                    alert("Login successful with Supabase, but your email was not found in the Volunteer Database. Please contact the administrator.");
+                    await supabase.auth.signOut();
+                }
             }
         });
 
