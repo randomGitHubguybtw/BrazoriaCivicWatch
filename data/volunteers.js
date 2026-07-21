@@ -8,5 +8,8 @@ export const masterVolunteers = [
   }, {
     email: "paypaypenney@gmail.com",
     role: "summarizer"
-  }, 
+  }, {
+    email: "lalimuniz7@gmail.com",
+    role: "summarizer"
+  }
 ]
