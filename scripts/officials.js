@@ -197,11 +197,22 @@ function formatGroupName(jurisdiction, position) {
     if (!jurisdiction) return position;
     const firstUnderscore = jurisdiction.indexOf('_');
     if (firstUnderscore !== -1) {
-        const typePart = jurisdiction.substring(0, firstUnderscore).trim();
+        let typePart = jurisdiction.substring(0, firstUnderscore).trim();
         const valPart = jurisdiction.substring(firstUnderscore + 1).trim();
+        
+        if (typePart === 'Justice of the Peace') {
+            typePart = 'Precinct';
+        }
+        
         return `${typePart} (${valPart}) - ${position}`;
     }
-    return `${jurisdiction} - ${position}`;
+    
+    let typePart = jurisdiction;
+    if (typePart === 'Justice of the Peace') {
+        typePart = 'Precinct';
+    }
+    
+    return `${typePart} - ${position}`;
 }
 
 const loadOfficials = async () => {
