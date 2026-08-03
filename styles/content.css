@@ -3,6 +3,9 @@
   font-size: clamp(2px, calc(24px + 1vw), 100px);
   margin-bottom: 10px;
   font-weight: 600;
+  object-position: 45% 55%;
+  height: 225px;
+  margin-top: 10px;
 }
 
 .separator-container {

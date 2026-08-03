@@ -98,6 +98,7 @@ document.body.insertAdjacentHTML('afterbegin', `
       
       <div id="donate-main-content" class="donate-main-content js-hands-off">
         <h2 class="donate-title">Support Our Cause</h2>
+        <p>We rely on you! We are dedicated to no ads, no sponsors, only people!</p>
         <div class="donate-options">
           <button class="donate-amt js-hands-off">$1</button>
           <button class="donate-amt js-hands-off">$5</button>
@@ -111,8 +112,8 @@ document.body.insertAdjacentHTML('afterbegin', `
           <input type="number" id="custom-donate-input" class="custom-donate-input js-hands-off" placeholder="Custom Amount" min="1" step="1" value="25">
         </div>
         <div class="donate-type">
-          <label class="payment-periodic-check"><input type="radio" name="freq" value="one-time" checked> One-time</label>
-          <label class="payment-periodic-check"><input type="radio" name="freq" value="monthly"> Monthly</label>
+          <label class="payment-periodic-check"><input type="radio" name="freq" value="one-time"> One-time</label>
+          <label class="payment-periodic-check"><input type="radio" name="freq" value="monthly" checked> Monthly</label>
         </div>
         <button class="submit-donation js-hands-off">Proceed to Donate</button>
       </div>
