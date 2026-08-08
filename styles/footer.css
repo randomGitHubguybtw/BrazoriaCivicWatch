@@ -61,10 +61,6 @@
   text-decoration: none;
 }
 
-.logos a:hover {
-  border-bottom: 1px solid;
-}
-
 .logo {
   height: 18px;
   width: auto;

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="../">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Our Mailing List</title>
+  <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+  <link rel="stylesheet" href="styles/mail-list.css">
+</head>
+<body>
+
+  <div class="header js-header"></div>
+  <div class="sidebar-container js-sidebar-container"></div>
+
+  <div class="title">
+    <picture>
+      <source srcset="icons/BrazoriaCivicWatchDarkModeFinal.png" media="(prefers-color-scheme: dark)">
+      <img class="title-graphic" src="icons/Brazoria Civic Watch Final.png" alt="Brazoria Civic Watch Logo">
+    </picture>
+  </div>
+
+  <div class="separator-container"> 
+    <div class="seperator"></div>
+  </div>
+
+  <div class="form-container">
+    <h2 class="polling-card-title js-page-title" style="text-align: center; margin-bottom: 20px;">Join Our Mailing List!</h2>
+    
+    <input type="text" id="subscriber-name" class="form-input" placeholder="Your Name (Optional)">
+    <input type="email" id="subscriber-email" class="form-input" placeholder="Your Email (Required)" required>
+    
+    <h3 style="text-align: center; color: var(--black-text-color); margin-top: 30px; padding: 0 10px;">Are these the districts you would like to receive emails for?</h3>
+    
+    <div class="js-dropdowns-list"></div>
+
+    <div class="checkbox-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="meeting-notifs" class="checkbox-input" checked>
+        Get emailed for new meeting summaries
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="election-notifs" class="checkbox-input" checked>
+        Get emailed for recent and upcoming elections
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="interview-notifs" class="checkbox-input" checked>
+        Get emailed for when a new interview is posted
+      </label>
+    </div>
+
+    <button id="opt-in-btn" class="polling-card-btn js-hands-off" style="width: 100%; max-width: 400px; margin: 20px auto; display: block;">Opt-In!</button>
+    <p id="form-message" style="text-align: center; font-size: 1.1rem; font-weight: bold; padding: 0 15px;"></p>
+  </div>
+
+  <div class="separator-container"> 
+    <div class="seperator"></div>
+  </div>
+
+  <div class="footer js-footer"></div>
+
+  <script type="module" src="scripts/utils/fixNoun.js"></script>
+  <script type="module" src="scripts/utils/fixDate.js"></script>
+  <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+  <script type="module" src="scripts/globalButtons.js"></script>
+  <script type="module" src="scripts/globalArchive.js"></script>
+  <script type="module" src="scripts/mail-list.js"></script>
+
+</body>
+</html>

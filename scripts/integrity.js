@@ -232,7 +232,18 @@ async function initializeChart() {
             const name = d.name || 'Unknown';
             const type = d.type || 'Unknown';
             
-            const searchStr = `${name} ${type} ${amtStr}`.toLowerCase();
+            let formattedDate = 'Unknown Date';
+            if (d.date) {
+                const dateObj = new Date(d.date);
+                if (!isNaN(dateObj)) {
+                    const day = String(dateObj.getDate()).padStart(2, '0');
+                    const month = dateObj.toLocaleString('en-US', { month: 'long' });
+                    const year = dateObj.getFullYear();
+                    formattedDate = `${day}, ${month}, ${year}`;
+                }
+            }
+            
+            const searchStr = `${name} ${type} ${amtStr} ${formattedDate}`.toLowerCase();
             if (searchTerm && !searchStr.includes(searchTerm.toLowerCase())) return;
 
             renderedCount++;
@@ -244,6 +255,7 @@ async function initializeChart() {
                 <div class="donor-info">
                     <p class="donor-detail" style="font-weight: 800; color: var(--primary-color);">Amount: ${amtStr}</p>
                     <p class="donor-detail" style="font-weight: 600;">Type: ${type}</p>
+                    <p class="donor-detail" style="font-weight: 600; font-size: 0.9rem;">Date: ${formattedDate}</p>
                 </div>
             `;
             cardsContainer.appendChild(card);
