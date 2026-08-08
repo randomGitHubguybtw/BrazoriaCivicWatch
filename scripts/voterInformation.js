@@ -74,7 +74,7 @@ const loadVoterInformation = async () => {
         if (cityLocations.length === 0) {
             if (addressesContainer) {
                 const emptyText = isAllCities ? 'any area' : userCity;
-                addressesContainer.innerHTML = `<div class="defualt-location-text"><p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}.</p> <a href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank" class="default-link">Volunteer to Change That!</a></div>`;
+                addressesContainer.innerHTML = `<div class="defualt-location-text"><p class="highlightable voter-message">No polling locations currently assigned for ${emptyText}.</p> <a href="https://forms.gle/oTUAUNgc3TBwZozB6" target="_blank" class="default-link">Volunteer to Change That!</a> Or perhaps check a nearby city?</div>`;
             }
             return;
         }

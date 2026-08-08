@@ -59,6 +59,26 @@
   transition: width 0.3s, background-color 0.3s;
 }
 
+.mailing-container {
+  display: flex;
+  justify-content: center;
+}
+
+.mailing-button {
+  color: var(--black-text-color);
+  width: 50vw;
+  text-align: center;
+  margin-bottom: -15px;
+  height: 45px;
+  transition: width 0.3s, background-color 0.3s;
+  background-color: var(--secondary-color);
+}
+
+.mailing-button:hover {
+  width: 70vw;
+  background-color: var(--accent-color);
+}
+
 .ballot-button:hover {
   width: 85vw;
   background-color: var(--accent-color);

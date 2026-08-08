@@ -91,6 +91,7 @@
   border: 3px solid transparent;
   border-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'><rect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='3' stroke-dasharray='10, 5' stroke-dashoffset='0' stroke-linecap='square'/></svg>") 1;
   opacity: 90%;
+  cursor: pointer;
 }
 
 .donate-button:active {
