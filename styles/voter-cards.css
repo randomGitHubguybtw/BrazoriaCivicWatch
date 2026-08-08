@@ -66,10 +66,10 @@
 
 .mailing-button {
   color: var(--black-text-color);
-  width: 50vw;
+  width: 40vw;
   text-align: center;
   margin-bottom: -15px;
-  height: 45px;
+  height: 50px;
   transition: width 0.3s, background-color 0.3s;
   background-color: var(--secondary-color);
 }
