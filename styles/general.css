@@ -43,6 +43,7 @@ button {
 
 :root {
   --primary-color: rgb(186, 94, 62);
+  --inverted-primary: rgb(105, 68, 56);
   --secondary-color: rgb(109, 130, 99);
   --inverted-secondary: rgb(78, 89, 73);
   --sickly-primary: rgb(20, 8, 4);
@@ -57,6 +58,7 @@ button {
 @media (prefers-color-scheme: dark) {
   :root {
   --primary-color: rgb(105, 68, 56);
+  --inverted-primary: rgb(186, 94, 62);
   --secondary-color: rgb(78, 89, 73);
   --inverted-secondary: rgb(109, 130, 99);
   --sickly-primary: rgb(15, 9, 7);

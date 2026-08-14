@@ -401,7 +401,7 @@ export function generateHTML(startCity, startIsd, activeButton) {
     <div class="horizontal-container">
     <div class="vertical-container">
         <p data-target="webpages/about-us.html" class="footer-text js-footer-text">About Us</p>
-        <p data-target="webpages/location-choose.html" class="footer-text js-footer-text">Change Your City</p>
+        <p data-target="webpages/privacy-policy.html" class="footer-text js-footer-text">Privacy Policy</p>
         <p data-target="webpages/contact-us.html" class="footer-text js-footer-text">Contact Us</p>
     </div>
     <div class="vertical-container">

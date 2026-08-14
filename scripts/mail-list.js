@@ -560,12 +560,16 @@ if (optInBtn) {
 
     const locationPrefsArray = [];
     document.querySelectorAll('.form-container .mail-selected-items').forEach(container => {
+      const group = [];
       Array.from(container.children).forEach(tag => {
         const val = tag.dataset.value;
         if (val) {
-          locationPrefsArray.push(val.replace(/ /g, '_'));
+          group.push(val.replace(/ /g, '_'));
         }
       });
+      if (group.length > 0) {
+        locationPrefsArray.push(group.join('.'));
+      }
     });
 
     const locationPrefs = locationPrefsArray.length > 0 ? locationPrefsArray.join('-') + '-' : '';
