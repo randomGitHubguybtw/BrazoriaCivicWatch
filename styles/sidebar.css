@@ -10,7 +10,7 @@
   right: 60vw;
   top: 45px;
   bottom: 0px;
-  z-index: 99;
+  z-index: 990;
   border-right: solid 3px var(--accent-color);
   transform: translateX(-100%);
   transition: transform 0.4s ease-in-out;

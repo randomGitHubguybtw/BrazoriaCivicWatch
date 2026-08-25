@@ -1,1 +1,63 @@
-<p>Survey will go here in time</p>
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <base href="../../">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Archive</title>
+    <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+    <link rel="stylesheet" href="styles/survey.css">
+
+  </head>
+
+<body>
+
+    <div class="header js-header"></div>
+
+    <div class="sidebar-container js-sidebar-container"></div>
+
+    <div class="survey-body">
+      
+      <div class="survey-header-wrapper">
+          <h1 class="survey-title">Local Polling Survey</h1>
+          <div class="progress-wrapper">
+              <div class="progress-fill" id="progressBar"></div>
+          </div>
+      </div>
+
+      <form id="pollingForm" class="polling-form">
+          <div id="surveyCardsContainer"></div>
+          
+          <div class="survey-navigation" id="surveyNavigation" style="display: none;">
+              <button type="button" class="nav-btn prev-btn js-hands-off" id="prevBtn">Previous</button>
+              <button type="button" class="nav-btn next-btn js-hands-off" id="nextBtn">Next</button>
+              <button type="submit" class="nav-btn submit-btn js-hands-off" id="submitBtn" style="display: none;">Submit</button>
+          </div>
+      </form>
+
+    </div>
+    
+  <div class="footer js-footer"></div>
+
+  <!--External Libraries-->
+  <script src="importedJS/turf.min.js" defer></script>
+
+  <!--Data-->
+  <script type="module" src="scripts/utils/fixNoun.js"></script>
+  <script type="module" src="scripts/utils/fixDate.js"></script>
+  <script type="module" src="scripts/locationStore.js"></script>
+
+  <!--Globals-->
+  <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+  <script type="module" src="scripts/globalButtons.js"></script>
+  <script type="module" src="scripts/globalArchive.js"></script>
+  
+  <!--Survey Script-->
+  <script type="module" src="scripts/survey.js"></script>
+
+</body>
+
+</html>
