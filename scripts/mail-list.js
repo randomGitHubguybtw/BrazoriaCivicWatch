@@ -544,6 +544,7 @@ if (optInBtn) {
   optInBtn.addEventListener('click', async () => {
     const emailInput = document.getElementById('subscriber-email');
     const nameInput = document.getElementById('subscriber-name');
+    const phoneInput = document.getElementById('subscriber-phone');
     const meetingNotifs = document.getElementById('meeting-notifs').checked ? 1 : 0;
     const electionNotifs = document.getElementById('election-notifs').checked ? 1 : 0;
     const interviewNotifs = document.getElementById('interview-notifs').checked ? 1 : 0;
@@ -551,6 +552,7 @@ if (optInBtn) {
     
     const email = emailInput.value.trim();
     const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim() || null;
 
     if (!email || !email.includes('@')) {
       messageEl.style.color = 'red';
@@ -580,7 +582,7 @@ if (optInBtn) {
       const response = await fetch(`${API_BASE}/api/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, locationPrefs, meetingNotifs, electionNotifs, interviewNotifs })
+        body: JSON.stringify({ email, phone, name, locationPrefs, meetingNotifs, electionNotifs, interviewNotifs })
       });
 
       const data = await response.json();
@@ -590,6 +592,7 @@ if (optInBtn) {
         messageEl.textContent = 'Successfully opted in! Thank you for joining.';
         emailInput.value = '';
         nameInput.value = '';
+        phoneInput.value = '';
         document.querySelectorAll('.form-container .mail-selected-items').forEach(c => c.innerHTML = '');
       } else {
         messageEl.style.color = 'red';
