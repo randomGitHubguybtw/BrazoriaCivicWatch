@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <base href="../">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Polling for Brazoria County</title>
+    <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+    
+    <link rel="stylesheet" href="styles/polling.css">
+
+  </head>
+
+<body>
+
+    <div class="header js-header"></div>
+
+    <div class="sidebar-container js-sidebar-container"></div>
+
+    <div class="title">
+      <picture>
+          <source srcset="icons/PollingCivicWatchTitleDark.png" media="(prefers-color-scheme: dark)">
+          <img style="object-position: 45% 55%; height: 225px; margin-top: 10px;" class="title-graphic" src="icons/PollingCivicWatchTitle.png" alt="Brazoria Civic Watch Logo">
+      </picture>
+    </div>
+    
+    <div class="polling-chart-container">
+      <h2 class="donation-chart-title" style="margin-top: -40px;">Polling Breakdown</h2>
+      
+      <div class="dropdown-container">
+        <button id="prevRaceBtn" class="race-nav-btn" title="Previous Question">&#10094;</button>
+        
+        <div class="searchable-dropdown" id="raceDropdown">
+          <input type="text" id="raceSearchInput" class="race-search-input" placeholder="Search races..." autocomplete="off">
+          <div class="dropdown-list" id="raceDropdownList"></div>
+        </div>
+
+        <button id="nextRaceBtn" class="race-nav-btn" title="Next Question">&#10095;</button>
+      </div>
+
+      <div class="filter-controls-container">
+        <div class="filter-group">
+          <div class="searchable-dropdown" id="demoCategoryDropdownWrapper">
+            <input type="text" id="demoCategorySearchInput" class="race-search-input" placeholder="Filter by Demographic..." autocomplete="off">
+            <div class="dropdown-list" id="demoCategoryDropdownList"></div>
+          </div>
+          <div class="searchable-dropdown sub-filter-dropdown" id="demoValueDropdownWrapper" style="display:none;">
+            <input type="text" id="demoValueSearchInput" class="race-search-input" placeholder="Select demographic value..." autocomplete="off">
+            <div class="dropdown-list" id="demoValueDropdownList"></div>
+            <input type="hidden" id="selectedDemoVal" value="">
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="searchable-dropdown" id="districtCategoryDropdownWrapper">
+            <input type="text" id="districtCategorySearchInput" class="race-search-input" placeholder="Filter by District..." autocomplete="off">
+            <div class="dropdown-list" id="districtCategoryDropdownList"></div>
+          </div>
+          <div class="searchable-dropdown sub-filter-dropdown" id="districtValueDropdownWrapper" style="display:none;">
+            <input type="text" id="districtValueSearchInput" class="race-search-input" placeholder="Select district value..." autocomplete="off">
+            <div class="dropdown-list" id="districtValueDropdownList"></div>
+            <input type="hidden" id="selectedDistrictVal" value="">
+          </div>
+        </div>
+      </div>
+
+      <div class="showing-indicator-container">
+        <div id="showingIndicator" class="showing-indicator"></div>
+        <button id="clearFiltersBtn" class="clear-filters-btn">Clear Filters</button>
+      </div>
+
+      <h3 id="currentQuestionTitle" class="current-question-title"></h3>
+      <p id="pollingSubtitle" class="polling-subtitle"></p>
+
+      <div class="polling-graph" id="pollingGraph">
+        <div id="pollingEmptyState" class="polling-empty-state">
+          <div class="empty-state-content">
+            <svg fill="#d9534f" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 10px;">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            <p style="margin: 0; line-height: 1.5;">Insufficient data to display representative results (n < 40).<br>Filter selection requires a larger sample size to ensure statistical validity.</p>
+          </div>
+        </div>
+      </div>
+      
+      <h4 id="currentTableTitle" class="polling-table-title"></h4>
+      <div class="polling-table-wrapper" id="pollingTableWrapper">
+        <table class="polling-data-table" id="pollingDataTable"></table>
+      </div>
+    </div>
+
+    <p class="disclaimer-text">Non-partisan polling of verified Brazoria County voters, statistically weighted for accuracy (n < 40). Learn more on our <a class="default-link" href="webpages/polling-methodology.html">Transparency & Methodology</a> page.</p>
+
+  <div class="footer js-footer"></div>
+  
+  <div id="pollingTooltip" class="polling-tooltip"></div>
+
+  <script src="importedJS/turf.min.js" defer></script>
+
+  <script type="module" src="scripts/utils/fixNoun.js"></script>
+  <script type="module" src="scripts/utils/fixDate.js"></script>
+  <script type="module" src="scripts/locationStore.js"></script>
+
+  <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+  <script type="module" src="scripts/globalButtons.js"></script>
+  <script type="module" src="scripts/globalArchive.js"></script>
+  <script type="module" src="scripts/integrity.js"></script>
+  
+  <script type="module" src="scripts/polling.js"></script>
+
+</body>
+
+</html>

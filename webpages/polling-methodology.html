@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <base href="../../">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transparency and Methodology</title>
+    <link rel="icon" type="image/x-icon" href="icons/Brazoria Civic Watch Logo Black.png">
+
+  </head>
+
+<body>
+
+    <div class="header js-header"></div>
+
+    <div class="sidebar-container js-sidebar-container"></div>
+
+    <div class="title">
+      <picture>
+          <source srcset="icons/PollingCivicWatchTitleDark.png" media="(prefers-color-scheme: dark)">
+          <img style="object-position: 45% 55%; height: 225px; margin-top: 10px;" class="title-graphic" src="icons/PollingCivicWatchTitle.png" alt="Brazoria Civic Watch Logo">
+      </picture>
+    </div>
+
+    <div class="text-section">
+      <div class="content-column" style="grid-template-columns: 1fr;">
+        <div><p style="font-size: 40px; font-weight: bold; margin-bottom: 20px;">Polling Transparency and Methodology</p></div>
+        
+        <div style="line-height: 1.6; font-size: 18px; color: #fcf6ee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            <h3 style="color: #c4a46a; margin-top: 15px; margin-bottom: 10px; font-size: 24px; border-bottom: 1px solid rgba(158, 129, 79, 0.3); padding-bottom: 5px;">1. Survey Population & Collection Methodology</h3>
+            <ul style="margin-bottom: 30px; padding-left: 20px;">
+                <li style="margin-bottom: 10px;"><strong>Target Universe & Data Sourcing:</strong> Our baseline voter universe is built using the public voter registration file provided by Brazoria County. To facilitate digital outreach, we append mobile phone numbers to this public list via reliable third-party data providers.</li>
+                <li style="margin-bottom: 10px;"><strong>Sampling Mode & Collection:</strong> Digital surveys are delivered via verified Peer-to-Peer (P2P) SMS invitations, leading to a secure, self-reported web survey.</li>
+                <li style="margin-bottom: 10px;"><strong>SMS Compliance & Outreach:</strong> All P2P SMS invitations strictly comply with telecommunication standards. We do not send malicious texts, spam, or misleading links. Every message clearly identifies our organization and includes standard opt-out instructions (e.g., "Reply STOP to end").</li>
+                <li style="margin-bottom: 10px;"><strong>SMS Invitation Variations:</strong> During outreach, we utilize the following 15 message variations to ensure delivery compliance and avoid carrier filtering:
+                    <ul style="margin-top: 5px; margin-bottom: 5px; padding-left: 20px; list-style-type: circle;">
+                      <li>Andrew Cobb here with Brazoria Civic Watch; we need you for a quick poll! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Hey! Andrew Cobb here with Brazoria Civic Watch. We need your input for November! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Hey! Andrew Cobb here. We at the Brazoria Civic Watch need your opinion: https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Andrew Cobb here with the Brazoria Civic Watch nonprofit. Fill out our poll here: https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>We at the Brazoria Civic Watch need your input. I'm Andrew Cobb; help us out! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Hey! Andrew Cobb and the nonprofit Brazoria Civic Watch here! We need your input! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Andrew Cobb and the Brazoria Civic Watch nonprofit here! Please do our survey: https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>I am Andrew Cobb with the nonprofit: The Brazoria Civic Watch; we need your input: https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>The Brazoria Civic Watch needs your input. I am Andrew Cobb; please help us! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>I am Andrew Cobb with the Brazoria Civic Watch, and we need your input! Please: https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Hey! Andrew Cobb here from the Brazoria Civic Watch, and we need your input: https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Hey! Andrew Cobb here from the Brazoria Civic Watch; your opinion is valuable! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>The Brazoria Civic Watch is here; I am Andrew Cobb, and your opinion is needed! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>Andrew Cobb is here; we are The Brazoria Civic Watch, and your opinion is needed! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                      <li>I am Andrew Cobb, and The Brazoria Civic Watch needs your input; please help us! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
+                    </ul>
+                </li>
+                <li style="margin-bottom: 10px;"><strong>Timing & Frequency:</strong> Polling is generally conducted on a monthly basis (subject to funding availability) for a two-week window, typically from the 1st through the 14th of the month. SMS invitations are strictly sent between 9:00 AM and 9:00 PM local time.</li>
+                <li style="margin-bottom: 10px;"><strong>Response Verification:</strong> Unique voter record validation ensures only one response per verified voter per election cycle month. Responses from inactive, unregistered, or opted-out numbers are automatically excluded.</li>
+            </ul>
+
+            <h3 style="color: #c4a46a; margin-top: 15px; margin-bottom: 10px; font-size: 24px; border-bottom: 1px solid rgba(158, 129, 79, 0.3); padding-bottom: 5px;">2. Weighting & Statistical Adjustment</h3>
+            <p style="margin-bottom: 15px;">To mitigate non-response bias and ensure the polling sample accurately reflects the true Brazoria County electorate, raw responses are dynamically calibrated using an <strong>Iterative Proportional Fitting (Raking)</strong> algorithm.</p>
+            <ul style="margin-bottom: 30px; padding-left: 20px;">
+                <li style="margin-bottom: 10px;"><strong>Baseline Benchmarks:</strong> Population targets are derived directly from the official U.S. Census Bureau 2020 Decennial Redistricting Data (P.L. 94-171), utilizing Voting Tabulation District (VTD) base data.</li>
+                <li style="margin-bottom: 10px;"><strong>Core Weighting Targets:</strong> The raking algorithm balances the sample across two primary dimensions: <em>Voting Age Population (VAP) by Race/Ethnicity</em> (White, Black, Hispanic, Asian, Other) and <em>Geography</em> (aggregated across Brazoria County Commissioner Precincts 1–4).</li>
+                <li style="margin-bottom: 10px;"><strong>Non-Response Handling:</strong> Demographic questions answered with "Prefer not to say" or left blank receive a neutral weight multiplier (1.0). This prevents unknown data from artificially inflating or shrinking verified demographic distributions.</li>
+            </ul>
+
+            <h3 style="color: #c4a46a; margin-top: 15px; margin-bottom: 10px; font-size: 24px; border-bottom: 1px solid rgba(158, 129, 79, 0.3); padding-bottom: 5px;">3. Dynamic Filtering & Subgroup Reliability</h3>
+            <p style="margin-bottom: 15px;">Our dashboard allows users to dynamically filter polling results by local districts (e.g., specific Cities or ISDs) and detailed demographic cross-tabs. To maintain mathematical integrity, the algorithm applies the following statistical guardrails:</p>
+            <ul style="margin-bottom: 30px; padding-left: 20px;">
+                <li style="margin-bottom: 10px;"><strong>Dimension Dropping:</strong> If a user filters by a specific core target (e.g., viewing <em>only</em> Hispanic voters), that specific dimension is dynamically dropped from the raking matrix to prevent mathematical division errors. The remaining dimensions (such as geography) continue to balance the subset. Geographic weighting is similarly dropped when viewing highly localized jurisdictions, like individual cities, to prevent over-weighting small populations.</li>
+                <li style="margin-bottom: 10px;"><strong>Sample Size Suppression (N &lt; 40):</strong> To prevent statistically unreliable generalizations from small sample sizes, granular cross-tabs that result in fewer than 40 total responses are entirely suppressed. In these cases, the dashboard hides the chart data and explicitly displays an "Insufficient data to display representative results" warning to protect the statistical validity of the poll.</li>
+            </ul>
+
+            <h3 style="color: #c4a46a; margin-top: 15px; margin-bottom: 10px; font-size: 24px; border-bottom: 1px solid rgba(158, 129, 79, 0.3); padding-bottom: 5px;">4. Margin of Sampling Error (MoSE)</h3>
+            <p style="margin-bottom: 25px;">Every poll carries a margin of sampling error resulting from measuring a sample rather than the entire electorate. For full-sample countywide questions with a typical sample size of ~400, the theoretical margin of error is generally ±4.9% at a 95% confidence interval. Subgroups and heavily filtered cross-tabs carry wider margins of error due to proportionately reduced sample sizes. In addition to sampling error, factors such as question wording and order effects can introduce practical error into survey research.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="separator-container"> 
+      <div class="seperator"></div>
+    </div>
+
+    <p class="disclaimer-text"> Return to the <a class="default-link" href="webpages/polling.html">Polling Page</a></p>
+
+  <div class="footer js-footer"></div>
+
+  <!--External Libraries-->
+  <script src="importedJS/turf.min.js" defer></script>
+
+  <!--Data-->
+  <script type="module" src="scripts/utils/fixNoun.js"></script>
+  <script type="module" src="scripts/utils/fixDate.js"></script>
+  <script type="module" src="scripts/locationStore.js"></script>
+
+  <!--Globals-->
+  <script type="module" src="scripts/globalHTMLGenerate.js"></script>
+  <script type="module" src="scripts/globalButtons.js"></script>
+  <script type="module" src="scripts/globalArchive.js"></script>
+
+  <!--Personal-->
+  <script type="module" src="scripts/about-us.js"></script>
+
+</body>
+
+</html>
