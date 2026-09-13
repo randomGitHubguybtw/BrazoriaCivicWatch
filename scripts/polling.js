@@ -116,7 +116,7 @@ async function initPolling() {
         if (uniqueRaces.length === 0) {
             document.getElementById('raceSearchInput').value = "No polling data available for this cycle yet.";
             document.getElementById('raceSearchInput').disabled = true;
-            document.getElementById('pollingGraph').innerHTML = '<p style="color: #fcf6ee; text-align: center; margin-top: 30px;">No polling data found.</p>';
+            document.getElementById('pollingGraph').innerHTML = '<p style="color: #fcf6ee; text-align: center; margin-top: 30px;">No polling data found. Data will begin to show on the 1st of the folliowing month</p>';
             return;
         }
         
