@@ -13,6 +13,7 @@ let maxPageReached = 0;
 let currentElectionCycle = null;
 let currentSurveyMonth = null;
 let encodedPhoneStr = null;
+let isShowcaseMode = false;
 
 const demoMap = {
     "How would you describe your race or ethnicity?": "race_ethnicity",
@@ -138,6 +139,11 @@ function updateUI() {
         }
     });
 
+    const showcaseHeader = document.getElementById('showcase-header');
+    if (showcaseHeader) {
+        showcaseHeader.style.display = currentStep === 0 ? 'block' : 'none';
+    }
+
     const allInputs = Array.from(document.querySelectorAll('.polling-dropdown-value'));
     const filledCount = allInputs.filter(input => input.value !== "").length;
 
@@ -167,7 +173,7 @@ function updateUI() {
         
         const allFilled = allInputs.length > 0 && filledCount === allInputs.length;
         
-        if (allFilled) {
+        if (allFilled || isShowcaseMode) {
             submitBtn.style.setProperty('display', 'inline-flex', 'important');
         } else {
             submitBtn.style.setProperty('display', 'none', 'important');
@@ -195,67 +201,76 @@ async function loadPoll() {
         }
 
         encodedPhoneStr = searchStr.split('=')[1] || searchStr;
-        const encodedNum = parseFloat(encodedPhoneStr);
         
-        if (isNaN(encodedNum)) {
-            formContainer.innerHTML = `
-                <div class="voter-message" style="display: flex; flex-direction: column; gap: 15px;">
-                    <h2 style="margin: 0; color: var(--primary-color);">Invalid Survey Link</h2>
-                    <p style="margin: 0; font-size: 1.2rem;">A valid voter link is required to take this survey.</p>
-                </div>
-            `;
-            document.querySelector('.progress-wrapper').style.display = 'none';
-            return;
-        }
+        let voterData = null;
+        let existingVotes = [];
 
-        const statusRes = await fetch(`${API_BASE}/api/survey/status/${encodedNum}`);
-        if (!statusRes.ok) throw new Error();
-        const statusData = await statusRes.json();
+        if (encodedPhoneStr === '138000') {
+            isShowcaseMode = true;
+        } else {
+            const encodedNum = parseFloat(encodedPhoneStr);
+            
+            if (isNaN(encodedNum)) {
+                formContainer.innerHTML = `
+                    <div class="voter-message" style="display: flex; flex-direction: column; gap: 15px;">
+                        <h2 style="margin: 0; color: var(--primary-color);">Invalid Survey Link</h2>
+                        <p style="margin: 0; font-size: 1.2rem;">A valid voter link is required to take this survey.</p>
+                    </div>
+                `;
+                document.querySelector('.progress-wrapper').style.display = 'none';
+                return;
+            }
 
-        if (!statusData.canTake) {
-            formContainer.innerHTML = `
-                <div class="voter-message" style="display: flex; flex-direction: column; gap: 15px;">
-                    <h2 style="margin: 0; color: var(--primary-color);">Survey Unavailable</h2>
-                    <p style="margin: 0; font-size: 1.2rem;">${statusData.reason}</p>
-                </div>
-            `;
-            document.querySelector('.progress-wrapper').style.display = 'none';
-            return;
-        }
+            const statusRes = await fetch(`${API_BASE}/api/survey/status/${encodedNum}`);
+            if (!statusRes.ok) throw new Error();
+            const statusData = await statusRes.json();
 
-        const voterData = statusData.voter;
-        currentElectionCycle = statusData.election_cycle;
-        currentSurveyMonth = statusData.survey_month;
+            if (!statusData.canTake) {
+                formContainer.innerHTML = `
+                    <div class="voter-message" style="display: flex; flex-direction: column; gap: 15px;">
+                        <h2 style="margin: 0; color: var(--primary-color);">Survey Unavailable</h2>
+                        <p style="margin: 0; font-size: 1.2rem;">${statusData.reason}</p>
+                    </div>
+                `;
+                document.querySelector('.progress-wrapper').style.display = 'none';
+                return;
+            }
 
-        sessionStorage.setItem('city', voterData.city_jurisdiction || 'None');
-        sessionStorage.setItem('isd', voterData.independent_school_district || 'None');
-        sessionStorage.setItem('boardOfEd', voterData.state_board_of_education_district || 'None');
-        sessionStorage.setItem('congressDist', voterData.congressional_district || 'None');
-        sessionStorage.setItem('precinct', voterData.precinct_jp_commissioner || 'None');
-        sessionStorage.setItem('stateRep', voterData.state_representative_district || 'None');
-        sessionStorage.setItem('stateSen', voterData.state_senate_district || 'None');
-        sessionStorage.setItem('college', voterData.college_district || 'None');
-        sessionStorage.setItem('drainage', voterData.drainage_district || 'None');
-        sessionStorage.setItem('hospital', voterData.hospital_district || 'None');
-        sessionStorage.setItem('mud', voterData.municipal_utility_district || 'None');
-        sessionStorage.setItem('navigation', voterData.navigation_district || 'None');
+            voterData = statusData.voter;
+            existingVotes = statusData.existing_votes;
+            currentElectionCycle = statusData.election_cycle;
+            currentSurveyMonth = statusData.survey_month;
 
-        const debugHeader = document.createElement('h3');
-        debugHeader.style.color = '#ff4444';
-        debugHeader.style.textAlign = 'center';
-        debugHeader.style.margin = '10px 0';
-        debugHeader.innerText //= `DEBUG: Found Voter - ${voterData.first_name || 'Unknown'} ${voterData.last_name || 'Unknown'}`;
-        formContainer.parentElement.insertBefore(debugHeader, formContainer);
+            sessionStorage.setItem('city', voterData.city_jurisdiction || 'None');
+            sessionStorage.setItem('isd', voterData.independent_school_district || 'None');
+            sessionStorage.setItem('boardOfEd', voterData.state_board_of_education_district || 'None');
+            sessionStorage.setItem('congressDist', voterData.congressional_district || 'None');
+            sessionStorage.setItem('precinct', voterData.precinct_jp_commissioner || 'None');
+            sessionStorage.setItem('stateRep', voterData.state_representative_district || 'None');
+            sessionStorage.setItem('stateSen', voterData.state_senate_district || 'None');
+            sessionStorage.setItem('college', voterData.college_district || 'None');
+            sessionStorage.setItem('drainage', voterData.drainage_district || 'None');
+            sessionStorage.setItem('hospital', voterData.hospital_district || 'None');
+            sessionStorage.setItem('mud', voterData.municipal_utility_district || 'None');
+            sessionStorage.setItem('navigation', voterData.navigation_district || 'None');
 
-        if (!isLocationSet()) {
-            formContainer.innerHTML = `
-                <div class="voter-message" style="display: flex; flex-direction: column; gap: 15px;">
-                    <h2 style="margin: 0; color: var(--primary-color);">Location Not Set</h2>
-                    <p style="margin: 0; font-size: 1.2rem;">You don't have your location set. Go to <a href="index.html" style="color: var(--accent-color); text-decoration: underline;">this link</a> first to set it, and come back here with the back arrow.</p>
-                </div>
-            `;
-            document.querySelector('.progress-wrapper').style.display = 'none';
-            return;
+            const debugHeader = document.createElement('h3');
+            debugHeader.style.color = '#ff4444';
+            debugHeader.style.textAlign = 'center';
+            debugHeader.style.margin = '10px 0';
+            debugHeader.innerText 
+            formContainer.parentElement.insertBefore(debugHeader, formContainer);
+
+            if (!isLocationSet()) {
+                formContainer.innerHTML = `
+                    <div class="voter-message" style="display: flex; flex-direction: column; gap: 15px;">
+                        <h2 style="margin: 0; color: var(--primary-color);">Location Not Set</h2>
+                        <p style="margin: 0; font-size: 1.2rem;">You don't have your location set. Go to <a href="index.html" style="color: var(--accent-color); text-decoration: underline;">this link</a> first to set it, and come back here with the back arrow.</p>
+                    </div>
+                `;
+                document.querySelector('.progress-wrapper').style.display = 'none';
+                return;
+            }
         }
 
         const [electionsResponse, seatsResponse] = await Promise.all([
@@ -269,6 +284,7 @@ async function loadPoll() {
         const allSeats = await seatsResponse.json();
 
         const relevantSeats = allSeats.filter(seat => {
+            if (isShowcaseMode) return true;
             if (seat.scope === 'general' || seat.scope === 'state' || seat.scope === 'major') return true;
             if (seat.scope === 'local') {
                 return checkCandidateMatch(seat.city);
@@ -276,7 +292,7 @@ async function loadPoll() {
             return false;
         });
 
-        const validElectionIds = new Set(relevantSeats.map(seat => seat.election_id));
+        const validElectionIds = new Set(allSeats.map(seat => seat.election_id));
         const now = new Date();
 
         const upcoming = allElections
@@ -328,6 +344,11 @@ async function loadPoll() {
         let formHTML = '';
         let globalPageIndex = 0;
 
+        const genPage0 = [
+            { q: "What matter do you care the most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Other"] },
+            { q: "What matter do you care the second most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Other"] }
+        ];
+
         const genPage1 = [
             { q: "Would you vote down-ballot for any party?", sub: "General Question", opts: ["Democrat", "Republican", "Other Party", "I would vote split-ballot"] },
             { q: "Which party do you generally support more?", sub: "General Question", opts: ["Democrat", "Republican", "Independent", "Other Party"] },
@@ -366,23 +387,31 @@ async function loadPoll() {
             { q: "What is the primary language spoken in your home?", sub: "Demographics", opts: ["English", "Spanish", "Other", "Prefer not to say"] }
         ];
 
-        [genPage1, genPage2, genPage3, demoPage1, demoPage2, demoPage3].forEach(chunk => {
+        [genPage0, genPage1, genPage2, genPage3, demoPage1, demoPage2, demoPage3].forEach(chunk => {
             chunk.forEach(question => {
                 let optionsHTML = '<div class="dropdown-option default-opt" data-value="">Select an option...</div>';
                 question.opts.forEach(opt => {
                     optionsHTML += `<div class="dropdown-option" data-value="${opt}">${opt}</div>`;
                 });
 
+                let showcaseTag = '';
+                if (isShowcaseMode) {
+                    let tagText = (chunk === demoPage1 || chunk === demoPage2 || chunk === demoPage3) 
+                        ? "(Demographic Question, shown to all)" 
+                        : "(General Question, shown to all)";
+                    showcaseTag = `<span class="showcase-tag" style="color: #ffaa00; font-weight: bold; display: block; margin-top: 5px;">${tagText}</span>`;
+                }
+
                 formHTML += `
                     <div class="polling-card" data-page="${globalPageIndex}">
                         <h3 class="polling-card-title">${question.q}</h3>
-                        <p class="seat-subtitle">${question.sub || "General Question"}</p>
+                        <p class="seat-subtitle">${question.sub || "General Question"} ${showcaseTag}</p>
                         <div class="custom-dropdown" tabindex="0">
                             <div class="dropdown-selected">Select an option...</div>
                             <div class="dropdown-options">
                                 ${optionsHTML}
                             </div>
-                            <input type="hidden" name="${question.q}" class="polling-dropdown-value" required>
+                            <input type="hidden" name="${question.q}" class="polling-dropdown-value" ${isShowcaseMode ? '' : 'required'}>
                         </div>
                     </div>
                 `;
@@ -397,6 +426,12 @@ async function loadPoll() {
                 if (formattedDistrictString.includes('_')) {
                     const parts = formattedDistrictString.split('_');
                     formattedDistrictString = `${parts[1].trim()} ${parts[0].trim()}`;
+                }
+
+                let showcaseTag = '';
+                if (isShowcaseMode) {
+                    let tagText = `(Local question, shown to ${formattedDistrictString})`;
+                    showcaseTag = `<span class="showcase-tag" style="color: #ffaa00; font-weight: bold; display: block; margin-top: 5px;">${tagText}</span>`;
                 }
 
                 let optionsHTML = '<div class="dropdown-option default-opt" data-value="">Select a candidate...</div>';
@@ -416,13 +451,13 @@ async function loadPoll() {
                 formHTML += `
                     <div class="polling-card" data-page="${globalPageIndex}">
                         <h3 class="polling-card-title">${seatName}</h3>
-                        <p class="seat-subtitle">District: ${formattedDistrictString}</p>
+                        <p class="seat-subtitle">District: ${formattedDistrictString} ${showcaseTag}</p>
                         <div class="custom-dropdown" tabindex="0">
                             <div class="dropdown-selected">Select a candidate...</div>
                             <div class="dropdown-options">
                                 ${optionsHTML}
                             </div>
-                            <input type="hidden" name="${seatName}" class="polling-dropdown-value" required>
+                            <input type="hidden" name="${seatName}" class="polling-dropdown-value" ${isShowcaseMode ? '' : 'required'}>
                         </div>
                     </div>
                 `;
@@ -432,6 +467,33 @@ async function loadPoll() {
         
         totalSteps = globalPageIndex;
         cardsContainer.innerHTML = formHTML;
+
+        if (isShowcaseMode) {
+            const showcaseHeader = document.createElement('div');
+            showcaseHeader.id = 'showcase-header';
+            showcaseHeader.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: var(--sickly-primary); border-radius: 8px; border: 2px solid var(--secondary-color);">
+                    <p style="color: var(--white-text-color); font-weight: bold; margin: 0 0 10px 0; font-size: 1.1rem;">(Usually, all questions are required. This box does not exist on the actual survey)</p>
+                    <label style="cursor: pointer; color: var(--white-text-color); font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="toggleDisclaimers" checked style="width: 18px; height: 18px;"> 
+                        Show Test Survey Disclaimer Text (Unchecked is What Survey Takers will see)
+                    </label>
+                </div>
+            `;
+            formContainer.insertBefore(showcaseHeader, cardsContainer);
+
+            setTimeout(() => {
+                const toggle = document.getElementById('toggleDisclaimers');
+                if (toggle) {
+                    toggle.addEventListener('change', (e) => {
+                        document.querySelectorAll('.showcase-tag').forEach(tag => {
+                            tag.style.display = e.target.checked ? 'block' : 'none';
+                        });
+                    });
+                }
+            }, 0);
+        }
+
         navContainer.style.display = 'flex';
         
         let firstUnansweredPage = 0;
@@ -447,12 +509,14 @@ async function loadPoll() {
             const pageIndex = parseInt(card.dataset.page);
 
             let prefillValue = null;
-            if (subtitle === "Demographics" && demoMap[title]) {
-                const colName = demoMap[title];
-                if (voterData[colName]) prefillValue = voterData[colName];
-            } else {
-                const existing = statusData.existing_votes.find(v => v.race_slug === title);
-                if (existing) prefillValue = existing.candidate_choice;
+            if (!isShowcaseMode) {
+                if (subtitle.includes("Demographics") && demoMap[title]) {
+                    const colName = demoMap[title];
+                    if (voterData && voterData[colName]) prefillValue = voterData[colName];
+                } else {
+                    const existing = existingVotes.find(v => v.race_slug === title);
+                    if (existing) prefillValue = existing.candidate_choice;
+                }
             }
 
             if (prefillValue) {
@@ -514,8 +578,8 @@ async function loadPoll() {
                     
                     updateUI();
 
-                    if (!isClear) {
-                        const isDemo = subtitle === "Demographics" && demoMap[title];
+                    if (!isClear && !isShowcaseMode) {
+                        const isDemo = subtitle.includes("Demographics") && demoMap[title];
                         fetch(`${API_BASE}/api/survey/save-answer`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -551,7 +615,7 @@ async function loadPoll() {
                 const hiddenInput = card.querySelector('.polling-dropdown-value');
                 const dropdownEl = card.querySelector('.custom-dropdown');
                 
-                if (!hiddenInput.value) {
+                if (!isShowcaseMode && !hiddenInput.value) {
                     allValid = false;
                     dropdownEl.style.border = 'solid 4px var(--primary-color)';
                     setTimeout(() => {
@@ -581,6 +645,44 @@ async function loadPoll() {
         formContainer.addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            if (isShowcaseMode) {
+                cardsContainer.style.display = 'none';
+                navContainer.style.display = 'none';
+                
+                const sh = document.getElementById('showcase-header');
+                if (sh) sh.style.display = 'none';
+                
+                const pw = document.querySelector('.progress-wrapper');
+                if (pw) pw.style.display = 'none';
+
+                let completionMsg = document.getElementById('showcase-completion');
+                if (!completionMsg) {
+                    completionMsg = document.createElement('div');
+                    completionMsg.id = 'showcase-completion';
+                    completionMsg.innerHTML = `
+                        <div class="voter-message" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                            <div>Thank you for reviewing the survey showcase! (No data was saved to the database).</div>
+                            <button type="button" class="nav-btn prev-btn js-hands-off" id="showcase-back-btn" style="margin: 0 auto; width: fit-content;">Go Back</button>
+                        </div>
+                    `;
+                    formContainer.appendChild(completionMsg);
+
+                    document.getElementById('showcase-back-btn').addEventListener('click', () => {
+                        completionMsg.style.display = 'none';
+                        cardsContainer.style.display = '';
+                        navContainer.style.display = 'flex';
+                        if (pw) pw.style.display = '';
+                        updateUI();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                } else {
+                    completionMsg.style.display = 'block';
+                }
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
             try {
                 const res = await fetch(`${API_BASE}/api/survey/submit`, {
                     method: 'POST',
