@@ -345,8 +345,8 @@ async function loadPoll() {
         let globalPageIndex = 0;
 
         const genPage0 = [
-            { q: "What matter do you care the most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Other"] },
-            { q: "What matter do you care the second most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Other"] }
+            { q: "What matter do you care the most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Immigration/Border Security", "Economy/Cost of Living", "Other"] },
+            { q: "What matter do you care the second most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Immigration/Border Security", "Economy/Cost of Living", "Other"] }
         ];
 
         const genPage1 = [
@@ -473,10 +473,10 @@ async function loadPoll() {
             showcaseHeader.id = 'showcase-header';
             showcaseHeader.innerHTML = `
                 <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: var(--sickly-primary); border-radius: 8px; border: 2px solid var(--secondary-color);">
-                    <p style="color: var(--white-text-color); font-weight: bold; margin: 0 0 10px 0; font-size: 1.1rem;">(Usually, all questions are required. This box does not exist on the actual survey)</p>
+                    <p style="color: var(--white-text-color); font-weight: bold; margin: 0 0 10px 0; font-size: 1.1rem;">(Usually, all questions are required)</p>
                     <label style="cursor: pointer; color: var(--white-text-color); font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
                         <input type="checkbox" id="toggleDisclaimers" checked style="width: 18px; height: 18px;"> 
-                        Show Test Survey Disclaimer Text (Unchecked is What Survey Takers will see)
+                        Show Audience Disclaimers
                     </label>
                 </div>
             `;
