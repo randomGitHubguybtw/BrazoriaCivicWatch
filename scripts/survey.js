@@ -258,7 +258,7 @@ async function loadPoll() {
             debugHeader.style.color = '#ff4444';
             debugHeader.style.textAlign = 'center';
             debugHeader.style.margin = '10px 0';
-            debugHeader.innerText 
+            debugHeader.innerText = '';
             formContainer.parentElement.insertBefore(debugHeader, formContainer);
 
             if (!isLocationSet()) {
@@ -345,14 +345,14 @@ async function loadPoll() {
         let globalPageIndex = 0;
 
         const genPage0 = [
-            { q: "What matter do you care the most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Immigration/Border Security", "Economy/Cost of Living", "Other"] },
-            { q: "What matter do you care the second most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Immigration/Border Security", "Economy/Cost of Living", "Other"] }
+            { q: "What matter do you care the most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Immigration/Border Security", "Economy/Cost of Living", "Other", "Unsure"] },
+            { q: "What matter do you care the second most about?", sub: "General Question", opts: ["Infrastructure", "Local Business", "Taxes", "Healthcare", "Transparency", "Partisanship", "Education", "Public Safety", "Environment", "Housing", "Immigration/Border Security", "Economy/Cost of Living", "Other", "Unsure"] }
         ];
 
         const genPage1 = [
-            { q: "Would you vote down-ballot for any party?", sub: "General Question", opts: ["Democrat", "Republican", "Other Party", "I would vote split-ballot"] },
-            { q: "Which party do you generally support more?", sub: "General Question", opts: ["Democrat", "Republican", "Independent", "Other Party"] },
-            { q: "Which party do you generally align yourself with?", sub: "General Question", opts: ["Democrat", "Republican", "Independent", "Other Party"] }
+            { q: "Would you vote down-ballot for any party?", sub: "General Question", opts: ["Democrat", "Republican", "Other Party", "I would vote split-ballot", "Unsure"] },
+            { q: "Which party do you generally support more?", sub: "General Question", opts: ["Democrat", "Republican", "Independent", "Other Party", "Unsure"] },
+            { q: "Which party do you generally align yourself with?", sub: "General Question", opts: ["Democrat", "Republican", "Independent", "Other Party", "Unsure"] }
         ];
 
         const genPage2 = [
@@ -363,31 +363,34 @@ async function loadPoll() {
         ];
 
         const genPage3 = [
-            { q: "How motivated are you to vote?", sub: "General Question", opts: ["Extremely motivated (I will vote)", "Somewhat motivated (I will probably vote)", "Motivated (I might vote)", "Unmotivated (I might not vote)", "Somewhat unmotivated (I probably will not vote)", "Extremely unmotivated (I will not vote)"] }
+            { q: "How motivated are you to vote?", sub: "General Question", opts: ["Extremely motivated (I will vote)", "Somewhat motivated (I will probably vote)", "Motivated (I might vote)", "Unmotivated (I might not vote)", "Somewhat unmotivated (I probably will not vote)", "Extremely unmotivated (I will not vote)", "Unsure"] },
+            { q: "Do you approve of the current President?", sub: "General Question", opts: ["Strongly approve", "Approve", "Neither approve or disapprove", "Disapprove", "Strongly disapprove", "Unsure"] }
         ];
 
         const demoPage1 = [
-            { q: "How would you describe your race or ethnicity?", sub: "Demographics", opts: ["Asian", "Black or African American", "Hispanic or Latino", "Native American or Alaska Native", "Native Hawaiian or Other Pacific Islander", "White", "Two or more races", "Other", "Prefer not to say"] },
-            { q: "What is your age?", sub: "Demographics", opts: ["18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75 or older", "Prefer not to say"] },
-            { q: "How do you describe your gender?", sub: "Demographics", opts: ["Male", "Female", "Non-binary / Third gender", "Prefer to self-describe", "Prefer not to say"] },
-            { q: "What is the highest level of education you have completed?", sub: "Demographics", opts: ["Less than high school", "High school graduate / GED", "Some college, no degree", "Associate degree", "Bachelor's degree", "Master's degree", "Doctoral or professional degree", "Prefer not to say"] }
+            { q: "How would you describe your race or ethnicity?", sub: "Demographics", opts: ["Asian", "Black or African American", "Hispanic or Latino", "Native American or Alaska Native", "Native Hawaiian or Other Pacific Islander", "White", "Two or more races", "Other", "Prefer not to say", "Unsure"] },
+            { q: "What is your age?", sub: "Demographics", opts: ["18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75 or older", "Prefer not to say", "Unsure"] },
+            { q: "How do you describe your gender?", sub: "Demographics", opts: ["Male", "Female", "Non-binary / Third gender", "Prefer to self-describe", "Prefer not to say", "Unsure"] },
+            { q: "What is the highest level of education you have completed?", sub: "Demographics", opts: ["Less than high school", "High school graduate / GED", "Some college, no degree", "Associate degree", "Bachelor's degree", "Master's degree", "Doctoral or professional degree", "Prefer not to say", "Unsure"] }
         ];
 
         const demoPage2 = [
-            { q: "Do you identify as LGBTQ+?", sub: "Demographics", opts: ["Yes", "No", "Prefer not to say"] },
-            { q: "What is your primary political party affiliation?", sub: "Demographics", opts: ["Democrat", "Republican", "Independent", "Libertarian", "Green Party", "Other", "None", "Prefer not to say"] },
-            { q: "What is your approximate annual household income?", sub: "Demographics", opts: ["Under $25,000", "$25,000 - $49,999", "$50,000 - $74,999", "$75,000 - $99,999", "$100,000 - $149,999", "$150,000 or more", "Prefer not to say"] },
-            { q: "What is your current employment status?", sub: "Demographics", opts: ["Employed full-time", "Employed part-time", "Self-employed", "Unemployed and looking for work", "Unemployed and not looking for work", "Student", "Retired", "Unable to work", "Prefer not to say"] }
+            { q: "Do you identify as LGBTQ+?", sub: "Demographics", opts: ["Yes", "No", "Prefer not to say", "Unsure"] },
+            { q: "What is your primary political party affiliation?", sub: "Demographics", opts: ["Democrat", "Republican", "Independent", "Libertarian", "Green Party", "Other", "None", "Prefer not to say", "Unsure"] },
+            { q: "What is your approximate annual household income?", sub: "Demographics", opts: ["Under $25,000", "$25,000 - $49,999", "$50,000 - $74,999", "$75,000 - $99,999", "$100,000 - $149,999", "$150,000 or more", "Prefer not to say", "Unsure"] },
+            { q: "What is your current employment status?", sub: "Demographics", opts: ["Employed full-time", "Employed part-time", "Self-employed", "Unemployed and looking for work", "Unemployed and not looking for work", "Student", "Retired", "Unable to work", "Prefer not to say", "Unsure"] }
         ];
 
         const demoPage3 = [
-            { q: "What is your religious affiliation, if any?", sub: "Demographics", opts: ["Christian (Protestant)", "Christian (Catholic)", "Christian (Other)", "Jewish", "Muslim", "Hindu", "Buddhist", "Atheist / Agnostic", "Nothing in particular", "Other", "Prefer not to say"] },
-            { q: "What is your marital status?", sub: "Demographics", opts: ["Single, never married", "Married or domestic partnership", "Widowed", "Divorced", "Separated", "Prefer not to say"] },
-            { q: "Are you a veteran of the U.S. Armed Forces?", sub: "Demographics", opts: ["Yes", "No", "Prefer not to say"] },
-            { q: "What is the primary language spoken in your home?", sub: "Demographics", opts: ["English", "Spanish", "Other", "Prefer not to say"] }
+            { q: "What is your religious affiliation, if any?", sub: "Demographics", opts: ["Christian (Protestant)", "Christian (Catholic)", "Christian (Other)", "Jewish", "Muslim", "Hindu", "Buddhist", "Atheist / Agnostic", "Nothing in particular", "Other", "Prefer not to say", "Unsure"] },
+            { q: "What is your marital status?", sub: "Demographics", opts: ["Single, never married", "Married or domestic partnership", "Widowed", "Divorced", "Separated", "Prefer not to say", "Unsure"] },
+            { q: "Are you a veteran of the U.S. Armed Forces?", sub: "Demographics", opts: ["Yes", "No", "Prefer not to say", "Unsure"] },
+            { q: "What is the primary language spoken in your home?", sub: "Demographics", opts: ["English", "Spanish", "Other", "Prefer not to say", "Unsure"] }
         ];
 
-        [genPage0, genPage1, genPage2, genPage3, demoPage1, demoPage2, demoPage3].forEach(chunk => {
+        const allDemoQuestions = [...demoPage1, ...demoPage2, ...demoPage3];
+
+        [allDemoQuestions, genPage0, genPage1, genPage2, genPage3].forEach(chunk => {
             chunk.forEach(question => {
                 let optionsHTML = '<div class="dropdown-option default-opt" data-value="">Select an option...</div>';
                 question.opts.forEach(opt => {
@@ -396,7 +399,7 @@ async function loadPoll() {
 
                 let showcaseTag = '';
                 if (isShowcaseMode) {
-                    let tagText = (chunk === demoPage1 || chunk === demoPage2 || chunk === demoPage3) 
+                    let tagText = (chunk === allDemoQuestions) 
                         ? "(Demographic Question, shown to all)" 
                         : "(General Question, shown to all)";
                     showcaseTag = `<span class="showcase-tag" style="color: #ffaa00; font-weight: bold; display: block; margin-top: 5px;">${tagText}</span>`;
