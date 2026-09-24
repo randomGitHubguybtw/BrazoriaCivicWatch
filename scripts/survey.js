@@ -188,8 +188,10 @@ async function loadPoll() {
     try {
         if (!formContainer) return;
 
-        const searchStr = window.location.search.substring(1);
-        if (!searchStr) {
+        const searchParams = new URLSearchParams(window.location.search);
+        encodedPhoneStr = searchParams.get('t');
+        
+        if (!encodedPhoneStr) {
             formContainer.innerHTML = `
                 <div class="voter-message" style="display: flex; flex-direction: column; gap: 15px;">
                     <h2 style="margin: 0; color: var(--primary-color);">Invalid Survey Link</h2>
@@ -199,8 +201,6 @@ async function loadPoll() {
             document.querySelector('.progress-wrapper').style.display = 'none';
             return;
         }
-
-        encodedPhoneStr = searchStr.split('=')[1] || searchStr;
         
         let voterData = null;
         let existingVotes = [];
