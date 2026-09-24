@@ -21,15 +21,15 @@
     <div class="title">
       <picture>
           <source srcset="icons/PollingCivicWatchTitleDark.png" media="(prefers-color-scheme: dark)">
-          <img style="object-position: 45% 55%; height: 225px; margin-top: 10px;" class="title-graphic" src="icons/PollingCivicWatchTitle.png" alt="Brazoria Civic Watch Logo">
+          <img style="object-position: 45% 55%; height: 225px; max-width: 100%; margin-top: 10px;" class="title-graphic" src="icons/PollingCivicWatchTitle.png" alt="Brazoria Civic Watch Logo">
       </picture>
     </div>
 
     <div class="text-section">
-      <div class="content-column" style="grid-template-columns: 1fr;">
-        <div><p style="font-size: 40px; font-weight: bold; margin-bottom: 20px;">Polling Transparency and Methodology</p></div>
+      <div class="content-column" style="grid-template-columns: 1fr; max-width: 100%; overflow: hidden;">
+        <div><p style="font-size: 40px; font-weight: bold; margin-bottom: 20px; word-wrap: break-word; overflow-wrap: break-word;">Polling Transparency and Methodology</p></div>
         
-        <div style="line-height: 1.6; font-size: 18px; color: #fcf6ee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <div style="line-height: 1.6; font-size: 18px; color: #fcf6ee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; word-wrap: break-word; overflow-wrap: break-word;">
             
             <p style="margin-bottom: 25px;">Brazoria Civic Watch is committed to the highest standards of data integrity and statistical transparency. Our public polling infrastructure is custom-built to provide unbiased, representative, and mathematically sound insights into local electorate sentiment. Below is a comprehensive overview of our data collection, weighting algorithms, and systemic guardrails.</p>
 
@@ -40,7 +40,7 @@
                 <li style="margin-bottom: 10px;"><strong>Response Verification & Authentication:</strong> Each SMS contains an algorithmically transformed, unique numeric identifier mathematically derived from the voter's contact record. Our database enforces strict logical constraints: only one response is permitted per verified voter per election cycle and survey month. Responses from inactive, unregistered, or opted-out numbers are automatically blocked at the server level.</li>
                 <li style="margin-bottom: 10px;"><strong>SMS Compliance & Opt-Outs:</strong> We strictly comply with 10DLC telecommunication standards. Webhooks connected to our messaging providers process "STOP" and "UNSUBSCRIBE" replies in absolute real-time, instantly flagging the voter in our database as opted-out and blocking future contact. Every message clearly identifies our organization and includes standard opt-out instructions.</li>
                 <li style="margin-bottom: 10px;"><strong>SMS Invitation Variations:</strong> During outreach, we utilize the following 15 message variations to ensure delivery compliance and avoid carrier filtering:
-                    <ul style="margin-top: 5px; margin-bottom: 5px; padding-left: 20px; list-style-type: circle;">
+                    <ul style="margin-top: 5px; margin-bottom: 5px; padding-left: 20px; list-style-type: circle; word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;">
                       <li>Andrew Cobb here with Brazoria Civic Watch; we need you for a quick poll! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
                       <li>Hey! Andrew Cobb here with Brazoria Civic Watch. We need your input for November! https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
                       <li>Hey! Andrew Cobb here. We at the Brazoria Civic Watch need your opinion: https://brazoriacivicwatch.org/webpages/survey?=########### Reply STOP to end</li>
