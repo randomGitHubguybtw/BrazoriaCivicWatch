@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <base href="../">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,6 +58,10 @@
           Opt in to receive recurring monthly community polling texts from Brazoria Civic Watch. Consent is not a condition of service. Message frequency varies. Message & data rates may apply. Reply STOP to cancel, HELP for help. View our <a class="default-link" href="webpages/privacy-policy.html">Privacy Policy</a> and <a class="default-link" href="webpages/terms-of-service.html">Terms of Service</a>. We do not share, sell, or otherwise distribute collected data or phone numbers to any third party.
         </span>
       </label>
+    </div>
+
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAFM7YTt-_1Ye6Rim"></div>
     </div>
 
     <button id="opt-in-btn" class="polling-card-btn js-hands-off" style="width: 100%; max-width: 400px; margin: 20px auto; display: block;">Opt-In!</button>
