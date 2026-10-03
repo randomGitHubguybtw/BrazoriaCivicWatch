@@ -150,20 +150,59 @@ function updateUI() {
     if (allInputs.length > 0) {
         if (filledCount === 0 && maxPageReached === 0) {
             progressBar.style.width = '0%';
-        } else if (filledCount === allInputs.length) {
-            progressBar.style.width = '100%';
         } else {
-            const pageWeight = 75 / (totalSteps - 1 || 1);
-            const dropdownRatio = Math.sqrt(filledCount) / Math.sqrt(allInputs.length || 1);
-            const dropdownProgress = 23 * dropdownRatio;
+            const corePages = Math.max(1, totalSteps - 1);
             
-            let progress = (maxPageReached * pageWeight) + dropdownProgress;
+            const getBaseProgress = (page) => {
+                // Squeeze the last page (demographics) so it only yields the final 2.5% juice
+                if (page >= corePages) return 97.5; 
+                
+                const x = page / corePages;
+                // Exponent 0.35 creates a much larger initial jump, tapering heavily after
+                const curve = 0.85 * Math.pow(x, 0.35) + 0.15 * Math.pow(x, 3);
+                return curve * 97.5;
+            };
+
+            let baseProgress = getBaseProgress(maxPageReached);
+            let nextProgress = maxPageReached >= corePages ? 100 : getBaseProgress(maxPageReached + 1);
+
+            let gap = nextProgress - baseProgress;
+
+            const maxPageCards = document.querySelectorAll(`.polling-card[data-page="${maxPageReached}"]`);
+            let maxPageInputs = [];
+            maxPageCards.forEach(c => {
+                c.querySelectorAll('.polling-dropdown-value').forEach(i => maxPageInputs.push(i));
+            });
             
-            progress = Math.min(progress, 98);
+            let maxPageFilled = maxPageInputs.filter(i => i.value !== "").length;
+            let pageRatio = maxPageInputs.length ? (maxPageFilled / maxPageInputs.length) : 0;
+            
+            // Adding the completion fraction of the current furthest page reached
+            let progress = baseProgress + (gap * pageRatio);
+
+            if (filledCount === allInputs.length) {
+                progress = 100;
+            } else if (progress > 99) {
+                progress = 99; // Cap tightly at 99% before the last item is done
+            }
+
             progressBar.style.width = `${progress}%`;
         }
     } else {
         progressBar.style.width = '0%';
+    }
+
+    if (currentStep === totalSteps - 1 && totalSteps > 0) {
+        progressBar.textContent = "Last Page";
+        progressBar.style.display = "flex";
+        progressBar.style.alignItems = "center";
+        progressBar.style.justifyContent = "center";
+        progressBar.style.color = "var(--white-text-color, #ffffff)";
+        progressBar.style.fontWeight = "bold";
+        progressBar.style.fontSize = "0.85rem";
+        progressBar.style.whiteSpace = "nowrap";
+    } else {
+        progressBar.textContent = "";
     }
 
     prevBtn.style.setProperty('display', currentStep === 0 ? 'none' : 'inline-flex', 'important');
