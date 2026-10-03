@@ -390,7 +390,7 @@ async function loadPoll() {
 
         const allDemoQuestions = [...demoPage1, ...demoPage2, ...demoPage3];
 
-        [allDemoQuestions, genPage0, genPage1, genPage2, genPage3].forEach(chunk => {
+        const generateStaticCards = (chunk) => {
             chunk.forEach(question => {
                 let optionsHTML = '<div class="dropdown-option default-opt" data-value="">Select an option...</div>';
                 question.opts.forEach(opt => {
@@ -420,7 +420,9 @@ async function loadPoll() {
                 `;
             });
             globalPageIndex++;
-        });
+        };
+
+        [genPage0, genPage1, genPage2, genPage3].forEach(generateStaticCards);
 
         pages.forEach((pageSeats) => {
             for (const [seatName, candidatesList] of pageSeats) {
@@ -467,6 +469,8 @@ async function loadPoll() {
             }
             globalPageIndex++;
         });
+
+        [allDemoQuestions].forEach(generateStaticCards);
         
         totalSteps = globalPageIndex;
         cardsContainer.innerHTML = formHTML;
