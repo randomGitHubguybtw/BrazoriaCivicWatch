@@ -85,12 +85,13 @@ document.head.insertAdjacentHTML('beforeend', `
   </style>
 `);
 
+const isSurveyPage = window.location.pathname.includes('survey.html');
 const cachedCity = sessionStorage.getItem('city') || localStorage.getItem('city');
 const cachedIsd = sessionStorage.getItem('isd') || localStorage.getItem('isd');
 const hasCachedLocation = !!cachedCity && !!cachedIsd;
 
 document.body.insertAdjacentHTML('afterbegin', `
-  <div id="loading-overlay" style="${hasCachedLocation ? 'display: none;' : ''}">
+  <div id="loading-overlay" style="${(hasCachedLocation || isSurveyPage) ? 'display: none;' : ''}">
     <div class="spinner"></div>
     <h2 class="loading-title">Figuring out your location...</h2>
     <p class="loading-subtitle">Cross-referencing maps.<br>Please allow location access when prompted.</p>
@@ -450,7 +451,7 @@ const cityInput = document.querySelector('.js-city-search');
 const isdInput = document.querySelector('.js-isd-search');
 const preciseLocationBtn = document.querySelector('button[data-target="webpages/location-choose.html"]');
 
-if (!hasCachedLocation) {
+if (!hasCachedLocation && !isSurveyPage) { // Prevent skeletons on survey.html
   if (cityInput) cityInput.classList.add('skeleton');
   if (isdInput) isdInput.classList.add('skeleton');
   if (preciseLocationBtn) {
