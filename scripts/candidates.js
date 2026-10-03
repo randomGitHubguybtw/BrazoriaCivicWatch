@@ -168,12 +168,10 @@ function checkCandidateMatch(seatCity) {
 function getSeatPriority(seat) {
     const name = (seat.seat_name || '').toLowerCase();
     
-    // 1. Federal Offices
     if (name.includes('president')) return 10;
     if (name.includes('united states senator') || name.includes('u.s. senator')) return 11;
     if (name.includes('united states representative') || name.includes('u.s. representative') || name.includes('congress')) return 12;
 
-    // 2. Statewide State Offices
     if (name === 'governor') return 20;
     if (name === 'lieutenant governor') return 21;
     if (name === 'attorney general') return 22;
@@ -186,7 +184,6 @@ function getSeatPriority(seat) {
     if (name.includes('presiding judge, court of criminal appeals')) return 29;
     if (name.includes('judge, court of criminal appeals')) return 30;
 
-    // 3. District State Offices
     if (name.includes('state board of education')) return 40;
     if (name.includes('state senator') || name.includes('state senate')) return 41;
     if (name.includes('state representative')) return 42;
@@ -195,7 +192,6 @@ function getSeatPriority(seat) {
     if (name.includes('district judge')) return 45;
     if (name.includes('district attorney')) return 46;
 
-    // 4. County Offices
     if (name === 'county judge') return 50;
     if (name.includes('county court at law') || name.includes('probate court')) return 51;
     if (name === 'county attorney') return 52;
@@ -205,12 +201,10 @@ function getSeatPriority(seat) {
     if (name.includes('tax assessor')) return 56;
     if (name.includes('county treasurer')) return 57;
 
-    // 5. Precinct Offices
     if (name.includes('county commissioner')) return 60;
     if (name.includes('justice of the peace')) return 61;
     if (name.includes('constable')) return 62;
 
-    // Fallbacks
     const scope = (seat.scope || '').toLowerCase();
     if (scope === 'federal') return 70;
     if (scope === 'state' || scope === 'general' || scope === 'major') return 80;
@@ -441,6 +435,7 @@ const loadCandidates = async () => {
                     else if (partyLower.includes('republican')) partyClass = 'party-republican';
                     else if (partyLower.includes('green')) partyClass = 'party-green';
                     else if (partyLower.includes('libertarian')) partyClass = 'party-libertarian';
+                    else if (partyLower.includes('independent')) partyClass = 'party-independent';
 
                     return `
                         <div class="candidate-info">

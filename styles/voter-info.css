@@ -195,11 +195,15 @@
 }
 
 .party-libertarian {
-  color: #7e22ce; 
+  color: #eab308; 
+}
+
+.party-independent {
+  color: #7e22ce;
 }
 
 .party-other {
-  color: var(--black-text-color); 
+  color: #ffffff; 
 }
 
 .candidates-grid-layout {
@@ -480,7 +484,7 @@
         font-style: italic !important;
     }
     
-    .party-democrat, .party-republican, .party-green, .party-libertarian, .party-other {
+    .party-democrat, .party-republican, .party-green, .party-libertarian, .party-independent, .party-other {
         color: #000 !important;
         font-weight: bold !important;
     }
