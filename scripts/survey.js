@@ -154,11 +154,9 @@ function updateUI() {
             const corePages = Math.max(1, totalSteps - 1);
             
             const getBaseProgress = (page) => {
-                // Squeeze the last page (demographics) so it only yields the final 2.5% juice
                 if (page >= corePages) return 97.5; 
                 
                 const x = page / corePages;
-                // Exponent 0.35 creates a much larger initial jump, tapering heavily after
                 const curve = 0.85 * Math.pow(x, 0.35) + 0.15 * Math.pow(x, 3);
                 return curve * 97.5;
             };
@@ -177,13 +175,12 @@ function updateUI() {
             let maxPageFilled = maxPageInputs.filter(i => i.value !== "").length;
             let pageRatio = maxPageInputs.length ? (maxPageFilled / maxPageInputs.length) : 0;
             
-            // Adding the completion fraction of the current furthest page reached
             let progress = baseProgress + (gap * pageRatio);
 
             if (filledCount === allInputs.length) {
                 progress = 100;
             } else if (progress > 99) {
-                progress = 99; // Cap tightly at 99% before the last item is done
+                progress = 99; 
             }
 
             progressBar.style.width = `${progress}%`;
@@ -479,8 +476,6 @@ async function loadPoll() {
                 }
 
                 let optionsHTML = '<div class="dropdown-option default-opt" data-value="">Select a candidate...</div>';
-                optionsHTML += '<div class="dropdown-option" data-value="Unsure">Unsure</div>';
-                optionsHTML += '<div class="dropdown-option" data-value="I don\'t know these candidates">I don\'t know these candidates</div>';
                 
                 candidatesList.forEach(c => {
                     const candidateDisplayName = c.name || 'Unknown';
@@ -491,6 +486,10 @@ async function loadPoll() {
                     
                     optionsHTML += `<div class="dropdown-option" data-value="${fullText}">${fullText}</div>`;
                 });
+
+                optionsHTML += '<div class="dropdown-option" data-value="Unsure">Unsure</div>';
+                optionsHTML += '<div class="dropdown-option" data-value="I don\'t know these candidates">I don\'t know these candidates</div>';
+                optionsHTML += '<div class="dropdown-option" data-value="Someone Else/Write-in">Someone Else/Write-in</div>';
                 
                 formHTML += `
                     <div class="polling-card" data-page="${globalPageIndex}">
