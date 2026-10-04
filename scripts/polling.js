@@ -355,7 +355,7 @@ function updateShowingIndicator() {
         }
     }
     
-    let targetText = `Showing: ${demo} in${place}`;
+    let targetText = `Showing: ${demo} in ${place}`;
     if (demo === "All Voters" && place === "Brazoria County") {
         targetText = `Showing: Brazoria County`;
     }
@@ -521,7 +521,7 @@ function initSVG() {
     tooltip = document.getElementById('pollingTooltip');
     
     svg = document.createElementNS(svgNS, 'svg');
-    svg.setAttribute('viewBox', `0 0 ${width}${height}`);
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
     svg.classList.add('svg-chart');
     
@@ -574,7 +574,7 @@ function initSVG() {
     xAxis.setAttribute('y1', padding.top + chartH);
     xAxis.setAttribute('y2', padding.top + chartH);
     xAxis.classList.add('chart-axis');
-    gGrid.appendChild(yAxis);
+    gGrid.appendChild(xAxis);
     
     svg.appendChild(gGrid);
     
@@ -691,14 +691,14 @@ function handleHoverInteraction(cand, pct, color, e, isHovering, monthStr, hover
             if (monthStr) {
                 tooltip.innerHTML = `
                     <div style="font-size: 11px; opacity: 0.8; text-transform: uppercase; margin-bottom: 2px; font-weight: 900;">${monthStr} Polling</div>
-                    <div style="margin-bottom: 4px;">${cand} \vert{}${pct}%</div>
-                    <div style="font-size: 11px; opacity: 0.8;">95% CI: [${lower}\%,${upper}%]</div>
+                    <div style="margin-bottom: 4px;">${cand} | ${pct}%</div>
+                    <div style="font-size: 11px; opacity: 0.8;">95% CI: [${lower}%, ${upper}%]</div>
                     <div style="font-size: 11px; opacity: 0.8;">Unweighted n = ${n}</div>
                 `;
             } else {
                 tooltip.innerHTML = `
-                    <div style="margin-bottom: 4px;">${cand} \vert{}${pct}%</div>
-                    <div style="font-size: 11px; opacity: 0.8;">95% CI: [${lower}\%,${upper}%]</div>
+                    <div style="margin-bottom: 4px;">${cand} | ${pct}%</div>
+                    <div style="font-size: 11px; opacity: 0.8;">95% CI: [${lower}%, ${upper}%]</div>
                     <div style="font-size: 11px; opacity: 0.8;">Unweighted n = ${n}</div>
                 `;
             }
@@ -776,7 +776,7 @@ function renderGraph() {
     let validCandidates = [];
     let moe = 0;
     
-    if (n < 20) {
+    if (n < 10) {
         if(emptyState) emptyState.classList.add('show');
         if(subtitle) subtitle.style.opacity = '0';
         if(tableContainer) tableContainer.style.opacity = '0';
@@ -784,12 +784,8 @@ function renderGraph() {
     } else {
         if(emptyState) emptyState.classList.remove('show');
         moe = (0.98 / Math.sqrt(n)) * 100;
-        
-        const isWeighted = raceVotes.some(v => v.weight !== 1.0);
-        const modeLabel = isWeighted ? "Demographically Weighted" : "Raw Respondent Snapshot";
-
         if(subtitle) {
-            subtitle.textContent = `${modeLabel} (n = ${n}) \vert{} MOE: ±${moe.toFixed(1)}% (95% CI)`;
+            subtitle.textContent = `Sample Size: n = ${n} | Margin of Error: ±${moe.toFixed(1)}% (95% Confidence Level)`;
             subtitle.style.opacity = '1';
         }
         if(tableContainer) tableContainer.style.opacity = '1';
@@ -874,8 +870,8 @@ function renderGraph() {
     
     const newKeySet = new Set(pathsData.map(pd => pd.key));
     
-    const bottomD = `M ${xOffsets[0]}${bottomY} L ${xOffsets[1]}${bottomY} L ${xOffsets[2]}${bottomY}`;
-    const bottomRibbonD = `M ${xOffsets[0]}${bottomY} L ${xOffsets[1]}${bottomY} L ${xOffsets[2]}${bottomY} L ${xOffsets[2]}${bottomY} L ${xOffsets[1]}${bottomY} L ${xOffsets[0]}${bottomY} Z`;
+    const bottomD = `M ${xOffsets[0]} ${bottomY} L ${xOffsets[1]} ${bottomY} L ${xOffsets[2]} ${bottomY}`;
+    const bottomRibbonD = `M ${xOffsets[0]} ${bottomY} L ${xOffsets[1]} ${bottomY} L ${xOffsets[2]} ${bottomY} L ${xOffsets[2]} ${bottomY} L ${xOffsets[1]} ${bottomY} L ${xOffsets[0]} ${bottomY} Z`;
 
     Array.from(gRibbons.children).forEach(el => {
         if (!newKeySet.has(el.dataset.key) && !el.dataset.leaving) {
@@ -915,7 +911,7 @@ function renderGraph() {
         const cp4x = pd.pts[2].x - (dx2 * 0.4);
         const cp4y = pd.pts[2].adjustedY;
 
-        const targetD = `M ${pd.pts[0].x}${pd.pts[0].y} C ${cp1x}${cp1y}, ${cp2x}${cp2y}, ${pd.pts[1].x}${pd.pts[1].y} C ${cp3x}${cp3y}, ${cp4x}${cp4y}, ${pd.pts[2].x}${pd.pts[2].adjustedY}`;
+        const targetD = `M ${pd.pts[0].x} ${pd.pts[0].y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${pd.pts[1].x} ${pd.pts[1].y} C ${cp3x} ${cp3y}, ${cp4x} ${cp4y}, ${pd.pts[2].x} ${pd.pts[2].adjustedY}`;
         
         const moePx = (moe / 100) * chartH;
         
@@ -927,12 +923,12 @@ function renderGraph() {
         const d1y = Math.min(bottomY, pd.pts[1].y + moePx);
         const d2y = Math.min(bottomY, pd.pts[2].adjustedY + moePx);
         
-        const targetRibbonD = `M ${pd.pts[0].x}${u0y} 
-                               C ${cp1x}${u0y}, ${cp2x}${u1y}, ${pd.pts[1].x}${u1y} 
-                               C ${cp3x}${u1y}, ${cp4x}${u2y}, ${pd.pts[2].x}${u2y} 
-                               L ${pd.pts[2].x}${d2y} 
-                               C ${cp4x}${d2y}, ${cp3x}${d1y}, ${pd.pts[1].x}${d1y} 
-                               C ${cp2x}${d1y}, ${cp1x}${d0y}, ${pd.pts[0].x}${d0y} Z`;
+        const targetRibbonD = `M ${pd.pts[0].x} ${u0y} 
+                               C ${cp1x} ${u0y}, ${cp2x} ${u1y}, ${pd.pts[1].x} ${u1y} 
+                               C ${cp3x} ${u1y}, ${cp4x} ${u2y}, ${pd.pts[2].x} ${u2y} 
+                               L ${pd.pts[2].x} ${d2y} 
+                               C ${cp4x} ${d2y}, ${cp3x} ${d1y}, ${pd.pts[1].x} ${d1y} 
+                               C ${cp2x} ${d1y}, ${cp1x} ${d0y}, ${pd.pts[0].x} ${d0y} Z`;
         
         let ribbon = Array.from(gRibbons.children).find(el => el.dataset.key === pd.key && !el.dataset.leaving);
         if (!ribbon) {
