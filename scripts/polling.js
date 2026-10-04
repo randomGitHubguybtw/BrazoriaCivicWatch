@@ -1193,4 +1193,4 @@ function renderGraph() {
             }, 300);
         }
     }
-}
+} 
