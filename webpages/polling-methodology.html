@@ -78,7 +78,7 @@
                 <li style="margin-bottom: 10px;"><strong>Sample Size Suppression & Phased Unlocking:</strong> To prevent mathematically distorting small sample sizes, our system utilizes a tiered transparency scale:
                   <ul style="margin-top: 5px; margin-bottom: 5px; padding-left: 20px; list-style-type: circle;">
                     <li><strong>n &lt; 10 (Suppressed):</strong> For maximum privacy, cross-tabs returning fewer than 10 total responses are completely suppressed and not drawn.</li>
-                    <li><strong>n = 10 to 39 (Raw Snapshot):</strong> Subgroups reaching double-digits generate a "Raw Respondent Snapshot." Every voter is assigned a flat, unweighted multiplier of 1.0. This honestly portrays early data exactly as it was received, avoiding mathematical illusions (the "phantom voter" effect).</li>
+                    <li><strong>n = 10 to 29 (Raw Snapshot):</strong> Subgroups reaching double-digits generate a "Raw Respondent Snapshot." Every voter is assigned a flat, unweighted multiplier of 1.0. This honestly portrays early data exactly as it was received, avoiding mathematical illusions (the "phantom voter" effect).</li>
                     <li><strong>n &ge; 40 (Demographic Modeling):</strong> Once a full or filtered cohort exceeds 40 baseline responses, full iterative raking logic seamlessly engages, transitioning the display to "Demographically Weighted."</li>
                   </ul>
                 </li>
