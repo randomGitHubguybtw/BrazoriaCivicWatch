@@ -776,7 +776,7 @@ function renderGraph() {
     let validCandidates = [];
     let moe = 0;
     
-    if (n < 10) {
+    if (n < 30) {
         if(emptyState) emptyState.classList.add('show');
         if(subtitle) subtitle.style.opacity = '0';
         if(tableContainer) tableContainer.style.opacity = '0';

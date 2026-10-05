@@ -77,9 +77,8 @@
                 <li style="margin-bottom: 10px;"><strong>Dynamic Localized Baselines:</strong> If a user filters the dashboard by a specific location (like a city or district), it is statistically unsound to rake those local voters against county-wide averages. Instead, our backend algorithm dynamically queries the exact micro-precincts that touch that specific territory. It aggregates the race, gender, and population metrics for <em>only that specific footprint</em>, creating flawless custom polling models for localized races in real-time.</li>
                 <li style="margin-bottom: 10px;"><strong>Sample Size Suppression & Phased Unlocking:</strong> To prevent mathematically distorting small sample sizes, our system utilizes a tiered transparency scale:
                   <ul style="margin-top: 5px; margin-bottom: 5px; padding-left: 20px; list-style-type: circle;">
-                    <li><strong>n &lt; 10 (Suppressed):</strong> For maximum privacy, cross-tabs returning fewer than 10 total responses are completely suppressed and not drawn.</li>
-                    <li><strong>n = 10 to 29 (Raw Snapshot):</strong> Subgroups reaching double-digits generate a "Raw Respondent Snapshot." Every voter is assigned a flat, unweighted multiplier of 1.0. This honestly portrays early data exactly as it was received, avoiding mathematical illusions (the "phantom voter" effect).</li>
-                    <li><strong>n &ge; 40 (Demographic Modeling):</strong> Once a full or filtered cohort exceeds 40 baseline responses, full iterative raking logic seamlessly engages, transitioning the display to "Demographically Weighted."</li>
+                    <li><strong>n &lt; 30</strong> For maximum privacy, cross-tabs returning fewer than 30 total responses are completely suppressed and not drawn.</li>
+                    <li><strong>n &ge; 30 (Demographic Modeling):</strong> Once a full or filtered cohort exceeds 30 baseline responses, full iterative raking logic engages.</li>
                   </ul>
                 </li>
             </ul>
