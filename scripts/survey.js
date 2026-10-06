@@ -278,7 +278,7 @@ async function loadPoll() {
                         <div id="regMatchOptions" style="display: flex; flex-direction: column; gap: 8px;"></div>
                     </div>
                     
-                    <button type="button" id="regSubmitBtn" class="nav-btn submit-btn" style="margin-top: 15px;">Verify & Start Survey</button>
+                    <button type="button" id="regSubmitBtn" class="nav-btn submit-btn js-hands-off" style="margin-top: 15px;">Verify & Start Survey</button>
                     <div id="regError" style="color: #ffaa00; font-family: var(--global-font); text-align: center; margin-top: 10px; display: none;"></div>
                 </div>
             `;
