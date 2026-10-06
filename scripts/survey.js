@@ -234,7 +234,7 @@ async function loadPoll() {
                     <div class="transparency-text">
                         <strong>Transparency Notice:</strong><br>
                         Enter your first and last name as it would appear on your voter registration.<br><br>
-                        Your address is used to determine relevant questions (e.g., precincts and districts) and verify your eligibility for local polling. Your privacy is protected.
+                        Your address and Date of Birth are used to securely verify your registration profile and determine relevant questions (e.g., precincts and districts) for local polling. Your privacy is protected.
                     </div>
                     
                     <div id="regInputsBlock" style="display: flex; flex-direction: column; gap: 15px;">
@@ -245,6 +245,10 @@ async function loadPoll() {
                         <div class="reg-input-group">
                             <label>Last Name</label>
                             <input type="text" id="regLast" class="reg-input" required>
+                        </div>
+                        <div class="reg-input-group">
+                            <label>Date of Birth</label>
+                            <input type="date" id="regDob" class="reg-input" required>
                         </div>
                         <div class="reg-input-group">
                             <label>Phone Number</label>
@@ -264,26 +268,45 @@ async function loadPoll() {
                                 <input type="text" id="regZip" class="reg-input" required>
                             </div>
                         </div>
+                        
+                        <div id="turnstile-container" style="display: flex; justify-content: center; margin-top: 15px;"></div>
                     </div>
 
                     <div id="regMatchBlock" style="display: none; flex-direction: column; gap: 10px;">
                         <h3 style="color: var(--white-text-color); margin: 0;">Is this you?</h3>
-                        <p style="color: var(--white-text-color); font-size: 0.9rem; margin: 0 0 10px 0;">We found some close matches in the voter registration file. Please select your record:</p>
+                        <p style="color: var(--white-text-color); font-size: 0.9rem; margin: 0 0 10px 0;">We found a close match in the voter registration file. Please verify this is your record:</p>
                         <div id="regMatchOptions" style="display: flex; flex-direction: column; gap: 8px;"></div>
                     </div>
                     
-                    <button type="button" id="regSubmitBtn" class="nav-btn submit-btn js-hands-off" style="margin-top: 15px;">Verify & Start Survey</button>
+                    <button type="button" id="regSubmitBtn" class="nav-btn submit-btn" style="margin-top: 15px;">Verify & Start Survey</button>
                     <div id="regError" style="color: #ffaa00; font-family: var(--global-font); text-align: center; margin-top: 10px; display: none;"></div>
                 </div>
             `;
             
             document.querySelector('.progress-wrapper').style.display = 'none';
 
+            if (window.turnstile) {
+                window.turnstile.render('#turnstile-container', {
+                    sitekey: '0x4AAAAAAFM7YTt-_1Ye6Rim'
+                });
+            } else {
+                const observer = new MutationObserver((mutations, obs) => {
+                    if (window.turnstile) {
+                        window.turnstile.render('#turnstile-container', {
+                            sitekey: '0x4AAAAAAFM7YTt-_1Ye6Rim'
+                        });
+                        obs.disconnect();
+                    }
+                });
+                observer.observe(document, { childList: true, subtree: true });
+            }
+
             let confirmedMatchData = null;
 
             document.getElementById('regSubmitBtn').addEventListener('click', async () => {
                 const first_name = document.getElementById('regFirst').value.trim();
                 const last_name = document.getElementById('regLast').value.trim();
+                const dob = document.getElementById('regDob').value;
                 const phone = document.getElementById('regPhone').value.trim();
                 const address = document.getElementById('regAddress').value.trim();
                 const city = document.getElementById('regCity').value.trim();
@@ -308,19 +331,26 @@ async function loadPoll() {
                     confirmedMatchData = JSON.parse(decodeURIComponent(selected.value));
                 }
 
-                if (!first_name || !last_name || !phone || !address || !city || !zip) {
+                if (!first_name || !last_name || !dob || !phone || !address || !city || !zip) {
                     errDiv.innerText = "Please fill out all fields.";
+                    errDiv.style.display = 'block';
+                    return;
+                }
+
+                const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+                if (!turnstileToken && !confirmedMatchData) {
+                    errDiv.innerText = "Please complete the security check.";
                     errDiv.style.display = 'block';
                     return;
                 }
 
                 errDiv.style.display = 'none';
                 const btn = document.getElementById('regSubmitBtn');
-                btn.innerText = "Verifying Location...";
+                btn.innerText = "Verifying Profile...";
                 btn.disabled = true;
 
                 try {
-                    const payload = { first_name, last_name, phone, address, city, zip };
+                    const payload = { first_name, last_name, dob, phone, address, city, zip, turnstileToken };
                     if (confirmedMatchData) {
                         payload.confirmed_match = confirmedMatchData;
                     }
@@ -374,6 +404,7 @@ async function loadPoll() {
                         confirmedMatchData = null; 
                         document.getElementById('regMatchBlock').style.display = 'none';
                         document.getElementById('regInputsBlock').style.display = 'flex';
+                        if (window.turnstile) window.turnstile.reset();
                     }
                 } catch (e) {
                     errDiv.innerText = "Network error. Please try again.";
@@ -383,6 +414,7 @@ async function loadPoll() {
                     confirmedMatchData = null;
                     document.getElementById('regMatchBlock').style.display = 'none';
                     document.getElementById('regInputsBlock').style.display = 'flex';
+                    if (window.turnstile) window.turnstile.reset();
                 }
             });
             
