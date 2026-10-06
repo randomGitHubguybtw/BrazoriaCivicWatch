@@ -226,6 +226,168 @@ async function loadPoll() {
 
         const searchParams = new URLSearchParams(window.location.search);
         encodedPhoneStr = searchParams.get('t');
+
+        if (encodedPhoneStr === '123456789') {
+            formContainer.innerHTML = `
+                <div class="registration-form" id="regFormBlock">
+                    <h2 style="margin: 0 0 10px 0; color: var(--accent-color); font-family: var(--global-font); text-align: center;">Voter Registration & Verification</h2>
+                    <div class="transparency-text">
+                        <strong>Transparency Notice:</strong><br>
+                        Enter your first and last name as it would appear on your voter registration.<br><br>
+                        Your address is used to determine relevant questions (e.g., precincts and districts) and verify your eligibility for local polling. Your privacy is protected.
+                    </div>
+                    
+                    <div id="regInputsBlock" style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="reg-input-group">
+                            <label>First Name</label>
+                            <input type="text" id="regFirst" class="reg-input" required>
+                        </div>
+                        <div class="reg-input-group">
+                            <label>Last Name</label>
+                            <input type="text" id="regLast" class="reg-input" required>
+                        </div>
+                        <div class="reg-input-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="regPhone" class="reg-input" placeholder="(123) 456-7890" required>
+                        </div>
+                        <div class="reg-input-group">
+                            <label>Street Address</label>
+                            <input type="text" id="regAddress" class="reg-input" placeholder="123 Main St" required>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                            <div class="reg-input-group" style="flex: 2 1 150px;">
+                                <label>City</label>
+                                <input type="text" id="regCity" class="reg-input" required>
+                            </div>
+                            <div class="reg-input-group" style="flex: 1 1 100px;">
+                                <label>ZIP Code</label>
+                                <input type="text" id="regZip" class="reg-input" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="regMatchBlock" style="display: none; flex-direction: column; gap: 10px;">
+                        <h3 style="color: var(--white-text-color); margin: 0;">Is this you?</h3>
+                        <p style="color: var(--white-text-color); font-size: 0.9rem; margin: 0 0 10px 0;">We found some close matches in the voter registration file. Please select your record:</p>
+                        <div id="regMatchOptions" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                    </div>
+                    
+                    <button type="button" id="regSubmitBtn" class="nav-btn submit-btn js-hands-off" style="margin-top: 15px;">Verify & Start Survey</button>
+                    <div id="regError" style="color: #ffaa00; font-family: var(--global-font); text-align: center; margin-top: 10px; display: none;"></div>
+                </div>
+            `;
+            
+            document.querySelector('.progress-wrapper').style.display = 'none';
+
+            let confirmedMatchData = null;
+
+            document.getElementById('regSubmitBtn').addEventListener('click', async () => {
+                const first_name = document.getElementById('regFirst').value.trim();
+                const last_name = document.getElementById('regLast').value.trim();
+                const phone = document.getElementById('regPhone').value.trim();
+                const address = document.getElementById('regAddress').value.trim();
+                const city = document.getElementById('regCity').value.trim();
+                const zip = document.getElementById('regZip').value.trim();
+                const errDiv = document.getElementById('regError');
+
+                if (document.getElementById('regMatchBlock').style.display === 'flex') {
+                    const selected = document.querySelector('input[name="voter_match"]:checked');
+                    if (!selected) {
+                        errDiv.innerText = "Please select an option.";
+                        errDiv.style.display = 'block';
+                        return;
+                    }
+                    if (selected.value === "none") {
+                        errDiv.innerText = "Please fill in the information as it appears on your voter registration. If you are not registered to vote or do not live in Brazoria County this system will not work.";
+                        errDiv.style.display = 'block';
+                        document.getElementById('regMatchBlock').style.display = 'none';
+                        document.getElementById('regInputsBlock').style.display = 'flex';
+                        document.getElementById('regSubmitBtn').innerText = "Verify & Start Survey";
+                        return;
+                    }
+                    confirmedMatchData = JSON.parse(decodeURIComponent(selected.value));
+                }
+
+                if (!first_name || !last_name || !phone || !address || !city || !zip) {
+                    errDiv.innerText = "Please fill out all fields.";
+                    errDiv.style.display = 'block';
+                    return;
+                }
+
+                errDiv.style.display = 'none';
+                const btn = document.getElementById('regSubmitBtn');
+                btn.innerText = "Verifying Location...";
+                btn.disabled = true;
+
+                try {
+                    const payload = { first_name, last_name, phone, address, city, zip };
+                    if (confirmedMatchData) {
+                        payload.confirmed_match = confirmedMatchData;
+                    }
+
+                    const res = await fetch(`${API_BASE}/api/survey/self-register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+
+                    if (data.requires_confirmation) {
+                        document.getElementById('regInputsBlock').style.display = 'none';
+                        document.getElementById('regMatchBlock').style.display = 'flex';
+                        
+                        const optionsContainer = document.getElementById('regMatchOptions');
+                        optionsContainer.innerHTML = '';
+                        
+                        data.matches.forEach((match) => {
+                            const encodedMatch = encodeURIComponent(JSON.stringify(match));
+                            const rawNameFormat = match.rawName.split(',').map(n => n.trim()).reverse().join(' ');
+                            
+                            optionsContainer.innerHTML += `
+                                <label style="display: flex; align-items: center; gap: 10px; color: var(--white-text-color); font-size: 1rem; cursor: pointer; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                                    <input type="radio" name="voter_match" value="${encodedMatch}">
+                                    <div>
+                                        <strong>${rawNameFormat}</strong><br>
+                                        <span style="font-size: 0.85rem; opacity: 0.8;">${match.rawAddress}</span>
+                                    </div>
+                                </label>
+                            `;
+                        });
+
+                        optionsContainer.innerHTML += `
+                            <label style="display: flex; align-items: center; gap: 10px; color: #ffaa00; font-size: 1rem; cursor: pointer; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                                <input type="radio" name="voter_match" value="none">
+                                <strong>None of these are me</strong>
+                            </label>
+                        `;
+
+                        btn.innerText = "Confirm Selection";
+                        btn.disabled = false;
+                        errDiv.style.display = 'none';
+                    } else if (data.success && data.encoded_t) {
+                        window.location.href = window.location.pathname + '?t=' + data.encoded_t;
+                    } else {
+                        errDiv.innerText = data.error || "Verification failed. Please check your information.";
+                        errDiv.style.display = 'block';
+                        btn.innerText = "Verify & Start Survey";
+                        btn.disabled = false;
+                        confirmedMatchData = null; 
+                        document.getElementById('regMatchBlock').style.display = 'none';
+                        document.getElementById('regInputsBlock').style.display = 'flex';
+                    }
+                } catch (e) {
+                    errDiv.innerText = "Network error. Please try again.";
+                    errDiv.style.display = 'block';
+                    btn.innerText = "Verify & Start Survey";
+                    btn.disabled = false;
+                    confirmedMatchData = null;
+                    document.getElementById('regMatchBlock').style.display = 'none';
+                    document.getElementById('regInputsBlock').style.display = 'flex';
+                }
+            });
+            
+            return;
+        }
         
         if (!encodedPhoneStr) {
             formContainer.innerHTML = `
