@@ -346,7 +346,7 @@ function getFallbackData() {
 }
 
 async function doBackgroundCheck() {
-  if (window.location.pathname.includes('survey.html')) return; // Do not check location in background on survey
+  if (window.location.pathname.includes('survey')) return;
   if (sessionStorage.getItem('locationCheckedThisSession')) return;
   sessionStorage.setItem('locationCheckedThisSession', 'true');
   
@@ -437,7 +437,7 @@ export async function testCoords(lat, long) {
 window.testCoords = testCoords;
 
 export const locationDataReady = (async function initLocation() {
-  const isSurveyPage = window.location.pathname.includes('survey.html');
+  const isSurveyPage = window.location.pathname.includes('survey');
   
   const cachedCity = sessionStorage.getItem('city');
   const cachedIsd = sessionStorage.getItem('isd');
@@ -476,7 +476,7 @@ export const locationDataReady = (async function initLocation() {
   }
 
   if (isSurveyPage) {
-    return getFallbackData(); // Bypass location fetching entirely for survey.html
+    return getFallbackData(); 
   }
 
   try {

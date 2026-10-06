@@ -86,7 +86,7 @@ document.head.insertAdjacentHTML('beforeend', `
   </style>
 `);
 
-const isSurveyPage = window.location.pathname.includes('survey.html');
+const isSurveyPage = window.location.pathname.includes('survey');
 const cachedCity = sessionStorage.getItem('city') || localStorage.getItem('city');
 const cachedIsd = sessionStorage.getItem('isd') || localStorage.getItem('isd');
 const hasCachedLocation = !!cachedCity && !!cachedIsd;
@@ -452,7 +452,7 @@ const cityInput = document.querySelector('.js-city-search');
 const isdInput = document.querySelector('.js-isd-search');
 const preciseLocationBtn = document.querySelector('button[data-target="webpages/location-choose.html"]');
 
-if (!hasCachedLocation && !isSurveyPage) { // Prevent skeletons on survey.html
+if (!hasCachedLocation && !isSurveyPage) {
   if (cityInput) cityInput.classList.add('skeleton');
   if (isdInput) isdInput.classList.add('skeleton');
   if (preciseLocationBtn) {
