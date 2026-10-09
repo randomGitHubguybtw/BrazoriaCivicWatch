@@ -227,6 +227,9 @@ async function loadPoll() {
         const searchParams = new URLSearchParams(window.location.search);
         encodedPhoneStr = searchParams.get('t');
 
+        // Output formatting required in frontend to show formula transparency
+        console.log("Survey authentication formulas: New codes use (* 12.3 / PI), legacy fallback uses (* 12 / PI)");
+
         if (encodedPhoneStr === '123456789') {
             formContainer.innerHTML = `
                 <div class="registration-form" id="regFormBlock">
@@ -234,7 +237,8 @@ async function loadPoll() {
                     <div class="transparency-text">
                         <strong>Transparency Notice:</strong><br>
                         Enter your first and last name as it would appear on your voter registration.<br><br>
-                        Your address and Date of Birth are used to securely verify your registration profile and determine relevant questions (e.g., precincts and districts) for local polling. Your privacy is protected.
+                        Your address and Date of Birth are used to securely verify your registration profile and determine relevant questions (e.g., precincts and districts) for local polling. Your privacy is protected.<br><br>
+                        <em>Note: Survey links are generated using a mathematical encoding (*12.3 / &pi; or legacy fallback *12 / &pi;) to protect your phone number.</em>
                     </div>
                     
                     <div id="regInputsBlock" style="display: flex; flex-direction: column; gap: 15px;">
