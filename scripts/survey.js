@@ -227,6 +227,8 @@ async function loadPoll() {
         const searchParams = new URLSearchParams(window.location.search);
         encodedPhoneStr = searchParams.get('t');
 
+        console.log("Survey authentication formulas: New codes use (* 12.3 / PI), legacy fallback uses (* 12 / PI)");
+
         if (encodedPhoneStr === '123456789') {
             formContainer.innerHTML = `
                 <div class="registration-form" id="regFormBlock">
